@@ -1,0 +1,8 @@
+waymark-server/node_modules
+waymark-server/.env
+
+waymark-client/node_modules
+waymark-client/dist
+
+.env
+.DS_Store
