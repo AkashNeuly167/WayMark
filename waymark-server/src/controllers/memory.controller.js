@@ -2,6 +2,7 @@ import Memory from "../models/Memory.js";
 import User from "../models/User.js";
 import Notification from "../models/Notification.js";
 import cloudinary from "../config/cloudinary.js";
+import  validateRequiredFields  from "../utils/validateRequiredFields.js";
 
 export const createMemory = async (
   req,
@@ -190,6 +191,7 @@ export const toggleLikeMemory = async (
             userId.toString()
         );
 
+       await memory.save();
 
       return res.status(200).json({
         success: true,

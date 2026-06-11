@@ -14,4 +14,4 @@ const validateRequiredFields = (body, fields) => {
   return missingFields;
 };
 
-export default validateRequiredFields;
+export default validateRequiredFields; 
