@@ -8,6 +8,7 @@ import { Plus } from "lucide-react";
 import { useEffect, useState } from "react";
 import { getMemories } from "../services/memory.service";
 import { useNavigate } from "react-router-dom";
+import FeedSkeleton from "../components/ui/FeedSkeleton";
 
 function Feed() {
   const [memories, setMemories] = useState([]);
@@ -29,12 +30,20 @@ function Feed() {
   });
 
   if (loading) {
-    return (
-      <div className="flex h-screen items-center justify-center">
-        Loading memories...
-      </div>
-    );
-  }
+  return (
+    <div className="min-h-screen bg-[#F7FAFC] text-[#002045]">
+      <TopNavbar />
+
+      <main className="mx-auto grid max-w-[1500px] grid-cols-1 gap-10 px-4 pb-28 pt-7 md:px-8 lg:grid-cols-[minmax(0,1fr)_320px]">
+        <section className="min-w-0">
+          <FeedSkeleton />
+        </section>
+      </main>
+
+      <MobileBottomNav />
+    </div>
+  );
+}
 
   return (
     <div className="min-h-screen bg-[#F7FAFC] text-[#002045]">

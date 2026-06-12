@@ -1,8 +1,18 @@
 import Comment from "../models/Comment.js";
 import Memory from "../models/Memory.js";
+import Notification from "../models/Notification.js";
 
 export const createComment = async (req, res) => {
   try {
+    const { text } = req.body;
+
+    if (!text || text.trim() === "") {
+      return res.status(400).json({
+        success: false,
+        message: "Comment text is required",
+      });
+    }
+
     const memory = await Memory.findById(req.params.id);
 
     if (!memory) {
@@ -15,12 +25,12 @@ export const createComment = async (req, res) => {
     const comment = await Comment.create({
       memory: memory._id,
       author: req.user._id,
-      text: req.body.text,
+      text: text.trim(),
     });
 
-    memory.commentsCount += 1;
-
-    await memory.save();
+    await Memory.findByIdAndUpdate(memory._id, {
+      $inc: { commentsCount: 1 },
+    });
 
     if (memory.author.toString() !== req.user._id.toString()) {
       await Notification.create({
@@ -31,12 +41,20 @@ export const createComment = async (req, res) => {
       });
     }
 
-    res.status(201).json({
+    const populatedComment = await Comment.findById(comment._id).populate(
+      "author",
+      "username fullName avatar"
+    );
+
+    return res.status(201).json({
       success: true,
-      comment,
+      message: "Comment added successfully",
+      comment: populatedComment,
     });
   } catch (error) {
-    res.status(500).json({
+    console.error("Create comment error:", error);
+
+    return res.status(500).json({
       success: false,
       message: error.message,
     });
@@ -57,6 +75,8 @@ export const getMemoryComments = async (req, res) => {
       comments,
     });
   } catch (error) {
+    console.error("Get comments error:", error);
+
     return res.status(500).json({
       success: false,
       message: error.message,
@@ -75,29 +95,51 @@ export const deleteComment = async (req, res) => {
       });
     }
 
-    if (comment.author.toString() !== req.user._id.toString()) {
-      return res.status(403).json({
+    const memory = await Memory.findById(comment.memory);
+
+    if (!memory) {
+      return res.status(404).json({
         success: false,
-        message: "Unauthorized",
+        message: "Memory not found",
       });
     }
 
-    await Memory.findByIdAndUpdate(comment.memory, {
-      $inc: {
-        commentsCount: -1,
-      },
-    });
+    const isCommentOwner =
+      comment.author.toString() === req.user._id.toString();
 
-    await comment.deleteOne();
+    const isMemoryOwner =
+      memory.author.toString() === req.user._id.toString();
+
+    if (!isCommentOwner && !isMemoryOwner) {
+      return res.status(403).json({
+        success: false,
+        message: "You are not allowed to delete this comment",
+      });
+    }
+
+    await Comment.findByIdAndDelete(comment._id);
+
+    await Memory.updateOne(
+      {
+        _id: memory._id,
+        commentsCount: { $gt: 0 },
+      },
+      {
+        $inc: { commentsCount: -1 },
+      }
+    );
 
     return res.status(200).json({
       success: true,
       message: "Comment deleted successfully",
+      deletedCommentId: comment._id,
     });
   } catch (error) {
+    console.error("Delete comment error:", error);
+
     return res.status(500).json({
       success: false,
-      message: error.message,
+      message: error.message || "Failed to delete comment",
     });
   }
 };
