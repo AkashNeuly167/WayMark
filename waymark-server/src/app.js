@@ -29,7 +29,7 @@ app.use("/api", commentRoutes);
 app.use("/api/upload", uploadRoutes);
 app.use("/api/search", searchRoutes);
 app.use("/api/notifications", notificationRoutes);
-app.use("/api/bucketlist", bucketListRoutes);
+app.use("/api/bucket-list", bucketListRoutes);
 app.use("/api/passport", passportRoutes);
 app.use("/api/travel-wrapped", travelWrappedRoutes);
 app.use("/api/explore", exploreRoutes);

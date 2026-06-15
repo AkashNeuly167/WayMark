@@ -8,8 +8,12 @@ import Explore from "../pages/Explore";
 import Journey from "../pages/Journey";
 import Profile from "../pages/Profile";
 import CreateMemory from "../pages/CreateMemory";
-
+import Notification from "../pages/Notification";
+import BucketList from "../pages/BucketList";
 import ProtectedRoute from "./ProtectedRoute";
+import More from "../pages/More";
+import TravelWrapped from "../pages/TravelWrapped";
+import Settings from "../pages/Settings";
 
 function AppRoutes() {
   return (
@@ -48,10 +52,28 @@ function AppRoutes() {
       />
 
       <Route
+        path="/bucket-list"
+        element={
+          <ProtectedRoute>
+            <BucketList />
+          </ProtectedRoute>
+        }
+      />
+
+      <Route
         path="/memories/create"
         element={
           <ProtectedRoute>
             <CreateMemory />
+          </ProtectedRoute>
+        }
+      />
+
+      <Route
+        path="/memories/:id"
+        element={
+          <ProtectedRoute>
+            <MemoryDetail />
           </ProtectedRoute>
         }
       />
@@ -65,16 +87,44 @@ function AppRoutes() {
         }
       />
 
-      {/* 404 fallback */}
-      <Route path="*" element={<Navigate to="/feed" />} />
       <Route
-        path="/memories/:id"
+        path="/notifications"
         element={
           <ProtectedRoute>
-            <MemoryDetail />
+            <Notification />
           </ProtectedRoute>
         }
       />
+
+      <Route
+        path="/more"
+        element={
+          <ProtectedRoute>
+            <More />
+          </ProtectedRoute>
+        }
+      />
+
+      <Route
+        path="/travel-wrapped"
+        element={
+          <ProtectedRoute>
+            <TravelWrapped />
+          </ProtectedRoute>
+        }
+      />
+
+      <Route
+        path="/settings"
+        element={
+          <ProtectedRoute>
+            <Settings />
+          </ProtectedRoute>
+        }
+      />
+
+      {/* 404 fallback must stay LAST */}
+      <Route path="*" element={<Navigate to="/feed" />} />
     </Routes>
   );
 }

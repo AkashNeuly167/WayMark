@@ -1,22 +1,22 @@
 import BucketList from "../models/BucketList.js";
+import validateRequiredFields from "../utils/validateRequiredFields.js";
 
 export const createBucketItem = async (req, res) => {
   try {
-     
     const missingFields = validateRequiredFields(req.body, [
-  "title",
-  "country",
-  "city",
-  "locationName",
-]);
+      "title",
+      "country",
+      "city",
+      "locationName",
+    ]);
 
-if (missingFields.length > 0) {
-  return res.status(400).json({
-    success: false,
-    message: "Missing required fields",
-    missingFields,
-  });
-}
+    if (missingFields.length > 0) {
+      return res.status(400).json({
+        success: false,
+        message: "Missing required fields",
+        missingFields,
+      });
+    }
 
     const bucketItem = await BucketList.create({
       ...req.body,
@@ -65,7 +65,7 @@ export const updateBucketItem = async (req, res) => {
       },
       req.body,
       {
-        new: true,
+        returnDocument: "after",
         runValidators: true,
       },
     );

@@ -2,12 +2,10 @@ import Memory from "../models/Memory.js";
 import User from "../models/User.js";
 import Notification from "../models/Notification.js";
 import cloudinary from "../config/cloudinary.js";
-import  validateRequiredFields  from "../utils/validateRequiredFields.js";
+import validateRequiredFields from "../utils/validateRequiredFields.js";
+import Comment from "../models/Comment.js";
 
-export const createMemory = async (
-  req,
-  res
-) => {
+export const createMemory = async (req, res) => {
   try {
     const {
       title,
@@ -20,20 +18,20 @@ export const createMemory = async (
     } = req.body;
 
     const missingFields = validateRequiredFields(req.body, [
-  "title",
-  "description",
-  "country",
-  "city",
-  "locationName",
-]);
+      "title",
+      "description",
+      "country",
+      "city",
+      "locationName",
+    ]);
 
-if (missingFields.length > 0) {
-  return res.status(400).json({
-    success: false,
-    message: "Missing required fields",
-    missingFields,
-  });
-}
+    if (missingFields.length > 0) {
+      return res.status(400).json({
+        success: false,
+        message: "Missing required fields",
+        missingFields,
+      });
+    }
 
     const memory = await Memory.create({
       title,
@@ -66,41 +64,36 @@ export const getMemories = async (req, res) => {
     const limit = Number(req.query.limit) || 10;
     const skip = (page - 1) * limit;
 
+    const totalMemories = await Memory.countDocuments();
+
     const memories = await Memory.find()
-      .populate("author", "username fullName avatar")
+      .populate("author", "username fullName country profileImage")
       .sort({ createdAt: -1 })
       .skip(skip)
       .limit(limit);
 
-    const total = await Memory.countDocuments();
-
-    return res.status(200).json({
-      success: true,
+    res.status(200).json({
       page,
       limit,
-      total,
-      totalPages: Math.ceil(total / limit),
-      count: memories.length,
+      totalMemories,
+      totalPages: Math.ceil(totalMemories / limit),
+      hasNextPage: page < Math.ceil(totalMemories / limit),
+      hasPrevPage: page > 1,
       memories,
     });
   } catch (error) {
-    return res.status(500).json({
-      success: false,
-      message: error.message,
+    res.status(500).json({
+      message: "Failed to fetch memories",
+      error: error.message,
     });
   }
 };
 
-export const getMemoryById = async (
-  req,
-  res
-) => {
+export const getMemoryById = async (req, res) => {
   try {
-    const memory = await Memory.findById(
-      req.params.id
-    ).populate(
+    const memory = await Memory.findById(req.params.id).populate(
       "author",
-      "username fullName avatar"
+      "username fullName avatar",
     );
 
     if (!memory) {
@@ -141,12 +134,20 @@ export const deleteMemory = async (req, res) => {
     }
 
     if (memory.images && memory.images.length > 0) {
-      for (const image of memory.images) {
-        if (image.publicId) {
-          await cloudinary.uploader.destroy(image.publicId);
-        }
-      }
+      const deleteImagePromises = memory.images
+        .filter((image) => image.publicId)
+        .map((image) => cloudinary.uploader.destroy(image.publicId));
+
+      await Promise.all(deleteImagePromises);
     }
+
+    await Comment.deleteMany({
+      memory: memory._id,
+    });
+
+    await Notification.deleteMany({
+      memory: memory._id,
+    });
 
     await memory.deleteOne();
 
@@ -162,14 +163,9 @@ export const deleteMemory = async (req, res) => {
   }
 };
 
-export const toggleLikeMemory = async (
-  req,
-  res
-) => {
+export const toggleLikeMemory = async (req, res) => {
   try {
-    const memory = await Memory.findById(
-      req.params.id
-    );
+    const memory = await Memory.findById(req.params.id);
 
     if (!memory) {
       return res.status(404).json({
@@ -180,24 +176,19 @@ export const toggleLikeMemory = async (
 
     const userId = req.user._id;
 
-    const alreadyLiked =
-      memory.likes.includes(userId);
+    const alreadyLiked = memory.likes.includes(userId);
 
     if (alreadyLiked) {
-      memory.likes =
-        memory.likes.filter(
-          (id) =>
-            id.toString() !==
-            userId.toString()
-        );
+      memory.likes = memory.likes.filter(
+        (id) => id.toString() !== userId.toString(),
+      );
 
-       await memory.save();
+      await memory.save();
 
       return res.status(200).json({
         success: true,
         liked: false,
-        likesCount:
-          memory.likes.length,
+        likesCount: memory.likes.length,
       });
     }
 
@@ -205,24 +196,19 @@ export const toggleLikeMemory = async (
 
     await memory.save();
 
-     if(memory.author.toString() !== req.user._id.toString()) {
-        await Notification.create({
+    if (memory.author.toString() !== req.user._id.toString()) {
+      await Notification.create({
         recipient: memory.author,
-        sender:req.user._id,
+        sender: req.user._id,
         type: "like",
         memory: memory._id,
       });
-     }
-    
+    }
 
-    
-
-      
     return res.status(200).json({
       success: true,
       liked: true,
-      likesCount:
-        memory.likes.length,
+      likesCount: memory.likes.length,
     });
   } catch (error) {
     console.error(error);
@@ -236,10 +222,7 @@ export const toggleLikeMemory = async (
 
 export const updateMemory = async (req, res) => {
   try {
-
-    const memory = await Memory.findById(
-      req.params.id
-    );
+    const memory = await Memory.findById(req.params.id);
 
     if (!memory) {
       return res.status(404).json({
@@ -248,31 +231,26 @@ export const updateMemory = async (req, res) => {
       });
     }
 
-    if (
-      memory.author.toString() !==
-      req.user._id.toString()
-    ) {
+    if (memory.author.toString() !== req.user._id.toString()) {
       return res.status(403).json({
         success: false,
         message: "Unauthorized",
       });
     }
 
-    const updatedMemory =
-      await Memory.findByIdAndUpdate(
-        req.params.id,
-        req.body,
-        {
-          new: true,
-          runValidators: true,
-        }
-      );
+    const updatedMemory = await Memory.findByIdAndUpdate(
+      req.params.id,
+      req.body,
+      {
+        returnDocument: "after",
+        runValidators: true,
+      },
+    );
 
     return res.status(200).json({
       success: true,
       memory: updatedMemory,
     });
-
   } catch (error) {
     return res.status(500).json({
       success: false,
@@ -311,6 +289,8 @@ export const getFeed = async (req, res) => {
       limit,
       total,
       totalPages: Math.ceil(total / limit),
+      hasNextPage: page < Math.ceil(total / limit),
+      hasPrevPage: page > 1,
       count: memories.length,
       memories,
     });

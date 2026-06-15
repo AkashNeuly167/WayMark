@@ -1,15 +1,24 @@
-import { Bell,  Home, PlusCircle, Search, User } from "lucide-react";
-import { Link } from "react-router-dom";
+import { Grid3X3, Home, PlusCircle, Search, User } from "lucide-react";
+import { Link, useLocation } from "react-router-dom";
 
 function MobileBottomNav() {
+  const location = useLocation();
+
+  const isActive = (path) => location.pathname === path;
+
+  const navClass = (path) =>
+    `flex flex-col items-center transition ${
+      isActive(path) ? "text-[#F6AD55]" : "text-[#002045]"
+    }`;
+
   return (
     <nav className="fixed bottom-0 left-0 right-0 z-50 flex h-20 items-center justify-around rounded-t-2xl border-t border-[#DDE3EA] bg-white shadow-lg md:hidden">
-      <Link className="flex flex-col items-center text-[#F6AD55]" to="/feed">
+      <Link className={navClass("/feed")} to="/feed">
         <Home size={22} />
         <span className="text-xs">Feed</span>
       </Link>
 
-      <Link className="flex flex-col items-center text-[#002045]" to="/explore">
+      <Link className={navClass("/explore")} to="/explore">
         <Search size={22} />
         <span className="text-xs">Explore</span>
       </Link>
@@ -18,12 +27,12 @@ function MobileBottomNav() {
         <PlusCircle size={36} />
       </Link>
 
-      <Link className="flex flex-col items-center text-[#002045]" to="/notifications">
-        <Bell size={22} />
-        <span className="text-xs">Alerts</span>
+      <Link className={navClass("/more")} to="/more">
+        <Grid3X3 size={22} />
+        <span className="text-xs">More</span>
       </Link>
 
-      <Link className="flex flex-col items-center text-[#002045]" to="/profile/me">
+      <Link className={navClass("/profile/me")} to="/profile/me">
         <User size={22} />
         <span className="text-xs">Profile</span>
       </Link>

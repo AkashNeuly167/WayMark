@@ -1,0 +1,21 @@
+import api from "../api/axios";
+
+export const getUserProfile = async (id) => {
+  if (id === "me") {
+    const response = await api.get("/users/me");
+    return response.data;
+  }
+
+  const response = await api.get(`/users/${id}`);
+  return response.data;
+};
+
+export const updateMyProfile = async (profileData) => {
+  const response = await api.patch("/users/me", profileData);
+  return response.data;
+};
+
+export const toggleFollowUser = async (id) => {
+  const response = await api.patch(`/users/${id}/follow`);
+  return response.data;
+};

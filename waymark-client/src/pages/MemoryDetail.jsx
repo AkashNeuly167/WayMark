@@ -1,45 +1,64 @@
-import { useEffect, useState, useRef } from "react";
-import { useParams, useLocation } from "react-router-dom";
+import { useEffect, useRef, useState } from "react";
+import { useLocation, useNavigate, useParams } from "react-router-dom";
 import {
   Heart,
   Loader2,
   MapPin,
   MessageCircle,
+  MoreVertical,
+  Pencil,
   Send,
   Trash2,
 } from "lucide-react";
-import ConfirmDialog from "../components/ui/ConfirmDialog";
-import { useAuth } from "../context/AuthContext";
 
+import EditMemoryModal from "../components/memory/EditMemoryModal";
+import ConfirmDialog from "../components/ui/ConfirmDialog";
+import MemoryDetailSkeleton from "../components/ui/MemoryDetailSkeleton";
 import TopNavbar from "../components/navigation/TopNavbar";
 import MobileBottomNav from "../components/navigation/MobileBottomNav";
+
+import { useAuth } from "../context/AuthContext";
 import { useToast } from "../context/ToastContext";
+
 import {
   createMemoryComment,
+  deleteMemory,
+  deleteMemoryComment,
   getMemoryById,
   getMemoryComments,
   toggleLikeMemory,
-  deleteMemoryComment,
 } from "../services/memory.service";
-import MemoryDetailSkeleton from "../components/ui/MemoryDetailSkeleton";
 
 function MemoryDetail() {
   const { id } = useParams();
-  const { user } = useAuth();
-  const currentUserId = user?._id || user?.id;
+  const navigate = useNavigate();
   const location = useLocation();
+
+  const { user } = useAuth();
+  const { showToast } = useToast();
+
+  const currentUserId = user?._id || user?.id;
+
   const commentsRef = useRef(null);
   const commentInputRef = useRef(null);
+
   const [memory, setMemory] = useState(null);
   const [comments, setComments] = useState([]);
   const [commentText, setCommentText] = useState("");
+
   const [loading, setLoading] = useState(true);
   const [likeLoading, setLikeLoading] = useState(false);
   const [commentLoading, setCommentLoading] = useState(false);
+
   const [error, setError] = useState("");
+
   const [deleteCommentId, setDeleteCommentId] = useState(null);
   const [deleteLoading, setDeleteLoading] = useState(false);
-  const { showToast } = useToast();
+
+  const [ownerMenuOpen, setOwnerMenuOpen] = useState(false);
+  const [deleteMemoryOpen, setDeleteMemoryOpen] = useState(false);
+  const [deleteMemoryLoading, setDeleteMemoryLoading] = useState(false);
+  const [editMemoryOpen, setEditMemoryOpen] = useState(false);
 
   useEffect(() => {
     const fetchMemoryDetail = async () => {
@@ -115,6 +134,7 @@ function MemoryDetail() {
 
       setCommentText("");
       await refreshMemoryAndComments();
+
       showToast({
         type: "success",
         title: "Comment added",
@@ -122,73 +142,121 @@ function MemoryDetail() {
       });
     } catch (error) {
       console.error("Comment error:", error);
+
       setError(error.response?.data?.message || "Failed to add comment.");
+
+      showToast({
+        type: "error",
+        title: "Comment failed",
+        message: error.response?.data?.message || "Could not add comment.",
+      });
     } finally {
       setCommentLoading(false);
     }
   };
 
- const handleDeleteComment = async () => {
-  if (!deleteCommentId) return;
+  const handleDeleteComment = async () => {
+    if (!deleteCommentId) return;
 
-  const commentId = deleteCommentId;
+    const commentId = deleteCommentId;
 
-  try {
-    setDeleteLoading(true);
-    setError("");
+    try {
+      setDeleteLoading(true);
+      setError("");
 
-    await deleteMemoryComment(commentId);
+      await deleteMemoryComment(commentId);
 
-    // update UI instantly
-    setComments((prevComments) =>
-      prevComments.filter((comment) => comment._id !== commentId)
-    );
+      setComments((prevComments) =>
+        prevComments.filter((comment) => comment._id !== commentId)
+      );
 
+      setMemory((prevMemory) => ({
+        ...prevMemory,
+        commentsCount: Math.max((prevMemory?.commentsCount || 1) - 1, 0),
+      }));
+
+      setDeleteCommentId(null);
+
+      showToast({
+        type: "success",
+        title: "Comment deleted",
+        message: "The comment was removed successfully.",
+      });
+
+      try {
+        await refreshMemoryAndComments();
+      } catch (refreshError) {
+        console.error("Refresh after delete failed:", refreshError);
+      }
+    } catch (error) {
+      console.error("Delete comment error:", error);
+
+      showToast({
+        type: "error",
+        title: "Delete failed",
+        message:
+          error.response?.data?.message || "Could not delete this comment.",
+      });
+
+      setError(error.response?.data?.message || "Failed to delete comment.");
+    } finally {
+      setDeleteLoading(false);
+    }
+  };
+
+  const handleDeleteMemory = async () => {
+    try {
+      setDeleteMemoryLoading(true);
+      setError("");
+
+      await deleteMemory(id);
+
+      showToast({
+        type: "success",
+        title: "Memory deleted",
+        message: "Your memory was removed successfully.",
+      });
+
+      setDeleteMemoryOpen(false);
+      navigate("/feed");
+    } catch (error) {
+      console.error("Delete memory error:", error);
+
+      showToast({
+        type: "error",
+        title: "Delete failed",
+        message:
+          error.response?.data?.message || "Could not delete this memory.",
+      });
+
+      setError(error.response?.data?.message || "Failed to delete memory.");
+    } finally {
+      setDeleteMemoryLoading(false);
+    }
+  };
+
+  const handleMemoryUpdated = (updatedMemory) => {
     setMemory((prevMemory) => ({
       ...prevMemory,
-      commentsCount: Math.max((prevMemory?.commentsCount || 1) - 1, 0),
+      ...updatedMemory,
     }));
-
-    setDeleteCommentId(null);
 
     showToast({
       type: "success",
-      title: "Comment deleted",
-      message: "The comment was removed successfully.",
+      title: "Memory updated",
+      message: "Your memory changes were saved successfully.",
     });
-
-    // optional background refresh, but don't show failed if this has issue
-    try {
-      await refreshMemoryAndComments();
-    } catch (refreshError) {
-      console.error("Refresh after delete failed:", refreshError);
-    }
-  } catch (error) {
-    console.error("Delete comment error:", error);
-
-    showToast({
-      type: "error",
-      title: "Delete failed",
-      message:
-        error.response?.data?.message ||
-        "Could not delete this comment.",
-    });
-
-    setError(error.response?.data?.message || "Failed to delete comment.");
-  } finally {
-    setDeleteLoading(false);
-  }
-};
+  };
 
   if (loading) {
-  return (
-    <div className="min-h-screen bg-[#F7FAFC] text-[#002045]">
-      <TopNavbar />
-      <MemoryDetailSkeleton />
-      <MobileBottomNav />
-    </div>
-  );
-}
+    return (
+      <div className="min-h-screen bg-[#F7FAFC] text-[#002045]">
+        <TopNavbar />
+        <MemoryDetailSkeleton />
+        <MobileBottomNav />
+      </div>
+    );
+  }
 
   if (!memory) {
     return (
@@ -199,6 +267,10 @@ function MemoryDetail() {
   }
 
   const image = memory.images?.[0]?.url || memory.images?.[0];
+
+  const memoryAuthorId = memory.author?._id || memory.author;
+  const isMemoryOwner =
+    memoryAuthorId?.toString() === currentUserId?.toString();
 
   return (
     <>
@@ -211,6 +283,17 @@ function MemoryDetail() {
         loading={deleteLoading}
         onConfirm={handleDeleteComment}
         onClose={() => setDeleteCommentId(null)}
+      />
+
+      <ConfirmDialog
+        open={deleteMemoryOpen}
+        title="Delete memory?"
+        description="This memory, its image, likes, and comments will be permanently removed."
+        confirmText="Delete"
+        cancelText="Cancel"
+        loading={deleteMemoryLoading}
+        onConfirm={handleDeleteMemory}
+        onClose={() => setDeleteMemoryOpen(false)}
       />
 
       <div className="min-h-screen bg-[#F7FAFC] text-[#002045]">
@@ -237,11 +320,54 @@ function MemoryDetail() {
             )}
 
             <div className="p-6 md:p-8">
-              <div className="flex items-center gap-2 text-[#F6AD55]">
-                <MapPin size={18} />
-                <span>
-                  {memory.city}, {memory.country}
-                </span>
+              <div className="flex items-start justify-between gap-4">
+                <div className="flex items-center gap-2 text-[#F6AD55]">
+                  <MapPin size={18} />
+                  <span>
+                    {memory.city}, {memory.country}
+                  </span>
+                </div>
+
+                {isMemoryOwner && (
+                  <div className="relative">
+                    <button
+                      type="button"
+                      onClick={() => setOwnerMenuOpen((prev) => !prev)}
+                      className="rounded-full p-2 text-[#002045]/60 transition hover:bg-[#F1F5F9] hover:text-[#002045]"
+                      aria-label="Memory actions"
+                    >
+                      <MoreVertical size={20} />
+                    </button>
+
+                    {ownerMenuOpen && (
+                      <div className="absolute right-0 top-11 z-20 w-44 overflow-hidden rounded-2xl border border-[#D8DEE6] bg-white shadow-xl">
+                        <button
+                          type="button"
+                          onClick={() => {
+                            setOwnerMenuOpen(false);
+                            setEditMemoryOpen(true);
+                          }}
+                          className="flex w-full items-center gap-2 px-4 py-3 text-left text-sm font-semibold text-[#002045] transition hover:bg-[#F7FAFC]"
+                        >
+                          <Pencil size={16} />
+                          Edit memory
+                        </button>
+
+                        <button
+                          type="button"
+                          onClick={() => {
+                            setOwnerMenuOpen(false);
+                            setDeleteMemoryOpen(true);
+                          }}
+                          className="flex w-full items-center gap-2 px-4 py-3 text-left text-sm font-semibold text-red-500 transition hover:bg-red-50"
+                        >
+                          <Trash2 size={16} />
+                          Delete memory
+                        </button>
+                      </div>
+                    )}
+                  </div>
+                )}
               </div>
 
               <h1 className="mt-3 text-3xl font-bold text-[#002045] md:text-5xl">
@@ -287,7 +413,9 @@ function MemoryDetail() {
             ref={commentsRef}
             className="mt-10 rounded-3xl border border-[#D8DEE6] bg-white p-6 shadow-sm md:p-8"
           >
-            <h2 className="mb-6 text-2xl font-bold text-[#002045]">Comments</h2>
+            <h2 className="mb-6 text-2xl font-bold text-[#002045]">
+              Comments
+            </h2>
 
             <form onSubmit={handleCommentSubmit} className="mb-8 flex gap-3">
               <input
@@ -317,40 +445,55 @@ function MemoryDetail() {
               </p>
             ) : (
               <div className="space-y-5">
-                {comments.map((comment) => (
-                  <div
-                    key={comment._id}
-                    className="rounded-2xl border border-[#E8EDF2] bg-[#F7FAFC] p-4"
-                  >
-                    <div className="flex items-start justify-between gap-4">
-                      <div>
-                        <h4 className="font-semibold text-[#002045]">
-                          {comment.author?.fullName ||
-                            comment.author?.username ||
-                            "Unknown user"}
-                        </h4>
+                {comments.map((comment) => {
+                  const commentAuthorId = comment.author?._id || comment.author;
+                  const isCommentOwner =
+                    commentAuthorId?.toString() === currentUserId?.toString();
 
-                        <p className="mt-2 text-[#002045]/70">{comment.text}</p>
+                  return (
+                    <div
+                      key={comment._id}
+                      className="rounded-2xl border border-[#E8EDF2] bg-[#F7FAFC] p-4"
+                    >
+                      <div className="flex items-start justify-between gap-4">
+                        <div>
+                          <h4 className="font-semibold text-[#002045]">
+                            {comment.author?.fullName ||
+                              comment.author?.username ||
+                              "Unknown user"}
+                          </h4>
+
+                          <p className="mt-2 text-[#002045]/70">
+                            {comment.text}
+                          </p>
+                        </div>
+
+                        {isCommentOwner && (
+                          <button
+                            type="button"
+                            onClick={() => setDeleteCommentId(comment._id)}
+                            className="rounded-full p-2 text-red-500 transition hover:bg-red-50"
+                            title="Delete comment"
+                          >
+                            <Trash2 size={16} />
+                          </button>
+                        )}
                       </div>
-
-                      {(comment.author?._id === currentUserId ||
-                        comment.author === currentUserId) && (
-                        <button
-                          type="button"
-                          onClick={() => setDeleteCommentId(comment._id)}
-                          className="rounded-full p-2 text-red-500 transition hover:bg-red-50"
-                          title="Delete comment"
-                        >
-                          <Trash2 size={16} />
-                        </button>
-                      )}
                     </div>
-                  </div>
-                ))}
+                  );
+                })}
               </div>
             )}
           </section>
         </main>
+
+        {editMemoryOpen && (
+          <EditMemoryModal
+            memory={memory}
+            onClose={() => setEditMemoryOpen(false)}
+            onUpdated={handleMemoryUpdated}
+          />
+        )}
 
         <MobileBottomNav />
       </div>

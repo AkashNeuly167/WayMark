@@ -32,3 +32,13 @@ export const deleteMemoryComment = async (commentId) => {
   const response = await api.delete(`/comments/${commentId}`);
   return response.data;
 };
+
+export const deleteMemory = async (id) => {
+  const response = await api.delete(`/memories/${id}`);
+  return response.data;
+};
+
+export const updateMemory = async (id, memoryData) => {
+  const response = await api.patch(`/memories/${id}`, memoryData);
+  return response.data;
+};

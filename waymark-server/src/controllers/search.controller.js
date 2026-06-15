@@ -70,20 +70,25 @@ export const searchMemories = async (req, res) => {
       ],
     };
 
+    const total = await Memory.countDocuments(filter);
+
     const memories = await Memory.find(filter)
-      .populate("author", "username fullName avatar")
+      .populate("author", "username fullName avatar profilePicture country")
       .sort({ createdAt: -1 })
       .skip(skip)
       .limit(limit);
 
-    const total = await Memory.countDocuments(filter);
+    const totalPages = Math.ceil(total / limit);
 
     return res.status(200).json({
       success: true,
+      q: query,
       page,
       limit,
       total,
-      totalPages: Math.ceil(total / limit),
+      totalPages,
+      hasNextPage: page < totalPages,
+      hasPrevPage: page > 1,
       count: memories.length,
       memories,
     });
