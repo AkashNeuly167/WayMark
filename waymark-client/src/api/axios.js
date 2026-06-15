@@ -1,7 +1,12 @@
 import axios from "axios";
 
+const API_BASE_URL =
+  window.location.hostname === "localhost"
+    ? "http://localhost:5000/api"
+    : "https://waymark-5a5v.onrender.com/api";
+
 const api = axios.create({
-  baseURL: import.meta.env.VITE_API_BASE_URL || "http://localhost:5000/api",
+  baseURL: API_BASE_URL,
 });
 
 api.interceptors.request.use((config) => {
