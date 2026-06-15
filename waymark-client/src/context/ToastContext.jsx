@@ -1,7 +1,7 @@
 import { AlertCircle, CheckCircle2, Info, X } from "lucide-react";
-import { createContext, useContext, useState } from "react";
+import { useState } from "react";
 
-const ToastContext = createContext(null);
+import ToastContext from "./toastContextCore";
 
 function ToastItem({ toast, onClose }) {
   const styles = {
@@ -29,7 +29,7 @@ function ToastItem({ toast, onClose }) {
 
   return (
     <div
-      className={`w-full rounded-3xl border ${current.border} ${current.bg} bg-white p-4 shadow-xl`}
+      className={`w-full rounded-3xl border ${current.border} ${current.bg} p-4 shadow-xl`}
     >
       <div className="flex items-start gap-3">
         <div className={`mt-0.5 ${current.iconClass}`}>{current.icon}</div>
@@ -97,4 +97,4 @@ export function ToastProvider({ children }) {
   );
 }
 
-export const useToast = () => useContext(ToastContext);
+export default ToastProvider;

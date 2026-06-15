@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { ImageOff, MapPin, Search, UserRound, X } from "lucide-react";
-import { Link } from "react-router-dom";
+import { Link, useSearchParams } from "react-router-dom";
 
 import TopNavbar from "../components/navigation/TopNavbar";
 import MobileBottomNav from "../components/navigation/MobileBottomNav";
@@ -17,7 +17,8 @@ const quickSearches = [
 ];
 
 function Explore() {
-  const [query, setQuery] = useState("");
+  const [searchParams, setSearchParams] = useSearchParams();
+  const query = searchParams.get("q") || "";
   const [users, setUsers] = useState([]);
   const [memories, setMemories] = useState([]);
   const [loading, setLoading] = useState(false);
@@ -29,25 +30,28 @@ function Explore() {
   const handleSearchChange = (e) => {
     const value = e.target.value;
 
-    setQuery(value);
     setActiveTab("all");
 
-    if (!value.trim()) {
+    if (value.trim()) {
+      setSearchParams({ q: value });
+    } else {
+      setSearchParams({});
       setUsers([]);
       setMemories([]);
     }
   };
 
   const handleQuickSearch = (item) => {
-    setQuery(item);
+    setSearchParams({ q: item });
     setActiveTab("all");
   };
 
   const handleClearSearch = () => {
-    setQuery("");
+    setSearchParams({});
     setUsers([]);
     setMemories([]);
     setActiveTab("all");
+    setLoading(false);
   };
 
   useEffect(() => {

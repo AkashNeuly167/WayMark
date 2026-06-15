@@ -18,7 +18,7 @@ import EditProfileModal from "../components/profile/EditProfileModal";
 import { getUserProfile, toggleFollowUser } from "../services/user.service";
 import { getMemories } from "../services/memory.service";
 import { useAuth } from "../context/AuthContext";
-import { useToast } from "../context/ToastContext";
+import { useToast } from "../context/useToast";
 
 function Profile() {
   const { id } = useParams();

@@ -1,36 +1,56 @@
 import { useEffect, useState } from "react";
-import {
-  Bell,
-  Compass,
-  Plus,
-  Search,
-  Settings,
-} from "lucide-react";
-import { Link, useLocation } from "react-router-dom";
+import { Bell, Compass, Plus, Search, Settings } from "lucide-react";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 
 import { getNotifications } from "../../services/notification.service";
+import { NOTIFICATIONS_UPDATED_EVENT } from "../../utils/notificationEvents";
 
 function TopNavbar() {
   const location = useLocation();
+  const navigate = useNavigate();
+
   const [unreadCount, setUnreadCount] = useState(0);
+  const [searchTerm, setSearchTerm] = useState("");
 
   useEffect(() => {
+    let ignore = false;
+
     const fetchUnreadCount = async () => {
       try {
         const data = await getNotifications();
 
         const unread = (data.notifications || []).filter(
-          (notification) => !notification.isRead,
+          (notification) => !notification.isRead
         ).length;
 
-        setUnreadCount(unread);
+        if (!ignore) {
+          setUnreadCount(unread);
+        }
       } catch (error) {
         console.error("Notification badge error:", error);
       }
     };
 
     fetchUnreadCount();
+
+    window.addEventListener(NOTIFICATIONS_UPDATED_EVENT, fetchUnreadCount);
+
+    return () => {
+      ignore = true;
+      window.removeEventListener(NOTIFICATIONS_UPDATED_EVENT, fetchUnreadCount);
+    };
   }, []);
+
+  const handleSearchSubmit = (e) => {
+    e.preventDefault();
+
+    const cleanSearch = searchTerm.trim();
+
+    if (!cleanSearch) return;
+
+    navigate(`/explore?q=${encodeURIComponent(cleanSearch)}`);
+    setSearchTerm("");
+  };
 
   const isActive = (path) => location.pathname === path;
 
@@ -68,13 +88,19 @@ function TopNavbar() {
           </Link>
         </nav>
 
-        <div className="hidden w-[260px] items-center gap-3 rounded-full border border-[#C8D0DA] bg-white px-4 py-2 lg:flex">
+        <form
+          onSubmit={handleSearchSubmit}
+          className="hidden w-[260px] items-center gap-3 rounded-full border border-[#C8D0DA] bg-white px-4 py-2 lg:flex"
+        >
           <Search size={18} className="text-[#002045]/50" />
+
           <input
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
             placeholder="Search destinations..."
-            className="w-full bg-transparent text-sm outline-none placeholder:text-[#002045]/40"
+            className="w-full bg-transparent text-sm text-[#002045] outline-none placeholder:text-[#002045]/40"
           />
-        </div>
+        </form>
 
         <div className="flex items-center gap-4">
           <Link
@@ -91,7 +117,13 @@ function TopNavbar() {
             )}
           </Link>
 
-          <Settings size={20} className="hidden md:block" />
+          <Link
+            to="/settings"
+            className="hidden rounded-full p-2 text-[#002045] transition hover:bg-white hover:text-[#F6AD55] md:block"
+            aria-label="Settings"
+          >
+            <Settings size={20} />
+          </Link>
 
           <Link
             to="/memories/create"

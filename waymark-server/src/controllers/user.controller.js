@@ -11,7 +11,7 @@ export const getMyProfile = async (req, res) => {
   } catch (error) {
     return res.status(500).json({
       success: false,
-      message: "error.message",
+      message: error.message,
     });
   }
 };
@@ -42,7 +42,7 @@ export const updateProfile = async (req, res) => {
   } catch (error) {
     return res.status(500).json({
       success: false,
-      message: "error.message",
+      message: error.message,
     });
   }
 };

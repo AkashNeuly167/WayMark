@@ -14,7 +14,7 @@ import { Link } from "react-router-dom";
 import TopNavbar from "../components/navigation/TopNavbar";
 import MobileBottomNav from "../components/navigation/MobileBottomNav";
 import { getTravelWrapped } from "../services/travelWrapped.service";
-import { useToast } from "../context/ToastContext";
+import { useToast } from "../context/useToast";
 
 function TravelWrapped() {
   const { showToast } = useToast();

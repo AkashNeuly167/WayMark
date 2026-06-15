@@ -8,7 +8,7 @@ import {
 } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 
-import { useToast } from "../context/ToastContext";
+import { useToast } from "../context/useToast";
 import TopNavbar from "../components/navigation/TopNavbar";
 import MobileBottomNav from "../components/navigation/MobileBottomNav";
 import NotificationSkeleton from "../components/ui/NotificationSkeleton";
@@ -17,6 +17,7 @@ import {
   getNotifications,
   markNotificationAsRead,
 } from "../services/notification.service";
+import { notifyNotificationsUpdated } from "../utils/notificationEvents";
 
 function Notifications() {
   const navigate = useNavigate();
@@ -97,6 +98,7 @@ function Notifications() {
             item._id === notification._id ? { ...item, isRead: true } : item
           )
         );
+        notifyNotificationsUpdated();
       }
 
       if (notification.memory?._id) {
@@ -128,6 +130,8 @@ function Notifications() {
           item._id === notificationId ? { ...item, isRead: true } : item
         )
       );
+
+      notifyNotificationsUpdated();
 
       showToast({
         type: "success",

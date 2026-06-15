@@ -18,7 +18,7 @@ import TopNavbar from "../components/navigation/TopNavbar";
 import MobileBottomNav from "../components/navigation/MobileBottomNav";
 
 import { useAuth } from "../context/AuthContext";
-import { useToast } from "../context/ToastContext";
+import { useToast } from "../context/useToast";
 
 import {
   createMemoryComment,
