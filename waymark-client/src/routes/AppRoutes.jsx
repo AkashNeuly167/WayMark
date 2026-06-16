@@ -14,12 +14,13 @@ import ProtectedRoute from "./ProtectedRoute";
 import More from "../pages/More";
 import TravelWrapped from "../pages/TravelWrapped";
 import Settings from "../pages/Settings";
+import Landing from "../pages/Landing";
 
 function AppRoutes() {
   return (
     <Routes>
       {/* Public Routes */}
-      <Route path="/" element={<Navigate to="/feed" />} />
+      <Route path="/" element={<Landing />} />
       <Route path="/login" element={<Login />} />
       <Route path="/register" element={<Register />} />
 
