@@ -1,103 +1,128 @@
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { Plus } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 
-import TopNavbar from "../components/navigation/TopNavbar";
+import DesktopSidebar from "../components/navigation/DesktopSidebar";
+import FeedMobileTopBar from "../components/navigation/FeedMobileTopBar";
 import MobileBottomNav from "../components/navigation/MobileBottomNav";
-import StoriesBar from "../components/feed/StoriesBar";
-import FeaturedMemoryCard from "../components/feed/FeaturedMemoryCard";
 import MemoryCard from "../components/feed/MemoryCard";
 import RightSidebar from "../components/feed/RightSidebar";
 import FeedSkeleton from "../components/ui/FeedSkeleton";
 
 import { getMemories } from "../services/memory.service";
+import { useAuth } from "../context/AuthContext";
 
 function Feed() {
+  const { user } = useAuth();
+  const navigate = useNavigate();
+
   const [memories, setMemories] = useState([]);
   const [loading, setLoading] = useState(true);
 
-  const navigate = useNavigate();
-
   useEffect(() => {
+    let ignore = false;
+
     const fetchMemories = async () => {
       try {
         const data = await getMemories();
-        setMemories(data.memories || []);
+
+        if (!ignore) {
+          setMemories(data.memories || []);
+        }
       } catch (error) {
         console.error("Fetch memories error:", error);
       } finally {
-        setLoading(false);
+        if (!ignore) {
+          setLoading(false);
+        }
       }
     };
 
     fetchMemories();
+
+    return () => {
+      ignore = true;
+    };
   }, []);
 
-  if (loading) {
-    return (
-      <div className="min-h-screen bg-[#F7FAFC] text-[#002045]">
-        <TopNavbar />
+  const featuredMemory = memories[0];
 
-        <main className="mx-auto grid max-w-[1500px] grid-cols-1 gap-10 px-4 pb-36 pt-7 md:px-8 lg:grid-cols-[minmax(0,1fr)_320px] lg:pb-12">
-          <section className="min-w-0">
-            <FeedSkeleton />
-          </section>
-        </main>
+  const gridMemories = useMemo(() => {
+    return memories.slice(1);
+  }, [memories]);
 
-        <MobileBottomNav />
-      </div>
-    );
-  }
+  const firstName =
+    user?.fullName?.split(" ")[0] || user?.username || "Traveler";
+
+  const hour = new Date().getHours();
+  const greeting =
+    hour < 12 ? "Good morning" : hour < 18 ? "Good afternoon" : "Good evening";
 
   return (
     <div className="min-h-screen bg-[#F7FAFC] text-[#002045]">
-      <TopNavbar />
+      <DesktopSidebar />
+      <FeedMobileTopBar />
 
-      <main className="mx-auto grid max-w-[1500px] grid-cols-1 gap-10 px-4 pb-36 pt-7 md:px-8 lg:grid-cols-[minmax(0,1fr)_320px] lg:pb-12">
-        <section className="min-w-0">
-          <div className="mb-8 flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
-            <div>
-              <h1 className="text-3xl font-bold text-[#0A2342] md:text-4xl">
-                Good morning, Akash 👋
-              </h1>
+      <main className="md:ml-64">
+        <div className="mx-auto grid max-w-[1500px] grid-cols-1 gap-10 px-5 pb-28 pt-8 md:px-10 xl:grid-cols-[minmax(0,1fr)_360px]">
+          <section className="min-w-0">
+            <div className="mb-8 flex items-start justify-between gap-5">
+              <div>
+                <h1 className="max-w-[420px] text-4xl font-black leading-tight text-[#1A365D] md:text-5xl">
+                  {greeting}, {firstName}
+                </h1>
 
-              <p className="mt-2 text-gray-500">
-                Ready for your next adventure?
-              </p>
+                <p className="mt-2 text-sm font-medium text-[#002045]/55 md:text-base">
+                  Ready for your next milestone?
+                </p>
+              </div>
+
+              <button
+                type="button"
+                onClick={() => navigate("/memories/create")}
+                className="mt-2 inline-flex shrink-0 items-center justify-center gap-2 rounded-2xl bg-[#F6AD55] px-5 py-4 text-sm font-black text-white shadow-md transition hover:bg-orange-400 md:px-7"
+              >
+                <Plus size={18} />
+                <span className="hidden sm:inline">Share Memory</span>
+                <span className="sm:hidden">Share</span>
+              </button>
             </div>
 
-            <button
-              type="button"
-              onClick={() => navigate("/memories/create")}
-              className="hidden rounded-2xl bg-[#F6AD55] px-6 py-3 font-semibold text-white transition hover:bg-orange-400 md:block"
-            >
-              Share Memory
-            </button>
-          </div>
+            {loading ? (
+              <FeedSkeleton />
+            ) : memories.length === 0 ? (
+              <div className="rounded-[2rem] border border-dashed border-[#D8DEE6] bg-white p-10 text-center shadow-sm">
+                <h2 className="text-2xl font-black">No memories yet</h2>
+                <p className="mt-3 text-[#002045]/60">
+                  Share your first travel memory to start your feed.
+                </p>
 
-          <StoriesBar />
+                <button
+                  type="button"
+                  onClick={() => navigate("/memories/create")}
+                  className="mt-6 rounded-2xl bg-[#F6AD55] px-6 py-3 font-black text-white"
+                >
+                  Share Memory
+                </button>
+              </div>
+            ) : (
+              <div className="space-y-10">
+                {featuredMemory && <MemoryCard memory={featuredMemory} />}
 
-          <div className="mt-10 space-y-10">
-            <FeaturedMemoryCard />
+                {gridMemories.length > 0 && (
+                  <div className="grid grid-cols-1 gap-8 lg:grid-cols-2">
+                    {gridMemories.map((memory) => (
+                      <MemoryCard key={memory._id} memory={memory} />
+                    ))}
+                  </div>
+                )}
+              </div>
+            )}
+          </section>
 
-            <div className="grid grid-cols-1 gap-8 xl:grid-cols-2">
-              {memories.map((memory) => (
-                <MemoryCard key={memory._id} memory={memory} />
-              ))}
-            </div>
-          </div>
-        </section>
-
-        <RightSidebar />
+          <RightSidebar memories={memories} />
+        </div>
       </main>
-
-      <button
-        type="button"
-        onClick={() => navigate("/memories/create")}
-        className="fixed bottom-8 right-8 hidden h-16 w-16 cursor-pointer items-center justify-center rounded-full bg-[#F6AD55] text-white shadow-xl transition hover:scale-110 lg:flex"
-      >
-        <Plus size={30} strokeWidth={2.5} />
-      </button>
 
       <MobileBottomNav />
     </div>
