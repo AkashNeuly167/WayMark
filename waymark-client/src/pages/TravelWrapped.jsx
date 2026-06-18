@@ -11,8 +11,6 @@ import {
 } from "lucide-react";
 import { Link } from "react-router-dom";
 
-import TopNavbar from "../components/navigation/TopNavbar";
-import MobileBottomNav from "../components/navigation/MobileBottomNav";
 import { getTravelWrapped } from "../services/travelWrapped.service";
 import { useToast } from "../context/useToast";
 
@@ -93,9 +91,7 @@ function TravelWrapped() {
 
   return (
     <div className="min-h-screen bg-[#F7FAFC] text-[#002045]">
-      <TopNavbar />
-
-      <main className="mx-auto max-w-6xl px-4 pb-28 pt-8 md:px-8">
+      <main className="mx-auto max-w-6xl px-4 pb-28 pt-8 md:px-8 md:ml-64">
         <section className="overflow-hidden rounded-[32px] border border-[#D8DEE6] bg-white shadow-sm">
           <div className="bg-gradient-to-r from-[#0B132B] via-[#1A365D] to-[#F6AD55] p-8 text-white md:p-12">
             <div className="flex items-start justify-between gap-5">
@@ -281,8 +277,6 @@ function TravelWrapped() {
           </>
         )}
       </main>
-
-      <MobileBottomNav />
     </div>
   );
 }

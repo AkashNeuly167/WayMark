@@ -84,7 +84,7 @@ function Settings() {
   ];
 
   return (
-    <main className="min-h-screen bg-[#F7FAFC] px-4 py-6 pb-28 md:px-8 md:py-10">
+    <main className="min-h-screen bg-[#F7FAFC] px-4 py-6 pb-28 md:px-8 md:ml-64 md:py-10">
       <div className="mx-auto max-w-5xl">
         <div className="mb-8">
           <h1 className="text-3xl font-black text-[#002045] md:text-4xl">

@@ -1,18 +1,17 @@
-import Sidebar from "../components/navigation/Sidebar";
+import DesktopSidebar from "../components/navigation/DesktopSidebar";
+import MobileBottomNav from "../components/navigation/MobileBottomNav";
 
-
-function MainLayout({ children }) {
+const MainLayout = ({children}) => {
   return (
-    <div className="min-h-screen bg-[#0B132B] text-white flex">
-      <Sidebar />
-
-      <main className="flex-1 pb-20 lg:pb-0">
-        {children}
+    <div>
+      <DesktopSidebar />
+      <main>
+      {children}
       </main>
-
       
+      <MobileBottomNav />
     </div>
   );
-}
+};
 
 export default MainLayout;

@@ -10,8 +10,7 @@ import {
   Pencil,
 } from "lucide-react";
 
-import TopNavbar from "../components/navigation/TopNavbar";
-import MobileBottomNav from "../components/navigation/MobileBottomNav";
+
 import ProfileSkeleton from "../components/ui/ProfileSkeleton";
 import EditProfileModal from "../components/profile/EditProfileModal";
 
@@ -104,9 +103,9 @@ function Profile() {
   if (loading) {
     return (
       <div className="min-h-screen bg-[#F7FAFC] text-[#002045]">
-        <TopNavbar />
+        
         <ProfileSkeleton />
-        <MobileBottomNav />
+        
       </div>
     );
   }
@@ -124,8 +123,8 @@ function Profile() {
   if (!profileUser) {
     return (
       <div className="min-h-screen bg-[#F7FAFC] text-[#002045]">
-        <TopNavbar />
-        <main className="flex min-h-[70vh] items-center justify-center px-4">
+        
+        <main className="flex min-h-[70vh] items-center justify-center px-4 ">
           <div className="rounded-3xl border border-[#D8DEE6] bg-white p-8 text-center">
             <h2 className="text-2xl font-bold">User not found</h2>
             <p className="mt-2 text-[#002045]/60">
@@ -133,7 +132,7 @@ function Profile() {
             </p>
           </div>
         </main>
-        <MobileBottomNav />
+        
       </div>
     );
   }
@@ -143,9 +142,9 @@ function Profile() {
 
   return (
     <div className="min-h-screen bg-[#F7FAFC] text-[#002045]">
-      <TopNavbar />
+     
 
-      <main className="mx-auto max-w-6xl px-4 pb-28 pt-8 md:px-8">
+      <main className="mx-auto max-w-6xl px-4 pb-28 pt-8 md:ml-64 md:px-8">
         <section className="overflow-hidden rounded-[32px] border border-[#D8DEE6] bg-white shadow-sm">
           <div className="h-36 bg-gradient-to-r from-[#0B132B] via-[#1A365D] to-[#F6AD55]" />
 
@@ -310,7 +309,7 @@ function Profile() {
     onUpdated={handleProfileUpdated}
   />
 )}
-      <MobileBottomNav />
+      
     </div>
   );
 }

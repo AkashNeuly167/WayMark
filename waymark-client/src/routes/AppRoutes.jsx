@@ -1,4 +1,5 @@
 import { Routes, Route, Navigate } from "react-router-dom";
+import MainLayout from "../layouts/MainLayout";
 
 import Login from "../pages/Login";
 import Register from "../pages/Register";
@@ -29,7 +30,10 @@ function AppRoutes() {
         path="/feed"
         element={
           <ProtectedRoute>
-            <Feed />
+            <MainLayout>
+              <Feed />
+            </MainLayout>
+            
           </ProtectedRoute>
         }
       />
@@ -38,7 +42,10 @@ function AppRoutes() {
         path="/explore"
         element={
           <ProtectedRoute>
-            <Explore />
+            <MainLayout>
+              <Explore />
+            </MainLayout>
+            
           </ProtectedRoute>
         }
       />
@@ -47,7 +54,9 @@ function AppRoutes() {
         path="/journeys"
         element={
           <ProtectedRoute>
+            <MainLayout>
             <Journey />
+            </MainLayout>
           </ProtectedRoute>
         }
       />
@@ -56,7 +65,9 @@ function AppRoutes() {
         path="/bucket-list"
         element={
           <ProtectedRoute>
+            <MainLayout>
             <BucketList />
+            </MainLayout>
           </ProtectedRoute>
         }
       />
@@ -65,7 +76,9 @@ function AppRoutes() {
         path="/memories/create"
         element={
           <ProtectedRoute>
+            <MainLayout>
             <CreateMemory />
+            </MainLayout>
           </ProtectedRoute>
         }
       />
@@ -74,7 +87,9 @@ function AppRoutes() {
         path="/memories/:id"
         element={
           <ProtectedRoute>
+            <MainLayout>
             <MemoryDetail />
+            </MainLayout>
           </ProtectedRoute>
         }
       />
@@ -83,7 +98,9 @@ function AppRoutes() {
         path="/profile/:id"
         element={
           <ProtectedRoute>
+            <MainLayout>
             <Profile />
+            </MainLayout>
           </ProtectedRoute>
         }
       />
@@ -92,7 +109,9 @@ function AppRoutes() {
         path="/notifications"
         element={
           <ProtectedRoute>
+            <MainLayout>
             <Notification />
+            </MainLayout>
           </ProtectedRoute>
         }
       />
@@ -101,7 +120,9 @@ function AppRoutes() {
         path="/more"
         element={
           <ProtectedRoute>
+            <MainLayout>
             <More />
+            </MainLayout>
           </ProtectedRoute>
         }
       />
@@ -110,7 +131,9 @@ function AppRoutes() {
         path="/travel-wrapped"
         element={
           <ProtectedRoute>
+            <MainLayout>
             <TravelWrapped />
+            </MainLayout>
           </ProtectedRoute>
         }
       />
@@ -119,7 +142,9 @@ function AppRoutes() {
         path="/settings"
         element={
           <ProtectedRoute>
+            <MainLayout>
             <Settings />
+            </MainLayout>
           </ProtectedRoute>
         }
       />

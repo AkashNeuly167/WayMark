@@ -9,9 +9,6 @@ import {
   Sparkles,
 } from "lucide-react";
 
-import TopNavbar from "../components/navigation/TopNavbar";
-import MobileBottomNav from "../components/navigation/MobileBottomNav";
-
 import { getMemories } from "../services/memory.service";
 import { useAuth } from "../context/AuthContext";
 import { useToast } from "../context/useToast";
@@ -65,9 +62,9 @@ function Journey() {
 
   const loading = journeyData === null;
 
-const memories = useMemo(() => {
-  return journeyData || [];
-}, [journeyData]);
+  const memories = useMemo(() => {
+    return journeyData || [];
+  }, [journeyData]);
 
   const journeyGroups = useMemo(() => {
     const grouped = memories.reduce((acc, memory) => {
@@ -104,9 +101,7 @@ const memories = useMemo(() => {
 
   return (
     <div className="min-h-screen bg-[#F7FAFC] text-[#002045]">
-      <TopNavbar />
-
-      <main className="mx-auto max-w-6xl px-4 pb-28 pt-8 md:px-8">
+      <main className="mx-auto max-w-6xl px-4 pb-28 pt-8 md:px-8 md:ml-64">
         <section className="mb-8 overflow-hidden rounded-[32px] border border-[#D8DEE6] bg-white shadow-sm">
           <div className="bg-gradient-to-r from-[#0B132B] via-[#1A365D] to-[#F6AD55] p-8 text-white md:p-10">
             <div className="flex h-16 w-16 items-center justify-center rounded-3xl bg-white/15 backdrop-blur">
@@ -260,8 +255,6 @@ const memories = useMemo(() => {
           </div>
         )}
       </main>
-
-      <MobileBottomNav />
     </div>
   );
 }

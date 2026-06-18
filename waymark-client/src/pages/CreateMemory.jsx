@@ -15,8 +15,7 @@ import { MapContainer, Marker, TileLayer, useMapEvents } from "react-leaflet";
 import L from "leaflet";
 
 import api from "../api/axios";
-import DesktopSidebar from "../components/navigation/DesktopSidebar";
-import MobileBottomNav from "../components/navigation/MobileBottomNav";
+
 
 delete L.Icon.Default.prototype._getIconUrl;
 
@@ -192,8 +191,6 @@ function CreateMemory() {
 
   return (
     <div className="min-h-screen bg-[#F7FAFC] text-[#002045]">
-      <DesktopSidebar />
-
       <main className="mx-auto max-w-[1280px] px-4 pb-36 pt-6 md:ml-64 md:px-8 md:pb-28 md:pt-8">
         <div className="mb-6 flex flex-col gap-4 md:mb-8 md:flex-row md:items-end md:justify-between">
           <div>
@@ -317,7 +314,10 @@ function CreateMemory() {
                 handleMapPick={handleMapPick}
               />
 
-              <MetadataSection formData={formData} handleChange={handleChange} />
+              <MetadataSection
+                formData={formData}
+                handleChange={handleChange}
+              />
 
               <ActivitySection
                 selectedActivities={selectedActivities}
@@ -355,12 +355,16 @@ function CreateMemory() {
         </form>
       </main>
 
-      <MobileBottomNav />
     </div>
   );
 }
 
-function StorySection({ formData, handleChange, selectedMood, setSelectedMood }) {
+function StorySection({
+  formData,
+  handleChange,
+  selectedMood,
+  setSelectedMood,
+}) {
   return (
     <section className="rounded-[2rem] border border-[#D8DEE6] bg-white p-5 shadow-[0_10px_25px_rgba(26,54,93,0.05)] md:p-8">
       <div className="mb-8">
@@ -438,12 +442,7 @@ function StorySection({ formData, handleChange, selectedMood, setSelectedMood })
   );
 }
 
-function GallerySection({
-  images,
-  uploading,
-  handleImageUpload,
-  removeImage,
-}) {
+function GallerySection({ images, uploading, handleImageUpload, removeImage }) {
   return (
     <section className="rounded-[2rem] border border-[#D8DEE6] bg-white p-5 shadow-[0_10px_25px_rgba(26,54,93,0.05)] md:p-8">
       <label className="mb-4 block text-xs font-black uppercase tracking-widest text-[#1A365D]">

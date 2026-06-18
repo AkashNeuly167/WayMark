@@ -14,8 +14,8 @@ import {
 import EditMemoryModal from "../components/memory/EditMemoryModal";
 import ConfirmDialog from "../components/ui/ConfirmDialog";
 import MemoryDetailSkeleton from "../components/ui/MemoryDetailSkeleton";
-import TopNavbar from "../components/navigation/TopNavbar";
-import MobileBottomNav from "../components/navigation/MobileBottomNav";
+
+
 
 import { useAuth } from "../context/AuthContext";
 import { useToast } from "../context/useToast";
@@ -251,9 +251,9 @@ function MemoryDetail() {
   if (loading) {
     return (
       <div className="min-h-screen bg-[#F7FAFC] text-[#002045]">
-        <TopNavbar />
+        
         <MemoryDetailSkeleton />
-        <MobileBottomNav />
+        
       </div>
     );
   }
@@ -297,9 +297,9 @@ function MemoryDetail() {
       />
 
       <div className="min-h-screen bg-[#F7FAFC] text-[#002045]">
-        <TopNavbar />
+        
 
-        <main className="mx-auto max-w-6xl px-4 pb-28 pt-8 md:px-8">
+        <main className="mx-auto max-w-6xl px-4 pb-28 pt-8 md:ml-64 md:px-8">
           {error && (
             <div className="mb-6 rounded-2xl border border-red-200 bg-red-50 px-5 py-4 text-red-600">
               {error}
@@ -495,7 +495,7 @@ function MemoryDetail() {
           />
         )}
 
-        <MobileBottomNav />
+        
       </div>
     </>
   );

@@ -1,10 +1,7 @@
 import { useEffect, useMemo, useState } from "react";
 import { Plus } from "lucide-react";
 import { useNavigate } from "react-router-dom";
-
-import DesktopSidebar from "../components/navigation/DesktopSidebar";
 import FeedMobileTopBar from "../components/navigation/FeedMobileTopBar";
-import MobileBottomNav from "../components/navigation/MobileBottomNav";
 import MemoryCard from "../components/feed/MemoryCard";
 import RightSidebar from "../components/feed/RightSidebar";
 import FeedSkeleton from "../components/ui/FeedSkeleton";
@@ -60,7 +57,7 @@ function Feed() {
 
   return (
     <div className="min-h-screen bg-[#F7FAFC] text-[#002045]">
-      <DesktopSidebar />
+      
       <FeedMobileTopBar />
 
       <main className="md:ml-64">
@@ -123,8 +120,6 @@ function Feed() {
           <RightSidebar memories={memories} />
         </div>
       </main>
-
-      <MobileBottomNav />
     </div>
   );
 }

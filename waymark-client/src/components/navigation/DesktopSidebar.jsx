@@ -1,4 +1,14 @@
-import { Compass, Home, Map, Search, SquarePen, } from "lucide-react";
+import {
+  BarChart3,
+  Bell,
+  Compass,
+  Home,
+  List,
+  Map,
+  Search,
+  Settings,
+  SquarePen,
+} from "lucide-react";
 import { Link, useLocation } from "react-router-dom";
 import { useAuth } from "../../context/AuthContext";
 
@@ -10,11 +20,19 @@ function DesktopSidebar() {
     { label: "Feed", path: "/feed", icon: Home },
     { label: "Explore", path: "/explore", icon: Search },
     { label: "Journeys", path: "/journeys", icon: Map },
-    { label: "Passport", path: "/profile/me", icon: Compass },
-    { label: "Create", path: "/memories/create", icon: SquarePen }
+    { label: "Notifications", path: "/notifications", icon: Bell },
+    { label: "Create", path: "/memories/create", icon: SquarePen },
+    { label: "Bucket List", path: "/bucket-list", icon: List },
+    { label: "Travel Wrapped", path: "/travel-wrapped", icon: BarChart3 },
+    { label: "Settings", path: "/settings", icon: Settings },
   ];
 
   const isActive = (path) => location.pathname === path;
+
+  const profileName = user?.fullName || user?.username || "Waymark Traveler";
+  const profileInitial = (user?.username || user?.fullName || "W")
+    .charAt(0)
+    .toUpperCase();
 
   return (
     <aside className="fixed left-0 top-0 z-50 hidden h-screen w-64 flex-col bg-[#002045] p-6 text-white md:flex">
@@ -49,19 +67,26 @@ function DesktopSidebar() {
         })}
       </nav>
 
-      <div className="border-t border-white/10 pt-6">
-        <div className="flex items-center gap-3">
-          <div className="grid h-11 w-11 place-items-center rounded-full border-2 border-[#F6AD55] bg-white/10 font-black text-white">
-            {(user?.username || user?.fullName || "W").charAt(0).toUpperCase()}
+      <div className="space-y-3 border-t border-white/10 pt-5">
+        <Link
+          to="/profile/me"
+          className={`flex items-center gap-3 rounded-2xl p-3 transition ${
+            isActive("/profile/me") ? "bg-white/10" : "hover:bg-white/10"
+          }`}
+        >
+          <div className="grid h-11 w-11 shrink-0 place-items-center rounded-full border-2 border-[#F6AD55] bg-white/10 font-black text-white">
+            {profileInitial}
           </div>
 
           <div className="min-w-0">
-            <p className="truncate text-sm font-black">
-              {user?.fullName || user?.username || "Waymark Traveler"}
+            <p className="truncate text-sm font-black text-white">
+              {profileName}
             </p>
-            <p className="text-xs text-white/50">Pro Explorer</p>
+            <p className="text-xs text-white/50">View Profile</p>
           </div>
-        </div>
+
+          <Compass size={18} className="ml-auto text-white/45" />
+        </Link>
       </div>
     </aside>
   );
