@@ -1,7 +1,7 @@
 import { useEffect, useMemo, useState } from "react";
 import { Plus } from "lucide-react";
 import { useNavigate } from "react-router-dom";
-
+import CommentsSheet from "../components/comments/CommentsSheet";
 import FeedMobileTopBar from "../components/navigation/FeedMobileTopBar";
 import MemoryCard from "../components/feed/MemoryCard";
 import RightSidebar from "../components/feed/RightSidebar";
@@ -17,6 +17,8 @@ function Feed() {
   const [activeTab, setActiveTab] = useState("discover");
   const [memories, setMemories] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [commentsOpen, setCommentsOpen] = useState(false);
+  const [selectedMemory, setSelectedMemory] = useState(null);
 
   useEffect(() => {
     let ignore = false;
@@ -73,6 +75,19 @@ function Feed() {
     activeTab === "following"
       ? "Follow travelers to see their memories here."
       : "Share your first travel memory to start your feed.";
+
+  const openComments = (memory) => {
+    setSelectedMemory(memory);
+    setCommentsOpen(true);
+  };
+
+  const handleCommentCountChange = (memoryId, count) => {
+    setMemories((prev) =>
+      prev.map((memory) =>
+        memory._id === memoryId ? { ...memory, commentsCount: count } : memory,
+      ),
+    );
+  };
 
   return (
     <div className="min-h-screen bg-[#F7FAFC] text-[#002045]">
@@ -148,17 +163,28 @@ function Feed() {
                   }
                   className="mt-6 rounded-2xl bg-[#F6AD55] px-6 py-3 font-black text-white"
                 >
-                  {activeTab === "following" ? "Explore Travelers" : "Share Memory"}
+                  {activeTab === "following"
+                    ? "Explore Travelers"
+                    : "Share Memory"}
                 </button>
               </div>
             ) : (
               <div className="space-y-10">
-                {featuredMemory && <MemoryCard memory={featuredMemory} />}
+                {featuredMemory && (
+                  <MemoryCard
+                    memory={featuredMemory}
+                    onCommentClick={openComments}
+                  />
+                )}
 
                 {gridMemories.length > 0 && (
                   <div className="grid grid-cols-1 gap-8 lg:grid-cols-2">
                     {gridMemories.map((memory) => (
-                      <MemoryCard key={memory._id} memory={memory} />
+                      <MemoryCard
+                        key={memory._id}
+                        memory={memory}
+                        onCommentClick={openComments}
+                      />
                     ))}
                   </div>
                 )}
@@ -169,6 +195,12 @@ function Feed() {
           <RightSidebar memories={memories} />
         </div>
       </main>
+      <CommentsSheet
+        open={commentsOpen}
+        memory={selectedMemory}
+        onClose={() => setCommentsOpen(false)}
+        onCommentCountChange={handleCommentCountChange}
+      />
     </div>
   );
 }

@@ -18,7 +18,7 @@ import {
 } from "../../services/bookmark.service";
 import { useAuth } from "../../context/AuthContext";
 
-function MemoryCard({ memory }) {
+function MemoryCard({ memory , onCommentClick }) {
   const navigate = useNavigate();
   const { user } = useAuth();
 
@@ -125,14 +125,19 @@ function MemoryCard({ memory }) {
     }
   };
 
-  const handleCommentClick = (e) => {
-    e.preventDefault();
-    e.stopPropagation();
+ const handleCommentClick = (e) => {
+  e.preventDefault();
+  e.stopPropagation();
 
-    navigate(`/memories/${memory._id}#comments`, {
-      state: { focusComment: true },
-    });
-  };
+  if (onCommentClick) {
+    onCommentClick(memory);
+    return;
+  }
+
+  navigate(`/memories/${memory._id}#comments`, {
+    state: { focusComment: true },
+  });
+};
 
   const handleBookmark = async (e) => {
     e.preventDefault();
