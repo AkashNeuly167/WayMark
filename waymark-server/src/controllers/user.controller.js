@@ -1,7 +1,8 @@
 import User from "../models/User.js";
 import Notification from "../models/Notification.js";
+import cloudinary from "../config/cloudinary.js";
 
-// Get user profile
+
 export const getMyProfile = async (req, res) => {
   try {
     return res.status(200).json({
@@ -16,7 +17,7 @@ export const getMyProfile = async (req, res) => {
   }
 };
 
-// Update user profile
+
 export const updateProfile = async (req, res) => {
   try {
     const { fullName, bio, country, website } = req.body;
@@ -70,6 +71,111 @@ export const getUserProfile = async (req, res) => {
   }
 };
 
+export const updateAvatar = async (req, res) => {
+  try {
+    const { url, publicId } = req.body;
+
+    const userId = req.user?._id || req.user?.id;
+
+    if (!userId) {
+      return res.status(401).json({
+        success: false,
+        message: "User id not found",
+      });
+    }
+
+    if (!url || !publicId) {
+      return res.status(400).json({
+        success: false,
+        message: "Avatar url and publicId are required",
+      });
+    }
+
+    const currentUser = await User.findById(userId);
+
+    if (!currentUser) {
+      return res.status(404).json({
+        success: false,
+        message: "User not found",
+      });
+    }
+
+    if (currentUser.avatar?.publicId) {
+      await cloudinary.uploader.destroy(currentUser.avatar.publicId);
+    }
+
+    currentUser.avatar = {
+      url,
+      publicId,
+    };
+
+    await currentUser.save();
+
+    const updatedUser = await User.findById(userId).select("-password");
+
+    return res.status(200).json({
+      success: true,
+      message: "Avatar updated successfully",
+      user: updatedUser,
+    });
+  } catch (error) {
+    console.error("Update avatar error:", error);
+
+    return res.status(500).json({
+      success: false,
+      message: error.message,
+    });
+  }
+};
+
+export const deleteAvatar = async (req, res) => {
+  try {
+    const userId = req.user?._id || req.user?.id;
+
+    if (!userId) {
+      return res.status(401).json({
+        success: false,
+        message: "User id not found",
+      });
+    }
+
+    const currentUser = await User.findById(userId);
+
+    if (!currentUser) {
+      return res.status(404).json({
+        success: false,
+        message: "User not found",
+      });
+    }
+
+    if (currentUser.avatar?.publicId) {
+      await cloudinary.uploader.destroy(currentUser.avatar.publicId);
+    }
+
+    currentUser.avatar = {
+      url: "",
+      publicId: "",
+    };
+
+    await currentUser.save();
+
+    const updatedUser = await User.findById(userId).select("-password");
+
+    return res.status(200).json({
+      success: true,
+      message: "Avatar deleted successfully",
+      user: updatedUser,
+    });
+  } catch (error) {
+    console.error("Delete avatar error:", error);
+
+    return res.status(500).json({
+      success: false,
+      message: error.message,
+    });
+  }
+};
+
 export const toggleFollowUser = async (req, res) => {
   try {
     const currentUser = await User.findById(req.user._id);
@@ -90,16 +196,16 @@ export const toggleFollowUser = async (req, res) => {
     }
 
     const alreadyFollowing = currentUser.following.some(
-      (id) => id.toString() === targetUser._id.toString()
+      (id) => id.toString() === targetUser._id.toString(),
     );
 
     if (alreadyFollowing) {
       currentUser.following = currentUser.following.filter(
-        (id) => id.toString() !== targetUser._id.toString()
+        (id) => id.toString() !== targetUser._id.toString(),
       );
 
       targetUser.followers = targetUser.followers.filter(
-        (id) => id.toString() !== currentUser._id.toString()
+        (id) => id.toString() !== currentUser._id.toString(),
       );
 
       await currentUser.save();

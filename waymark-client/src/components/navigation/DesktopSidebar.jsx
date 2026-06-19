@@ -74,8 +74,16 @@ function DesktopSidebar() {
             isActive("/profile/me") ? "bg-white/10" : "hover:bg-white/10"
           }`}
         >
-          <div className="grid h-11 w-11 shrink-0 place-items-center rounded-full border-2 border-[#F6AD55] bg-white/10 font-black text-white">
-            {profileInitial}
+          <div className="grid h-11 w-11 shrink-0 place-items-center overflow-hidden rounded-full border-2 border-[#F6AD55] bg-white/10 font-black text-white">
+            {user?.avatar?.url ? (
+              <img
+                src={user.avatar.url}
+                alt={profileName}
+                className="h-full w-full object-cover"
+              />
+            ) : (
+              profileInitial
+            )}
           </div>
 
           <div className="min-w-0">

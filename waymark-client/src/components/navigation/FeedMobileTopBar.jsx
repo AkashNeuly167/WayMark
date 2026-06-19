@@ -5,6 +5,15 @@ import { useAuth } from "../../context/AuthContext";
 function FeedMobileTopBar() {
   const { user } = useAuth();
 
+  const profileName = user?.fullName || user?.username || "Waymark Traveler";
+
+  const profileInitial = (user?.username || user?.fullName || "W")
+    .charAt(0)
+    .toUpperCase();
+
+  const avatarUrl =
+    typeof user?.avatar === "string" ? user.avatar : user?.avatar?.url;
+
   return (
     <header className="sticky top-0 z-40 flex h-16 items-center justify-between border-b border-[#DDE3EA] bg-[#F7FAFC]/95 px-5 backdrop-blur md:hidden">
       <Link to="/feed" className="text-2xl font-black text-[#002045]">
@@ -18,9 +27,17 @@ function FeedMobileTopBar() {
 
         <Link
           to="/profile/me"
-          className="grid h-9 w-9 place-items-center rounded-full bg-[#1A365D] text-sm font-black text-white"
+          className="grid h-9 w-9 place-items-center overflow-hidden rounded-full border-2 border-[#F6AD55] bg-[#1A365D] text-sm font-black text-white"
         >
-          {(user?.username || user?.fullName || "W").charAt(0).toUpperCase()}
+          {avatarUrl ? (
+            <img
+              src={avatarUrl}
+              alt={profileName}
+              className="h-full w-full object-cover"
+            />
+          ) : (
+            profileInitial
+          )}
         </Link>
       </div>
     </header>

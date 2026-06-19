@@ -15,6 +15,16 @@ export const updateMyProfile = async (profileData) => {
   return response.data;
 };
 
+export const updateAvatar = async (avatarData) => {
+  const response = await api.patch(`/users/me/avatar`, avatarData);
+  return response.data;
+};
+
+export const deleteAvatar = async () => {
+  const response = await api.delete(`/users/me/avatar`);
+  return response.data;
+};
+
 export const toggleFollowUser = async (id) => {
   const response = await api.patch(`/users/${id}/follow`);
   return response.data;
