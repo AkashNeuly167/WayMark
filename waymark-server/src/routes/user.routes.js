@@ -8,6 +8,8 @@ import {
   toggleFollowUser,
   updateAvatar,
   deleteAvatar,
+  updateCoverImage,
+  deleteCoverImage,
 } from "../controllers/user.controller.js";
 
 const router = express.Router();
@@ -114,6 +116,88 @@ router.patch("/me/avatar", protect, updateAvatar);
  *         description: Unauthorized
  */
 router.delete("/me/avatar", protect, deleteAvatar);
+
+/**
+ * @swagger
+ * /api/users/me/cover:
+ *   patch:
+ *     summary: Update current user's cover image
+ *     tags:
+ *       - Users
+ *     security:
+ *       - bearerAuth: []
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             required:
+ *               - url
+ *               - publicId
+ *             properties:
+ *               url:
+ *                 type: string
+ *                 example: https://res.cloudinary.com/demo/image/upload/v123/cover.jpg
+ *               publicId:
+ *                 type: string
+ *                 example: waymark/covers/cover_123
+ *     responses:
+ *       200:
+ *         description: Cover image updated successfully
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: true
+ *                 message:
+ *                   type: string
+ *                   example: Cover image updated successfully
+ *                 user:
+ *                   type: object
+ *       400:
+ *         description: Cover image url and publicId are required
+ *       401:
+ *         description: Unauthorized
+ *       404:
+ *         description: User not found
+ */
+router.patch("/me/cover", protect, updateCoverImage);
+
+/**
+ * @swagger
+ * /api/users/me/cover:
+ *   delete:
+ *     summary: Delete current user's cover image
+ *     tags:
+ *       - Users
+ *     security:
+ *       - bearerAuth: []
+ *     responses:
+ *       200:
+ *         description: Cover image removed successfully
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: true
+ *                 message:
+ *                   type: string
+ *                   example: Cover image removed successfully
+ *                 user:
+ *                   type: object
+ *       401:
+ *         description: Unauthorized
+ *       404:
+ *         description: User not found
+ */
+router.delete("/me/cover", protect, deleteCoverImage);
 
 // public profile
 /**

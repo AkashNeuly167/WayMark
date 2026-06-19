@@ -27,6 +27,8 @@ import {
   getUserProfile,
   toggleFollowUser,
   updateAvatar,
+  updateCoverImage,
+  deleteCoverImage,
 } from "../services/user.service";
 import { getMemories } from "../services/memory.service";
 import { getSavedMemories } from "../services/bookmark.service";
@@ -51,6 +53,7 @@ function Profile() {
   const [followLoading, setFollowLoading] = useState(false);
   const [avatarLoading, setAvatarLoading] = useState(false);
   const [activeTab, setActiveTab] = useState("memories");
+  const [coverLoading, setCoverLoading] = useState(false);
 
   useEffect(() => {
     const fetchProfile = async () => {
@@ -107,8 +110,15 @@ function Profile() {
     return followerId?.toString() === currentUserId?.toString();
   });
 
-  const coverImage =
+  const coverUrl =
+    typeof profileUser?.coverImage === "string"
+      ? profileUser.coverImage
+      : profileUser?.coverImage?.url;
+
+  const fallbackCoverImage =
     userMemories[0]?.images?.[0]?.url || userMemories[0]?.images?.[0] || "";
+
+  const coverImage = coverUrl || fallbackCoverImage;
 
   const displayedMemories =
     activeTab === "saved" ? savedMemories : userMemories;
@@ -274,6 +284,97 @@ function Profile() {
     }
   };
 
+  const handleCoverUpload = async (e) => {
+    const file = e.target.files?.[0];
+
+    if (!file || coverLoading) return;
+
+    const uploadData = new FormData();
+    uploadData.append("images", file);
+
+    try {
+      setCoverLoading(true);
+
+      const uploadRes = await api.post("/upload/images", uploadData, {
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
+      });
+
+      const uploadedImage = uploadRes.data.images?.[0];
+
+      if (!uploadedImage) {
+        throw new Error("Cover image upload failed");
+      }
+
+      const coverPayload = {
+        url: uploadedImage.url || uploadedImage.secure_url || uploadedImage,
+        publicId: uploadedImage.publicId || uploadedImage.public_id,
+      };
+
+      if (!coverPayload.url || !coverPayload.publicId) {
+        throw new Error("Uploaded cover is missing url or publicId");
+      }
+
+      const coverRes = await updateCoverImage(coverPayload);
+      const updatedUser = coverRes.user;
+
+      setProfileUser(updatedUser);
+      updateUser?.(updatedUser);
+
+      showToast({
+        type: "success",
+        title: "Cover updated",
+        message: "Your profile cover was updated successfully.",
+      });
+    } catch (error) {
+      console.error("Cover upload error:", error);
+
+      showToast({
+        type: "error",
+        title: "Upload failed",
+        message:
+          error.response?.data?.message ||
+          error.message ||
+          "Could not update cover image.",
+      });
+    } finally {
+      setCoverLoading(false);
+      e.target.value = "";
+    }
+  };
+
+  const handleCoverDelete = async () => {
+    if (coverLoading || !coverUrl) return;
+
+    try {
+      setCoverLoading(true);
+
+      const coverRes = await deleteCoverImage();
+      const updatedUser = coverRes.user;
+
+      setProfileUser(updatedUser);
+      updateUser?.(updatedUser);
+
+      showToast({
+        type: "success",
+        title: "Cover removed",
+        message: "Your profile cover was removed.",
+      });
+    } catch (error) {
+      console.error("Cover delete error:", error);
+
+      showToast({
+        type: "error",
+        title: "Delete failed",
+        message:
+          error.response?.data?.message || "Could not remove cover image.",
+      });
+    } finally {
+      setCoverLoading(false);
+    }
+  };
+
   if (loading) {
     return (
       <div className="min-h-screen bg-[#F7FAFC] text-[#002045]">
@@ -302,6 +403,38 @@ function Profile() {
       <main className="pb-28 md:ml-64">
         <section className="relative overflow-hidden">
           <div className="relative h-56 overflow-hidden md:min-h-[600px]">
+            {isOwnProfile && (
+              <div className="absolute right-4 top-4 z-10 flex gap-2 md:right-8 md:top-8">
+                <label className="inline-flex cursor-pointer items-center gap-2 rounded-full border border-white/20 bg-white/15 px-4 py-2 text-xs font-black text-white backdrop-blur transition hover:bg-white/25">
+                  {coverLoading ? (
+                    <Loader2 size={15} className="animate-spin" />
+                  ) : (
+                    <Camera size={15} />
+                  )}
+                  {coverUrl ? "Change cover" : "Add cover"}
+
+                  <input
+                    type="file"
+                    accept="image/*"
+                    onChange={handleCoverUpload}
+                    disabled={coverLoading}
+                    className="hidden"
+                  />
+                </label>
+
+                {coverUrl && (
+                  <button
+                    type="button"
+                    onClick={handleCoverDelete}
+                    disabled={coverLoading}
+                    className="inline-flex items-center gap-2 rounded-full border border-white/20 bg-white/15 px-4 py-2 text-xs font-black text-white backdrop-blur transition hover:bg-red-500 disabled:opacity-60"
+                  >
+                    <Trash2 size={15} />
+                    Remove
+                  </button>
+                )}
+              </div>
+            )}
             {coverImage ? (
               <img
                 src={coverImage}

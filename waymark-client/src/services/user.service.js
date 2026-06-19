@@ -29,3 +29,14 @@ export const toggleFollowUser = async (id) => {
   const response = await api.patch(`/users/${id}/follow`);
   return response.data;
 };
+
+export const updateCoverImage = async(coverData)=> {
+       const response  = await api.patch(`/users/me/cover` , coverData);
+       return response.data;
+};
+
+export const deleteCoverImage = async () => {
+  const response = await api.delete(`/users/me/cover`);
+  return response.data;
+};
+

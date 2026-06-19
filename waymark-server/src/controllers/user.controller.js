@@ -244,3 +244,99 @@ export const toggleFollowUser = async (req, res) => {
     });
   }
 };
+
+export const updateCoverImage = async (req, res) => {
+  try {
+    const { url, publicId } = req.body;
+    const userId = req.user?._id || req.user?.id;
+
+    if (!userId) {
+      return res.status(401).json({
+        success: false,
+        message: "User id not found",
+      });
+    }
+
+    if (!url || !publicId) {
+      return res.status(400).json({
+        success: false,
+        message: "Cover image url and publicId are required",
+      });
+    }
+
+    const currentUser = await User.findById(userId);
+
+    if (!currentUser) {
+      return res.status(404).json({
+        success: false,
+        message: "User not found",
+      });
+    }
+
+    if (currentUser.coverImage?.publicId) {
+      await cloudinary.uploader.destroy(currentUser.coverImage.publicId);
+    }
+
+    currentUser.coverImage = { url, publicId };
+    await currentUser.save();
+
+    const updatedUser = await User.findById(userId).select("-password");
+
+    return res.status(200).json({
+      success: true,
+      message: "Cover image updated successfully",
+      user: updatedUser,
+    });
+  } catch (error) {
+    console.error("Update cover image error:", error);
+
+    return res.status(500).json({
+      success: false,
+      message: error.message,
+    });
+  }
+};
+
+export const deleteCoverImage = async (req, res) => {
+  try {
+    const userId = req.user?._id || req.user?.id;
+
+    if (!userId) {
+      return res.status(401).json({
+        success: false,
+        message: "User id not found",
+      });
+    }
+
+    const currentUser = await User.findById(userId);
+
+    if (!currentUser) {
+      return res.status(404).json({
+        success: false,
+        message: "User not found",
+      });
+    }
+
+    if (currentUser.coverImage?.publicId) {
+      await cloudinary.uploader.destroy(currentUser.coverImage.publicId);
+    }
+
+    currentUser.coverImage = { url: "", publicId: "" };
+    await currentUser.save();
+
+    const updatedUser = await User.findById(userId).select("-password");
+
+    return res.status(200).json({
+      success: true,
+      message: "Cover image removed successfully",
+      user: updatedUser,
+    });
+  } catch (error) {
+    console.error("Delete cover image error:", error);
+
+    return res.status(500).json({
+      success: false,
+      message: error.message,
+    });
+  }
+};
