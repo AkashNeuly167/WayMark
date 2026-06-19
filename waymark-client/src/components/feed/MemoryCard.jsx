@@ -1,4 +1,4 @@
-import { useCallback, useState } from "react";
+import { useEffect, useState } from "react";
 import {
   Bookmark,
   Calendar,
@@ -11,6 +11,11 @@ import {
 import { useNavigate } from "react-router-dom";
 
 import { toggleLikeMemory } from "../../services/memory.service";
+import {
+  getSavedMemoryIds,
+  saveMemory,
+  unsaveMemory,
+} from "../../services/bookmark.service";
 import { useAuth } from "../../context/AuthContext";
 
 function MemoryCard({ memory }) {
@@ -22,29 +27,40 @@ function MemoryCard({ memory }) {
 
   const userId = user?._id || user?.id;
   const image = memory.images?.[0]?.url || memory.images?.[0];
-  const avatarUrl = memory.author?.avatar?.url || memory.author?.avatar;
+  const avatarUrl =
+    typeof memory.author?.avatar === "string"
+      ? memory.author.avatar
+      : memory.author?.avatar?.url;
 
   const alreadyLiked = memory.likes?.some((like) => {
     const likeId = typeof like === "string" ? like : like?._id;
     return likeId?.toString() === userId?.toString();
   });
 
-  const getStoredBookmarks = useCallback(() => {
-    try {
-      return JSON.parse(localStorage.getItem("waymark_bookmarks")) || [];
-    } catch {
-      return [];
-    }
-  }, []);
-
   const [liked, setLiked] = useState(alreadyLiked || false);
   const [likesCount, setLikesCount] = useState(memory.likes?.length || 0);
   const [likeLoading, setLikeLoading] = useState(false);
   const [likeAnimating, setLikeAnimating] = useState(false);
 
-  const [bookmarked, setBookmarked] = useState(() =>
-    getStoredBookmarks().includes(memory._id)
-  );
+  const [bookmarked, setBookmarked] = useState(false);
+  const [bookmarkLoading, setBookmarkLoading] = useState(false);
+
+  useEffect(() => {
+    const fetchSavedStatus = async () => {
+      if (!memory?._id || !userId) return;
+
+      try {
+        const data = await getSavedMemoryIds();
+        const savedIds = data.savedMemoryIds || [];
+
+        setBookmarked(savedIds.includes(memory._id));
+      } catch (error) {
+        console.error("Fetch bookmark status error:", error);
+      }
+    };
+
+    fetchSavedStatus();
+  }, [memory?._id, userId]);
 
   const authorName =
     memory.author?.fullName || memory.author?.username || "WayMark Traveler";
@@ -118,18 +134,29 @@ function MemoryCard({ memory }) {
     });
   };
 
-  const handleBookmark = (e) => {
+  const handleBookmark = async (e) => {
     e.preventDefault();
     e.stopPropagation();
 
-    const bookmarks = getStoredBookmarks();
+    if (bookmarkLoading || !memory?._id) return;
 
-    const updatedBookmarks = bookmarked
-      ? bookmarks.filter((id) => id !== memory._id)
-      : [...new Set([...bookmarks, memory._id])];
+    const previousBookmarked = bookmarked;
 
-    localStorage.setItem("waymark_bookmarks", JSON.stringify(updatedBookmarks));
-    setBookmarked(!bookmarked);
+    try {
+      setBookmarkLoading(true);
+      setBookmarked(!previousBookmarked);
+
+      if (previousBookmarked) {
+        await unsaveMemory(memory._id);
+      } else {
+        await saveMemory(memory._id);
+      }
+    } catch (error) {
+      console.error("Bookmark error:", error);
+      setBookmarked(previousBookmarked);
+    } finally {
+      setBookmarkLoading(false);
+    }
   };
 
   return (
@@ -169,7 +196,8 @@ function MemoryCard({ memory }) {
         <button
           type="button"
           onClick={handleBookmark}
-          className={`absolute right-4 top-4 grid h-11 w-11 place-items-center rounded-full border border-white/25 shadow-lg backdrop-blur-md transition ${
+          disabled={bookmarkLoading}
+          className={`absolute right-4 top-4 grid h-11 w-11 place-items-center rounded-full border border-white/25 shadow-lg backdrop-blur-md transition disabled:opacity-60 ${
             bookmarked
               ? "bg-orange-500 text-white"
               : "bg-black/25 text-white hover:bg-white/20"
@@ -204,7 +232,6 @@ function MemoryCard({ memory }) {
                 src={avatarUrl}
                 alt={authorName}
                 className="h-11 w-11 rounded-2xl object-cover ring-2 ring-slate-100"
-                onError={() => setImageError(false)}
               />
             ) : (
               <div className="grid h-11 w-11 place-items-center rounded-2xl bg-gradient-to-br from-[#1A365D] to-[#002045] text-sm font-black text-white shadow-md">
@@ -226,7 +253,10 @@ function MemoryCard({ memory }) {
         {(memory.locationName || memory.city || memory.country) && (
           <div className="mb-4 rounded-2xl bg-orange-50 px-4 py-3">
             <div className="flex items-start gap-2">
-              <Navigation size={16} className="mt-0.5 shrink-0 text-orange-500" />
+              <Navigation
+                size={16}
+                className="mt-0.5 shrink-0 text-orange-500"
+              />
 
               <div className="min-w-0">
                 <p className="truncate text-sm font-black text-orange-600">

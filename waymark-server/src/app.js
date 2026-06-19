@@ -15,6 +15,7 @@ import bucketListRoutes from "./routes/bucketList.routes.js";
 import passportRoutes from "./routes/passport.routes.js";
 import travelWrappedRoutes from "./routes/travelWrapped.routes.js";
 import exploreRoutes from "./routes/explore.routes.js";
+import bookmarkRoutes from "./routes/bookmark.routes.js";
 
 const app = express();
 
@@ -60,6 +61,7 @@ app.use("/api/bucket-list", bucketListRoutes);
 app.use("/api/passport", passportRoutes);
 app.use("/api/travel-wrapped", travelWrappedRoutes);
 app.use("/api/explore", exploreRoutes);
+app.use("/api/bookmarks", bookmarkRoutes);
 
 
 

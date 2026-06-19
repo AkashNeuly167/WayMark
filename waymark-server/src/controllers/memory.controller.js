@@ -4,6 +4,7 @@ import Notification from "../models/Notification.js";
 import cloudinary from "../config/cloudinary.js";
 import validateRequiredFields from "../utils/validateRequiredFields.js";
 import Comment from "../models/Comment.js";
+import Bookmark from "../models/Bookmark.js";
 
 export const createMemory = async (req, res) => {
   try {
@@ -67,7 +68,7 @@ export const getMemories = async (req, res) => {
     const totalMemories = await Memory.countDocuments();
 
     const memories = await Memory.find()
-      .populate("author", "username fullName country profileImage")
+      .populate("author", "username fullName country avatar")
       .sort({ createdAt: -1 })
       .skip(skip)
       .limit(limit);
@@ -146,6 +147,10 @@ export const deleteMemory = async (req, res) => {
     });
 
     await Notification.deleteMany({
+      memory: memory._id,
+    });
+
+    await Bookmark.deleteMany({
       memory: memory._id,
     });
 

@@ -26,6 +26,8 @@ import { getMemories } from "../services/memory.service";
 import { useAuth } from "../context/AuthContext";
 import { useToast } from "../context/useToast";
 import api from "../api/axios";
+import { getSavedMemories } from "../services/bookmark.service";
+import SavedMemoryRow from "../components/memory/SavedMemoryRow";
 
 function Profile() {
   const { id } = useParams();
@@ -40,6 +42,8 @@ function Profile() {
   const [editOpen, setEditOpen] = useState(false);
   const [followLoading, setFollowLoading] = useState(false);
   const [avatarLoading, setAvatarLoading] = useState(false);
+  const [savedMemories, setSavedMemories] = useState([]);
+  const [activeTab, setActiveTab] = useState("memories");
 
   useEffect(() => {
     const fetchProfile = async () => {
@@ -59,6 +63,14 @@ function Profile() {
 
         setProfileUser(userData);
         setUserMemories(filteredMemories);
+
+        const viewingOwnProfile =
+          userData._id?.toString() === currentUserId?.toString();
+
+        if (viewingOwnProfile) {
+          const savedRes = await getSavedMemories();
+          setSavedMemories(savedRes.memories || []);
+        }
       } catch (error) {
         console.error("Profile fetch error:", error);
       } finally {
@@ -67,7 +79,7 @@ function Profile() {
     };
 
     fetchProfile();
-  }, [id]);
+  }, [id, currentUserId]);
 
   const isOwnProfile =
     profileUser?._id?.toString() === currentUserId?.toString();
@@ -244,6 +256,24 @@ function Profile() {
   const followersCount = profileUser.followers?.length || 0;
   const followingCount = profileUser.following?.length || 0;
 
+  const displayedMemories =
+    activeTab === "saved" ? savedMemories : userMemories;
+
+  const emptyTitle =
+    activeTab === "saved" ? "No saved memories yet" : "No memories yet";
+
+  const emptyMessage =
+    activeTab === "saved"
+      ? "Saved memories will appear here."
+      : "This traveler has not shared any memories.";
+
+  const sectionTitle = activeTab === "saved" ? "Saved Memories" : "Memories";
+
+  const sectionSubtitle =
+    activeTab === "saved"
+      ? "Memories you saved for later."
+      : "Places shared by this traveler.";
+
   return (
     <div className="min-h-screen bg-[#F7FAFC] text-[#002045]">
       <main className="mx-auto max-w-6xl px-4 pb-28 pt-8 md:ml-64 md:px-8">
@@ -393,23 +423,62 @@ function Profile() {
         </section>
 
         <section className="mt-10">
+          {isOwnProfile && (
+            <div className="mb-6 flex rounded-2xl border border-[#D8DEE6] bg-white p-1">
+              <button
+                type="button"
+                onClick={() => setActiveTab("memories")}
+                className={`flex-1 rounded-xl px-4 py-3 text-sm font-black transition ${
+                  activeTab === "memories"
+                    ? "bg-[#002045] text-white"
+                    : "text-[#002045]/55 hover:bg-[#F7FAFC]"
+                }`}
+              >
+                My Memories
+              </button>
+
+              <button
+                type="button"
+                onClick={() => setActiveTab("saved")}
+                className={`flex-1 rounded-xl px-4 py-3 text-sm font-black transition ${
+                  activeTab === "saved"
+                    ? "bg-[#002045] text-white"
+                    : "text-[#002045]/55 hover:bg-[#F7FAFC]"
+                }`}
+              >
+                Saved
+              </button>
+            </div>
+          )}
           <div className="mb-6 flex items-center justify-between">
             <div>
-              <h2 className="text-3xl font-bold">Memories</h2>
-              <p className="mt-1 text-[#002045]/55">
-                Places shared by this traveler.
-              </p>
+              <h2 className="text-3xl font-bold">{sectionTitle}</h2>
+              <p className="mt-1 text-[#002045]/55">{sectionSubtitle}</p>
             </div>
 
             <Users className="hidden text-[#002045]/30 md:block" size={28} />
           </div>
 
-          {userMemories.length === 0 ? (
+          {displayedMemories.length === 0 ? (
             <div className="rounded-3xl border border-dashed border-[#D8DEE6] bg-white p-10 text-center">
-              <h3 className="text-2xl font-bold">No memories yet</h3>
-              <p className="mt-2 text-[#002045]/60">
-                This traveler has not shared any memories.
-              </p>
+              <h3 className="text-2xl font-bold">{emptyTitle}</h3>
+              <p className="mt-2 text-[#002045]/60">{emptyMessage}</p>
+            </div>
+          ) : activeTab === "saved" ? (
+            <div className="space-y-4">
+              {savedMemories.map((memory) => (
+                <SavedMemoryRow
+                  key={memory._id}
+                  memory={memory}
+                  onRemoved={(memoryId) => {
+                    setSavedMemories((prev) =>
+                      prev.filter(
+                        (savedMemory) => savedMemory._id !== memoryId,
+                      ),
+                    );
+                  }}
+                />
+              ))}
             </div>
           ) : (
             <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
