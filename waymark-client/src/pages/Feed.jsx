@@ -1,18 +1,20 @@
 import { useEffect, useMemo, useState } from "react";
 import { Plus } from "lucide-react";
 import { useNavigate } from "react-router-dom";
+
 import FeedMobileTopBar from "../components/navigation/FeedMobileTopBar";
 import MemoryCard from "../components/feed/MemoryCard";
 import RightSidebar from "../components/feed/RightSidebar";
 import FeedSkeleton from "../components/ui/FeedSkeleton";
 
-import { getMemories } from "../services/memory.service";
+import { getFollowingFeed, getMemories } from "../services/memory.service";
 import { useAuth } from "../context/AuthContext";
 
 function Feed() {
   const { user } = useAuth();
   const navigate = useNavigate();
 
+  const [activeTab, setActiveTab] = useState("discover");
   const [memories, setMemories] = useState([]);
   const [loading, setLoading] = useState(true);
 
@@ -21,13 +23,22 @@ function Feed() {
 
     const fetchMemories = async () => {
       try {
-        const data = await getMemories();
+        setLoading(true);
+
+        const data =
+          activeTab === "following"
+            ? await getFollowingFeed()
+            : await getMemories();
 
         if (!ignore) {
           setMemories(data.memories || []);
         }
       } catch (error) {
         console.error("Fetch memories error:", error);
+
+        if (!ignore) {
+          setMemories([]);
+        }
       } finally {
         if (!ignore) {
           setLoading(false);
@@ -40,7 +51,7 @@ function Feed() {
     return () => {
       ignore = true;
     };
-  }, []);
+  }, [activeTab]);
 
   const featuredMemory = memories[0];
 
@@ -55,9 +66,16 @@ function Feed() {
   const greeting =
     hour < 12 ? "Good morning" : hour < 18 ? "Good afternoon" : "Good evening";
 
+  const emptyTitle =
+    activeTab === "following" ? "No following memories yet" : "No memories yet";
+
+  const emptyMessage =
+    activeTab === "following"
+      ? "Follow travelers to see their memories here."
+      : "Share your first travel memory to start your feed.";
+
   return (
     <div className="min-h-screen bg-[#F7FAFC] text-[#002045]">
-      
       <FeedMobileTopBar />
 
       <main className="md:ml-64">
@@ -85,21 +103,52 @@ function Feed() {
               </button>
             </div>
 
+            <div className="mb-8 rounded-3xl border border-[#D8DEE6] bg-white p-1 shadow-sm">
+              <div className="grid grid-cols-2 gap-1">
+                <button
+                  type="button"
+                  onClick={() => setActiveTab("discover")}
+                  className={`rounded-2xl px-4 py-3 text-sm font-black transition ${
+                    activeTab === "discover"
+                      ? "bg-[#002045] text-white shadow-sm"
+                      : "text-[#002045]/55 hover:bg-[#F7FAFC] hover:text-[#002045]"
+                  }`}
+                >
+                  Discover
+                </button>
+
+                <button
+                  type="button"
+                  onClick={() => setActiveTab("following")}
+                  className={`rounded-2xl px-4 py-3 text-sm font-black transition ${
+                    activeTab === "following"
+                      ? "bg-[#002045] text-white shadow-sm"
+                      : "text-[#002045]/55 hover:bg-[#F7FAFC] hover:text-[#002045]"
+                  }`}
+                >
+                  Following
+                </button>
+              </div>
+            </div>
+
             {loading ? (
               <FeedSkeleton />
             ) : memories.length === 0 ? (
               <div className="rounded-[2rem] border border-dashed border-[#D8DEE6] bg-white p-10 text-center shadow-sm">
-                <h2 className="text-2xl font-black">No memories yet</h2>
-                <p className="mt-3 text-[#002045]/60">
-                  Share your first travel memory to start your feed.
-                </p>
+                <h2 className="text-2xl font-black">{emptyTitle}</h2>
+
+                <p className="mt-3 text-[#002045]/60">{emptyMessage}</p>
 
                 <button
                   type="button"
-                  onClick={() => navigate("/memories/create")}
+                  onClick={() =>
+                    activeTab === "following"
+                      ? navigate("/explore")
+                      : navigate("/memories/create")
+                  }
                   className="mt-6 rounded-2xl bg-[#F6AD55] px-6 py-3 font-black text-white"
                 >
-                  Share Memory
+                  {activeTab === "following" ? "Explore Travelers" : "Share Memory"}
                 </button>
               </div>
             ) : (

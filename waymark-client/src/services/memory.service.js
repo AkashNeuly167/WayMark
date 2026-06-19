@@ -5,6 +5,11 @@ export const getMemories = async () => {
   return response.data;
 };
 
+export const getFollowingFeed = async () => {
+  const response = await api.get("/memories/feed");
+  return response.data;
+};
+
 export const getMemoryById = async (id) => {
   const response = await api.get(`/memories/${id}`);
   return response.data;
