@@ -3,7 +3,8 @@ import protect from "../middlewares/auth.middleware.js";
 
 import {
   getNotifications,
-  markNotificationAsRead
+  markNotificationAsRead,
+  markAllNotificationsAsRead,
 } from "../controllers/notification.controller.js";
 
 const router = express.Router();
@@ -57,6 +58,20 @@ const router = express.Router();
  */
 router.get("/", protect, getNotifications);
 
+/**
+ * @swagger
+ * /api/notifications/read-all:
+ *   patch:
+ *     summary: Mark all notifications as read
+ *     tags:
+ *       - Notifications
+ *     security:
+ *       - bearerAuth: []
+ *     responses:
+ *       200:
+ *         description: All notifications marked as read
+ */
+router.patch("/read-all", protect, markAllNotificationsAsRead);
 
 /**
  * @swagger

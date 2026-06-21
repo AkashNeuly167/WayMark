@@ -340,3 +340,62 @@ export const deleteCoverImage = async (req, res) => {
     });
   }
 };
+
+export const getUserFollowers = async (req, res) => {
+  try {
+    const user = await User.findById(req.params.id).populate(
+      "followers",
+      "username fullName avatar country bio",
+    );
+
+    if (!user) {
+      return res.status(404).json({
+        success: false,
+        message: "User not found",
+      });
+    }
+
+    return res.status(200).json({
+      success: true,
+      count: user.followers.length,
+      followers: user.followers,
+    });
+  } catch (error) {
+    console.error("Get followers error:", error);
+
+    return res.status(500).json({
+      success: false,
+      message: error.message,
+    });
+  }
+};
+
+
+export const getUserFollowing = async (req, res) => {
+  try {
+    const user = await User.findById(req.params.id).populate(
+      "following",
+      "username fullName avatar country bio",
+    );
+
+    if (!user) {
+      return res.status(404).json({
+        success: false,
+        message: "User not found",
+      });
+    }
+
+    return res.status(200).json({
+      success: true,
+      count: user.following.length,
+      following: user.following,
+    });
+  } catch (error) {
+    console.error("Get following error:", error);
+
+    return res.status(500).json({
+      success: false,
+      message: error.message,
+    });
+  }
+};

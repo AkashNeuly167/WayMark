@@ -12,23 +12,26 @@ import {
   MapPin,
   MessageCircle,
   Pencil,
+  Trash2,
   UserPlus,
   UserRound,
   Users,
-  Trash2,
 } from "lucide-react";
 
 import ProfileSkeleton from "../components/ui/ProfileSkeleton";
 import EditProfileModal from "../components/profile/EditProfileModal";
 import SavedMemoryRow from "../components/memory/SavedMemoryRow";
+import FollowListModal from "../components/profile/FollowListModal";
 
 import {
   deleteAvatar,
+  deleteCoverImage,
+  getUserFollowers,
+  getUserFollowing,
   getUserProfile,
   toggleFollowUser,
   updateAvatar,
   updateCoverImage,
-  deleteCoverImage,
 } from "../services/user.service";
 import { getMemories } from "../services/memory.service";
 import { getSavedMemories } from "../services/bookmark.service";
@@ -52,8 +55,13 @@ function Profile() {
   const [editOpen, setEditOpen] = useState(false);
   const [followLoading, setFollowLoading] = useState(false);
   const [avatarLoading, setAvatarLoading] = useState(false);
-  const [activeTab, setActiveTab] = useState("memories");
   const [coverLoading, setCoverLoading] = useState(false);
+  const [activeTab, setActiveTab] = useState("memories");
+
+  const [followModalOpen, setFollowModalOpen] = useState(false);
+  const [followModalTitle, setFollowModalTitle] = useState("");
+  const [followListUsers, setFollowListUsers] = useState([]);
+  const [followListLoading, setFollowListLoading] = useState(false);
 
   useEffect(() => {
     const fetchProfile = async () => {
@@ -102,6 +110,11 @@ function Profile() {
       ? profileUser.avatar
       : profileUser?.avatar?.url;
 
+  const coverUrl =
+    typeof profileUser?.coverImage === "string"
+      ? profileUser.coverImage
+      : profileUser?.coverImage?.url;
+
   const followersCount = profileUser?.followers?.length || 0;
   const followingCount = profileUser?.following?.length || 0;
 
@@ -109,11 +122,6 @@ function Profile() {
     const followerId = typeof follower === "string" ? follower : follower?._id;
     return followerId?.toString() === currentUserId?.toString();
   });
-
-  const coverUrl =
-    typeof profileUser?.coverImage === "string"
-      ? profileUser.coverImage
-      : profileUser?.coverImage?.url;
 
   const fallbackCoverImage =
     userMemories[0]?.images?.[0]?.url || userMemories[0]?.images?.[0] || "";
@@ -375,6 +383,38 @@ function Profile() {
     }
   };
 
+  const handleOpenFollowList = async (type) => {
+    if (!profileUser?._id) return;
+
+    try {
+      setFollowModalOpen(true);
+      setFollowListLoading(true);
+      setFollowListUsers([]);
+      setFollowModalTitle(type === "followers" ? "Followers" : "Following");
+
+      const data =
+        type === "followers"
+          ? await getUserFollowers(profileUser._id)
+          : await getUserFollowing(profileUser._id);
+
+      setFollowListUsers(
+        type === "followers" ? data.followers || [] : data.following || [],
+      );
+    } catch (error) {
+      console.error("Follow list error:", error);
+
+      showToast({
+        type: "error",
+        title: "Could not load list",
+        message:
+          error.response?.data?.message ||
+          "Could not load followers/following.",
+      });
+    } finally {
+      setFollowListLoading(false);
+    }
+  };
+
   if (loading) {
     return (
       <div className="min-h-screen bg-[#F7FAFC] text-[#002045]">
@@ -402,7 +442,20 @@ function Profile() {
     <div className="min-h-screen bg-[#F7FAFC] text-[#002045]">
       <main className="pb-28 md:ml-64">
         <section className="relative overflow-hidden">
+          {/* ── Cover image ── */}
           <div className="relative h-56 overflow-hidden md:min-h-[600px]">
+            {coverImage ? (
+              <img
+                src={coverImage}
+                alt="Profile cover"
+                className="absolute inset-0 h-full w-full object-cover"
+              />
+            ) : (
+              <div className="absolute inset-0 bg-[radial-gradient(circle_at_20%_20%,rgba(246,173,85,0.45),transparent_28%),linear-gradient(135deg,#0B132B_0%,#1A365D_55%,#F6AD55_140%)]" />
+            )}
+
+            <div className="absolute inset-0 bg-gradient-to-t from-[#002045]/95 via-[#002045]/45 to-[#002045]/10" />
+
             {isOwnProfile && (
               <div className="absolute right-4 top-4 z-10 flex gap-2 md:right-8 md:top-8">
                 <label className="inline-flex cursor-pointer items-center gap-2 rounded-full border border-white/20 bg-white/15 px-4 py-2 text-xs font-black text-white backdrop-blur transition hover:bg-white/25">
@@ -435,20 +488,12 @@ function Profile() {
                 )}
               </div>
             )}
-            {coverImage ? (
-              <img
-                src={coverImage}
-                alt="Profile cover"
-                className="absolute inset-0 h-full w-full object-cover"
-              />
-            ) : (
-              <div className="absolute inset-0 bg-[radial-gradient(circle_at_20%_20%,rgba(246,173,85,0.45),transparent_28%),linear-gradient(135deg,#0B132B_0%,#1A365D_55%,#F6AD55_140%)]" />
-            )}
-
-            <div className="absolute inset-0 bg-gradient-to-t from-[#002045]/95 via-[#002045]/45 to-[#002045]/10" />
           </div>
 
-          <div className="relative z-10 -mt-16 px-4 md:-mt-[210px] md:px-8">
+          {/* ── Profile info overlaid on cover ──
+              FIX: increased pb from pb-8 → pb-16 on desktop so the
+              avatar/name row has enough clearance before the stats cards. */}
+          <div className="relative z-10 -mt-16 px-4 pb-4 md:-mt-[210px] md:px-8 md:pb-16">
             <div className="mx-auto max-w-6xl">
               <div className="flex flex-col gap-5 md:flex-row md:items-end md:justify-between">
                 <div className="flex flex-col gap-4 md:flex-row md:items-end">
@@ -578,7 +623,10 @@ function Profile() {
           </div>
         </section>
 
-        <section className="relative z-10 mx-auto mt-6 max-w-6xl px-4 md:-mt-10 md:px-8">
+        {/* ── Stats cards ──
+            FIX: removed md:-mt-10 negative margin that caused cards to
+            overlap the hero section. Now uses a clean positive mt-6 gap. */}
+        <section className="relative z-10 mx-auto mt-6 max-w-6xl px-4 md:mt-8 md:px-8">
           <div className="grid grid-cols-3 gap-2 md:gap-6">
             <div className="rounded-2xl border border-[#D8DEE6] bg-white p-3 text-center shadow-sm md:rounded-3xl md:p-7">
               <p className="text-2xl font-black text-[#1A365D] md:text-4xl">
@@ -589,23 +637,31 @@ function Profile() {
               </p>
             </div>
 
-            <div className="rounded-2xl border border-[#D8DEE6] bg-white p-3 text-center shadow-sm md:rounded-3xl md:p-7">
+            <button
+              type="button"
+              onClick={() => handleOpenFollowList("followers")}
+              className="rounded-2xl border border-[#D8DEE6] bg-white p-3 text-center shadow-sm transition hover:-translate-y-0.5 hover:border-orange-200 hover:shadow-md md:rounded-3xl md:p-7"
+            >
               <p className="text-2xl font-black text-[#1A365D] md:text-4xl">
                 {followersCount}
               </p>
               <p className="mt-1 text-[10px] font-black uppercase tracking-[0.14em] text-[#002045]/45 md:text-xs">
                 Followers
               </p>
-            </div>
+            </button>
 
-            <div className="rounded-2xl border border-[#D8DEE6] bg-white p-3 text-center shadow-sm md:rounded-3xl md:p-7">
+            <button
+              type="button"
+              onClick={() => handleOpenFollowList("following")}
+              className="rounded-2xl border border-[#D8DEE6] bg-white p-3 text-center shadow-sm transition hover:-translate-y-0.5 hover:border-orange-200 hover:shadow-md md:rounded-3xl md:p-7"
+            >
               <p className="text-2xl font-black text-[#1A365D] md:text-4xl">
                 {followingCount}
               </p>
               <p className="mt-1 text-[10px] font-black uppercase tracking-[0.14em] text-[#002045]/45 md:text-xs">
                 Following
               </p>
-            </div>
+            </button>
           </div>
         </section>
 
@@ -824,6 +880,14 @@ function Profile() {
           onUpdated={handleProfileUpdated}
         />
       )}
+
+      <FollowListModal
+        open={followModalOpen}
+        title={followModalTitle}
+        users={followListUsers}
+        loading={followListLoading}
+        onClose={() => setFollowModalOpen(false)}
+      />
     </div>
   );
 }

@@ -1,42 +1,11 @@
-import { useEffect, useState } from "react";
 import { Grid3X3, Home, PlusCircle, Search, User } from "lucide-react";
 import { Link, useLocation } from "react-router-dom";
 
-import { getNotifications } from "../../services/notification.service";
-import { NOTIFICATIONS_UPDATED_EVENT } from "../../utils/notificationEvents";
+import { useUnreadNotifications } from "../../hooks/useUnreadNotifications";
 
 function MobileBottomNav() {
   const location = useLocation();
-  const [unreadCount, setUnreadCount] = useState(0);
-
-  useEffect(() => {
-    let ignore = false;
-
-    const fetchUnreadCount = async () => {
-      try {
-        const data = await getNotifications();
-
-        const unread = (data.notifications || []).filter(
-          (notification) => !notification.isRead
-        ).length;
-
-        if (!ignore) {
-          setUnreadCount(unread);
-        }
-      } catch (error) {
-        console.error("Mobile notification badge error:", error);
-      }
-    };
-
-    fetchUnreadCount();
-
-    window.addEventListener(NOTIFICATIONS_UPDATED_EVENT, fetchUnreadCount);
-
-    return () => {
-      ignore = true;
-      window.removeEventListener(NOTIFICATIONS_UPDATED_EVENT, fetchUnreadCount);
-    };
-  }, []);
+  const unreadCount = useUnreadNotifications();
 
   const isActive = (path) => location.pathname === path;
 
@@ -66,7 +35,7 @@ function MobileBottomNav() {
           <Grid3X3 size={22} />
 
           {unreadCount > 0 && (
-            <span className="absolute -right-2 -top-2 flex h-5 min-w-5 items-center justify-center rounded-full bg-red-500 px-1.5 text-[10px] font-bold text-white">
+            <span className="absolute -right-2 -top-2 grid h-5 min-w-5 place-items-center rounded-full bg-red-500 px-1 text-[10px] font-black leading-none text-white">
               {unreadCount > 9 ? "9+" : unreadCount}
             </span>
           )}

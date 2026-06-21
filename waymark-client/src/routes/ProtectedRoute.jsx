@@ -1,7 +1,6 @@
 import { Navigate, useLocation } from "react-router-dom";
-
+import DesktopSidebar from "../components/navigation/DesktopSideBar";
 import { useAuth } from "../context/AuthContext";
-import TopNavbar from "../components/navigation/TopNavbar";
 import MobileBottomNav from "../components/navigation/MobileBottomNav";
 import FeedSkeleton from "../components/ui/FeedSkeleton";
 
@@ -17,7 +16,7 @@ function ProtectedRoute({ children }) {
     if (location.pathname === "/feed") {
       return (
         <div className="min-h-screen bg-[#F7FAFC] text-[#002045]">
-          <TopNavbar />
+          <DesktopSidebar />
 
           <main className="mx-auto grid max-w-[1500px] grid-cols-1 gap-10 px-4 pb-36 pt-7 md:px-8 lg:grid-cols-[minmax(0,1fr)_320px] lg:pb-12">
             <section className="min-w-0">

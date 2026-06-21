@@ -10,6 +10,8 @@ import {
   deleteAvatar,
   updateCoverImage,
   deleteCoverImage,
+  getUserFollowers,
+  getUserFollowing,
 } from "../controllers/user.controller.js";
 
 const router = express.Router();
@@ -198,6 +200,10 @@ router.patch("/me/cover", protect, updateCoverImage);
  *         description: User not found
  */
 router.delete("/me/cover", protect, deleteCoverImage);
+
+router.get("/:id/followers", getUserFollowers);
+
+router.get("/:id/following", getUserFollowing);
 
 // public profile
 /**

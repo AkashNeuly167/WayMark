@@ -40,3 +40,12 @@ export const deleteCoverImage = async () => {
   return response.data;
 };
 
+export const getUserFollowers = async(id)=>{
+   const response = await api.get(`/users/${id}/followers`);
+   return response.data;
+};
+
+export const getUserFollowing = async(id)=>{
+   const response = await api.get(`/users/${id}/following`);
+   return response.data;
+};

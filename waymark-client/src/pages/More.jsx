@@ -9,7 +9,7 @@ import {
 } from "lucide-react";
 import { Link } from "react-router-dom";
 
-import TopNavbar from "../components/navigation/TopNavbar";
+import DesktopSidebar from "../components/navigation/DesktopSideBar";
 import MobileBottomNav from "../components/navigation/MobileBottomNav";
 
 const moreItems = [
@@ -54,7 +54,7 @@ const moreItems = [
 function More() {
   return (
     <div className="min-h-screen bg-[#F7FAFC] text-[#002045]">
-      <TopNavbar />
+      <DesktopSidebar />
 
       <main className="mx-auto max-w-5xl px-4 pb-28 pt-8 md:px-8">
         <div className="mb-8">

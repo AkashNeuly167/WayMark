@@ -57,3 +57,26 @@ export const markNotificationAsRead = async (req, res) => {
     });
   }
 };
+
+export const markAllNotificationsAsRead = async (req, res) => {
+  try {
+    await Notification.updateMany(
+      {
+        recipient: req.user._id,
+        isRead: false,
+      },
+      { isRead: true },
+    );
+
+    return res.status(200).json({
+      success: true,
+      message: "All notifications marked as read",
+    });
+  } catch (error) {
+    console.error("Mark all notifications read error:", error);
+    return res.status(500).json({
+      success: false,
+      message: error.message,
+    });
+  }
+};
