@@ -11,7 +11,7 @@ import { Link } from "react-router-dom";
 
 
 import MobileBottomNav from "../components/navigation/MobileBottomNav";
-
+import DesktopSidebar from "../components/navigation/DesktopSidebar";
 const moreItems = [
   {
     title: "Bucket List",
@@ -54,7 +54,7 @@ const moreItems = [
 function More() {
   return (
     <div className="min-h-screen bg-[#F7FAFC] text-[#002045]">
-      
+      <DesktopSidebar />
 
       <main className="mx-auto max-w-5xl px-4 pb-28 pt-8 md:px-8">
         <div className="mb-8">

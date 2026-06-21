@@ -11,7 +11,7 @@ import { useNavigate } from "react-router-dom";
 
 import { useToast } from "../context/useToast";
 
-import DesktopSidebar from "../components/navigation/DesktopSideBar";
+
 import MobileBottomNav from "../components/navigation/MobileBottomNav";
 import NotificationSkeleton from "../components/ui/NotificationSkeleton";
 
@@ -268,7 +268,7 @@ function Notifications() {
 
   return (
     <div className="min-h-screen bg-[#F7FAFC] text-[#002045]">
-      <DesktopSidebar />
+     
 
       <main className="mx-auto max-w-6xl px-4 pb-28 pt-8 md:px-8 md:ml-64">
         <div className="mb-8 flex flex-col gap-4 md:flex-row md:items-end md:justify-between">
