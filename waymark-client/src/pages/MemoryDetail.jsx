@@ -2,7 +2,6 @@ import { useEffect, useRef, useState } from "react";
 import { useLocation, useNavigate, useParams } from "react-router-dom";
 import {
   Heart,
-  ImageOff,
   Loader2,
   Map,
   MapPin,
@@ -18,6 +17,7 @@ import MemoryDetailSkeleton from "../components/ui/MemoryDetailSkeleton";
 
 import { useAuth } from "../context/AuthContext";
 import { useToast } from "../context/useToast";
+import ImageCarousel from "../components/memory/ImageCarousel";
 
 import {
   createMemoryComment,
@@ -58,6 +58,7 @@ function MemoryDetail() {
   const [deleteMemoryOpen, setDeleteMemoryOpen] = useState(false);
   const [deleteMemoryLoading, setDeleteMemoryLoading] = useState(false);
   const [editMemoryOpen, setEditMemoryOpen] = useState(false);
+  
 
   useEffect(() => {
     const fetchMemoryDetail = async () => {
@@ -321,13 +322,7 @@ function MemoryDetail() {
     );
   }
 
-  const images = memory.images || [];
-  const heroImage = images[0]?.url || images[0];
-
-  const galleryImages = images
-    .map((imageItem) => imageItem?.url || imageItem)
-    .filter(Boolean)
-    .slice(1, 5);
+ const images = memory.images || [];
 
   const memoryAuthorId = memory.author?._id || memory.author;
   const isMemoryOwner =
@@ -374,82 +369,76 @@ function MemoryDetail() {
           )}
 
           <section className="relative mb-6 h-[58vh] min-h-[420px] overflow-hidden rounded-[2rem] bg-[#E8EDF2] shadow-xl md:h-[72vh]">
-            {heroImage ? (
-              <img
-                src={heroImage}
-                alt={memory.title}
-                className="absolute inset-0 h-full w-full object-cover"
-              />
-            ) : (
-              <div className="absolute inset-0 flex items-center justify-center bg-[#E8EDF2]">
-                <ImageOff size={42} className="text-[#002045]/35" />
-              </div>
-            )}
+  <ImageCarousel
+    images={images}
+    title={memory.title}
+    className="h-full !aspect-auto"
+  />
 
-            <div className="absolute inset-0 bg-gradient-to-t from-[#002045]/85 via-[#002045]/30 to-transparent" />
+  <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-[#002045]/85 via-[#002045]/30 to-transparent" />
 
-            <div className="absolute bottom-0 left-0 right-0 p-6 md:p-10">
-              <div className="mb-3 flex flex-wrap items-center gap-2 text-sm font-semibold text-white/80">
-                <MapPin size={16} />
-                <span>{memory.locationName || memory.city}</span>
-                <span>•</span>
-                <span>
-                  {memory.city}, {memory.country}
-                </span>
-                <span className="hidden sm:inline">•</span>
-                <span className="hidden sm:inline">
-                  {formatDate(memory.createdAt)}
-                </span>
-              </div>
+  <div className="absolute bottom-0 left-0 right-0 z-10 p-6 md:p-10">
+    <div className="mb-3 flex flex-wrap items-center gap-2 text-sm font-semibold text-white/80">
+      <MapPin size={16} />
+      <span>{memory.locationName || memory.city}</span>
+      <span>•</span>
+      <span>
+        {memory.city}, {memory.country}
+      </span>
+      <span className="hidden sm:inline">•</span>
+      <span className="hidden sm:inline">
+        {formatDate(memory.createdAt)}
+      </span>
+    </div>
 
-              <div className="flex items-end justify-between gap-5">
-                <h1 className="max-w-3xl text-4xl font-black leading-tight text-white drop-shadow-lg md:text-6xl">
-                  {memory.title}
-                </h1>
+    <div className="flex items-end justify-between gap-5">
+      <h1 className="max-w-3xl text-4xl font-black leading-tight text-white drop-shadow-lg md:text-6xl">
+        {memory.title}
+      </h1>
 
-                {isMemoryOwner && (
-                  <div className="relative shrink-0">
-                    <button
-                      type="button"
-                      onClick={() => setOwnerMenuOpen((prev) => !prev)}
-                      className="grid h-12 w-12 place-items-center rounded-full border border-white/20 bg-white/15 text-white backdrop-blur transition hover:bg-white/25"
-                      aria-label="Memory actions"
-                    >
-                      <MoreVertical size={22} />
-                    </button>
+      {isMemoryOwner && (
+        <div className="relative shrink-0">
+          <button
+            type="button"
+            onClick={() => setOwnerMenuOpen((prev) => !prev)}
+            className="grid h-12 w-12 place-items-center rounded-full border border-white/20 bg-white/15 text-white backdrop-blur transition hover:bg-white/25"
+            aria-label="Memory actions"
+          >
+            <MoreVertical size={22} />
+          </button>
 
-                    {ownerMenuOpen && (
-                      <div className="absolute bottom-14 right-0 z-20 w-44 overflow-hidden rounded-2xl border border-[#D8DEE6] bg-white text-[#002045] shadow-xl">
-                        <button
-                          type="button"
-                          onClick={() => {
-                            setOwnerMenuOpen(false);
-                            setEditMemoryOpen(true);
-                          }}
-                          className="flex w-full items-center gap-2 px-4 py-3 text-left text-sm font-semibold transition hover:bg-[#F7FAFC]"
-                        >
-                          <Pencil size={16} />
-                          Edit memory
-                        </button>
+          {ownerMenuOpen && (
+            <div className="absolute bottom-14 right-0 z-20 w-44 overflow-hidden rounded-2xl border border-[#D8DEE6] bg-white text-[#002045] shadow-xl">
+              <button
+                type="button"
+                onClick={() => {
+                  setOwnerMenuOpen(false);
+                  navigate(`/memories/${memory._id}/edit`);
+                }}
+                className="flex w-full items-center gap-2 px-4 py-3 text-left text-sm font-semibold transition hover:bg-[#F7FAFC]"
+              >
+                <Pencil size={16} />
+                Edit memory
+              </button>
 
-                        <button
-                          type="button"
-                          onClick={() => {
-                            setOwnerMenuOpen(false);
-                            setDeleteMemoryOpen(true);
-                          }}
-                          className="flex w-full items-center gap-2 px-4 py-3 text-left text-sm font-semibold text-red-500 transition hover:bg-red-50"
-                        >
-                          <Trash2 size={16} />
-                          Delete memory
-                        </button>
-                      </div>
-                    )}
-                  </div>
-                )}
-              </div>
+              <button
+                type="button"
+                onClick={() => {
+                  setOwnerMenuOpen(false);
+                  setDeleteMemoryOpen(true);
+                }}
+                className="flex w-full items-center gap-2 px-4 py-3 text-left text-sm font-semibold text-red-500 transition hover:bg-red-50"
+              >
+                <Trash2 size={16} />
+                Delete memory
+              </button>
             </div>
-          </section>
+          )}
+        </div>
+      )}
+    </div>
+  </div>
+</section>
 
           <div className="grid grid-cols-1 gap-6 lg:grid-cols-12">
             <section className="space-y-6 lg:col-span-8">
@@ -526,22 +515,7 @@ function MemoryDetail() {
                 </div>
               </article>
 
-              {galleryImages.length > 0 && (
-                <section className="grid grid-cols-2 gap-4 md:grid-cols-4">
-                  {galleryImages.map((imageUrl, index) => (
-                    <div
-                      key={`${imageUrl}-${index}`}
-                      className="aspect-square overflow-hidden rounded-2xl bg-[#E8EDF2] shadow-sm"
-                    >
-                      <img
-                        src={imageUrl}
-                        alt={`${memory.title} gallery ${index + 1}`}
-                        className="h-full w-full object-cover transition duration-700 hover:scale-110"
-                      />
-                    </div>
-                  ))}
-                </section>
-              )}
+              
 
               <section
                 id="comments"

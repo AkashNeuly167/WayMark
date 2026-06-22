@@ -16,6 +16,7 @@ import More from "../pages/More";
 import TravelWrapped from "../pages/TravelWrapped";
 import Settings from "../pages/Settings";
 import Landing from "../pages/Landing";
+import EditMemory from "../pages/EditMemory";
 
 function AppRoutes() {
   return (
@@ -148,6 +149,17 @@ function AppRoutes() {
           </ProtectedRoute>
         }
       />
+
+      <Route
+  path="/memories/:id/edit"
+  element={
+    <ProtectedRoute>
+      <MainLayout>
+        <EditMemory />
+      </MainLayout>
+    </ProtectedRoute>
+  }
+/>
 
       {/* 404 fallback must stay LAST */}
       <Route path="*" element={<Navigate to="/feed" />} />

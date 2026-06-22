@@ -3,7 +3,6 @@ import { Link, useNavigate } from "react-router-dom";
 import {
   CalendarDays,
   Heart,
-  ImageOff,
   Loader2,
   Map,
   MapPin,
@@ -17,6 +16,7 @@ import {
 import { deleteMemory, getMemories } from "../services/memory.service";
 import { useAuth } from "../context/AuthContext";
 import { useToast } from "../context/useToast";
+import ImageCarousel from "../components/memory/ImageCarousel";
 
 function Journey() {
   const navigate = useNavigate();
@@ -117,12 +117,7 @@ function Journey() {
     }, 0);
   }, [memories]);
 
-  const getMemoryImage = (memory) => {
-    const firstImage = memory.images?.[0];
 
-    if (!firstImage) return "";
-    return firstImage.url || firstImage;
-  };
 
   const formatDate = (dateString) => {
     if (!dateString) return "Recently";
@@ -284,7 +279,6 @@ function Journey() {
 
                 <div className="grid grid-cols-1 gap-5 md:grid-cols-2">
                   {group.memories.map((memory) => {
-                    const image = getMemoryImage(memory);
 
                     return (
                       <article
@@ -293,17 +287,11 @@ function Journey() {
                         className="group cursor-pointer overflow-hidden rounded-3xl border border-[#E8EDF2] bg-[#F7FAFC] transition hover:-translate-y-0.5 hover:shadow-md"
                       >
                         <div className="relative">
-                          {image ? (
-                            <img
-                              src={image}
-                              alt={memory.title}
-                              className="h-48 w-full object-cover transition duration-500 group-hover:scale-105"
-                            />
-                          ) : (
-                            <div className="grid h-48 w-full place-items-center bg-[#E8EDF2] text-[#002045]/40">
-                              <ImageOff size={28} />
-                            </div>
-                          )}
+                          <ImageCarousel
+  images={memory.images || []}
+  title={memory.title}
+  className="h-64 rounded-none"
+/>
 
                           <div className="absolute right-3 top-3 flex gap-2">
                             <button

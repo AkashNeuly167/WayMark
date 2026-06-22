@@ -3,7 +3,6 @@ import {
   Bookmark,
   Calendar,
   Heart,
-  ImageOff,
   MapPin,
   MessageCircle,
   Navigation,
@@ -17,16 +16,16 @@ import {
   unsaveMemory,
 } from "../../services/bookmark.service";
 import { useAuth } from "../../context/AuthContext";
+import ImageCarousel from "../memory/ImageCarousel";
 
-function MemoryCard({ memory , onCommentClick }) {
+function MemoryCard({ memory, onCommentClick }) {
   const navigate = useNavigate();
   const { user } = useAuth();
 
-  const [imageLoaded, setImageLoaded] = useState(false);
-  const [imageError, setImageError] = useState(false);
-
   const userId = user?._id || user?.id;
-  const image = memory.images?.[0]?.url || memory.images?.[0];
+
+  const hasImages = memory.images && memory.images.length > 0;
+
   const avatarUrl =
     typeof memory.author?.avatar === "string"
       ? memory.author.avatar
@@ -125,19 +124,19 @@ function MemoryCard({ memory , onCommentClick }) {
     }
   };
 
- const handleCommentClick = (e) => {
-  e.preventDefault();
-  e.stopPropagation();
+  const handleCommentClick = (e) => {
+    e.preventDefault();
+    e.stopPropagation();
 
-  if (onCommentClick) {
-    onCommentClick(memory);
-    return;
-  }
+    if (onCommentClick) {
+      onCommentClick(memory);
+      return;
+    }
 
-  navigate(`/memories/${memory._id}#comments`, {
-    state: { focusComment: true },
-  });
-};
+    navigate(`/memories/${memory._id}#comments`, {
+      state: { focusComment: true },
+    });
+  };
 
   const handleBookmark = async (e) => {
     e.preventDefault();
@@ -170,39 +169,27 @@ function MemoryCard({ memory , onCommentClick }) {
       className="group cursor-pointer overflow-hidden rounded-[2rem] border border-slate-200 bg-white shadow-[0_12px_40px_rgba(15,23,42,0.08)] transition-all duration-300 hover:-translate-y-1 hover:border-orange-200 hover:shadow-[0_24px_70px_rgba(15,23,42,0.16)]"
     >
       <div className="relative overflow-hidden">
-        {image && !imageError ? (
-          <>
-            {!imageLoaded && (
-              <div className="h-[280px] w-full animate-pulse bg-slate-200" />
-            )}
-
-            <img
-              src={image}
-              alt={memory.title}
-              loading="lazy"
-              onLoad={() => setImageLoaded(true)}
-              onError={() => setImageError(true)}
-              className={`h-[280px] w-full object-cover transition-all duration-500 group-hover:scale-105 ${
-                imageLoaded ? "opacity-100" : "absolute inset-0 opacity-0"
-              }`}
-            />
-          </>
+        {hasImages ? (
+          <ImageCarousel
+            images={memory.images || []}
+            title={memory.title}
+            className="h-[280px] aspect-auto"
+          />
         ) : (
           <div className="flex h-[280px] w-full flex-col items-center justify-center bg-gradient-to-br from-slate-100 to-slate-200">
-            <ImageOff size={42} className="mb-3 text-slate-400" />
             <p className="text-sm font-semibold text-slate-500">
               No image uploaded
             </p>
           </div>
         )}
 
-        <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent opacity-75 transition-opacity duration-300 group-hover:opacity-85" />
+        <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent opacity-75 transition-opacity duration-300 group-hover:opacity-85" />
 
         <button
           type="button"
           onClick={handleBookmark}
           disabled={bookmarkLoading}
-          className={`absolute right-4 top-4 grid h-11 w-11 place-items-center rounded-full border border-white/25 shadow-lg backdrop-blur-md transition disabled:opacity-60 ${
+          className={`absolute right-4 top-4 z-20 grid h-11 w-11 place-items-center rounded-full border border-white/25 shadow-lg backdrop-blur-md transition disabled:opacity-60 ${
             bookmarked
               ? "bg-orange-500 text-white"
               : "bg-black/25 text-white hover:bg-white/20"
@@ -215,7 +202,7 @@ function MemoryCard({ memory , onCommentClick }) {
           />
         </button>
 
-        <div className="absolute bottom-0 left-0 right-0 p-5">
+        <div className="pointer-events-none absolute bottom-0 left-0 right-0 z-10 p-5">
           <div className="mb-3 inline-flex max-w-full items-center gap-1.5 rounded-full border border-white/20 bg-white/95 px-3 py-1.5 text-xs font-black text-slate-900 shadow-lg backdrop-blur">
             <MapPin size={14} className="shrink-0 text-orange-500" />
             <span className="truncate">
