@@ -1,12 +1,5 @@
 import { useEffect, useState } from "react";
-import {
-  Bookmark,
-  Calendar,
-  Heart,
-  MapPin,
-  MessageCircle,
-  Navigation,
-} from "lucide-react";
+import { Bookmark, Calendar, Heart, MapPin, MessageCircle } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 
 import { toggleLikeMemory } from "../../services/memory.service";
@@ -23,8 +16,6 @@ function MemoryCard({ memory, onCommentClick }) {
   const { user } = useAuth();
 
   const userId = user?._id || user?.id;
-
-  const hasImages = memory.images && memory.images.length > 0;
 
   const avatarUrl =
     typeof memory.author?.avatar === "string"
@@ -166,133 +157,79 @@ function MemoryCard({ memory, onCommentClick }) {
   return (
     <article
       onClick={handleCardClick}
-      className="group cursor-pointer overflow-hidden rounded-[2rem] border border-slate-200 bg-white shadow-[0_12px_40px_rgba(15,23,42,0.08)] transition-all duration-300 hover:-translate-y-1 hover:border-orange-200 hover:shadow-[0_24px_70px_rgba(15,23,42,0.16)]"
+      className="group cursor-pointer overflow-hidden rounded-[1.75rem] border border-slate-200 bg-white shadow-[0_10px_30px_rgba(15,23,42,0.07)] transition-all duration-300 hover:-translate-y-1 hover:border-orange-200 hover:shadow-[0_18px_50px_rgba(15,23,42,0.14)]"
     >
-      <div className="relative overflow-hidden">
-        {hasImages ? (
-          <ImageCarousel
-            images={memory.images || []}
-            title={memory.title}
-            className="h-[280px] aspect-auto"
-          />
-        ) : (
-          <div className="flex h-[280px] w-full flex-col items-center justify-center bg-gradient-to-br from-slate-100 to-slate-200">
-            <p className="text-sm font-semibold text-slate-500">
-              No image uploaded
-            </p>
-          </div>
-        )}
+      <div className="flex items-center gap-3 px-4 py-3">
+        <div className="flex min-w-0 items-center gap-3">
+          {avatarUrl ? (
+            <img
+              src={avatarUrl}
+              alt={authorName}
+              className="h-10 w-10 shrink-0 rounded-2xl object-cover ring-2 ring-slate-100"
+            />
+          ) : (
+            <div className="grid h-10 w-10 shrink-0 place-items-center rounded-2xl bg-gradient-to-br from-[#1A365D] to-[#002045] text-sm font-black text-white shadow-md">
+              {authorInitial}
+            </div>
+          )}
 
-        <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent opacity-75 transition-opacity duration-300 group-hover:opacity-85" />
+          <div className="min-w-0">
+            <h4 className="truncate text-sm font-black text-slate-950">
+              {authorName}
+            </h4>
 
-        <button
-          type="button"
-          onClick={handleBookmark}
-          disabled={bookmarkLoading}
-          className={`absolute right-4 top-4 z-20 grid h-11 w-11 place-items-center rounded-full border border-white/25 shadow-lg backdrop-blur-md transition disabled:opacity-60 ${
-            bookmarked
-              ? "bg-orange-500 text-white"
-              : "bg-black/25 text-white hover:bg-white/20"
-          }`}
-          aria-label={bookmarked ? "Remove bookmark" : "Bookmark memory"}
-        >
-          <Bookmark
-            size={18}
-            className={bookmarked ? "fill-white text-white" : ""}
-          />
-        </button>
-
-        <div className="pointer-events-none absolute bottom-0 left-0 right-0 z-10 p-5">
-          <div className="mb-3 inline-flex max-w-full items-center gap-1.5 rounded-full border border-white/20 bg-white/95 px-3 py-1.5 text-xs font-black text-slate-900 shadow-lg backdrop-blur">
-            <MapPin size={14} className="shrink-0 text-orange-500" />
-            <span className="truncate">
-              {memory.city}, {memory.country}
-            </span>
-          </div>
-
-          <h3 className="line-clamp-2 text-2xl font-black leading-tight text-white drop-shadow-md">
-            {memory.title}
-          </h3>
-        </div>
-      </div>
-
-      <div className="p-5">
-        <div className="mb-4 flex items-center gap-3">
-          <div className="relative shrink-0">
-            {avatarUrl ? (
-              <img
-                src={avatarUrl}
-                alt={authorName}
-                className="h-11 w-11 rounded-2xl object-cover ring-2 ring-slate-100"
-              />
-            ) : (
-              <div className="grid h-11 w-11 place-items-center rounded-2xl bg-gradient-to-br from-[#1A365D] to-[#002045] text-sm font-black text-white shadow-md">
-                {authorInitial}
-              </div>
-            )}
-          </div>
-
-          <div className="min-w-0 flex-1">
-            <h4 className="truncate font-bold text-slate-950">{authorName}</h4>
-
-            <div className="mt-0.5 flex items-center gap-1.5 text-xs font-medium text-slate-400">
-              <Calendar size={12} />
+            <div className="mt-0.5 flex items-center gap-1.5 text-[11px] font-bold text-slate-400">
+              <Calendar size={11} />
               <span>{formatDate(memory.createdAt)}</span>
             </div>
           </div>
         </div>
+      </div>
 
-        {(memory.locationName || memory.city || memory.country) && (
-          <div className="mb-4 rounded-2xl bg-orange-50 px-4 py-3">
-            <div className="flex items-start gap-2">
-              <Navigation
-                size={16}
-                className="mt-0.5 shrink-0 text-orange-500"
-              />
+      <div className="relative overflow-hidden bg-slate-100">
+        <ImageCarousel
+          images={memory.images || []}
+          title={memory.title}
+          variant="feed"
+          className="h-[300px] !aspect-auto md:h-[390px] xl:h-[420px]"
+        />
+      </div>
 
-              <div className="min-w-0">
-                <p className="truncate text-sm font-black text-orange-600">
-                  {memory.locationName || memory.city}
-                </p>
-                <p className="mt-0.5 truncate text-xs font-semibold text-orange-500/75">
-                  {memory.city}, {memory.country}
-                </p>
+      <div className="p-4 md:p-5">
+        <div className="mb-3 flex items-start justify-between gap-3">
+          <div className="min-w-0">
+            <h3 className="line-clamp-1 text-xl font-black leading-tight text-[#002045] md:text-2xl">
+              {memory.title}
+            </h3>
+
+            {(memory.city || memory.country) && (
+              <div className="mt-2 flex max-w-full items-center gap-1.5 text-xs font-black text-orange-500">
+                <MapPin size={13} className="shrink-0" />
+                <span className="truncate">
+                  {[memory.locationName, memory.city, memory.country]
+                    .filter(Boolean)
+                    .join(", ")}
+                </span>
               </div>
-            </div>
+            )}
           </div>
-        )}
 
-        <p className="mb-5 line-clamp-2 text-sm leading-6 text-slate-600">
+          <span className="mt-1 hidden shrink-0 rounded-full bg-slate-50 px-3 py-1.5 text-[10px] font-black uppercase tracking-[0.14em] text-slate-400 transition group-hover:bg-orange-50 group-hover:text-orange-500 md:inline-flex">
+            View
+          </span>
+        </div>
+
+        <p className="line-clamp-2 text-sm leading-6 text-slate-600">
           {memory.description}
         </p>
 
-        <div className="mb-5 flex flex-wrap gap-2">
-          {memory.country && (
-            <span className="rounded-full bg-slate-100 px-3 py-1 text-xs font-bold text-slate-600">
-              #{memory.country}
-            </span>
-          )}
-
-          {memory.city && (
-            <span className="rounded-full bg-slate-100 px-3 py-1 text-xs font-bold text-slate-600">
-              #{memory.city}
-            </span>
-          )}
-
-          {memory.locationName && (
-            <span className="rounded-full bg-slate-100 px-3 py-1 text-xs font-bold text-slate-600">
-              #{memory.locationName}
-            </span>
-          )}
-        </div>
-
-        <div className="flex items-center justify-between border-t border-slate-100 pt-4">
+        <div className="mt-4 flex items-center justify-between border-t border-slate-100 pt-3">
           <div className="flex items-center gap-1">
             <button
               type="button"
               onClick={handleLike}
               disabled={likeLoading}
-              className={`flex items-center gap-1.5 rounded-xl px-3 py-2 text-sm font-bold transition-all duration-200 disabled:opacity-50 ${
+              className={`flex items-center gap-1.5 rounded-xl px-3 py-2 text-sm font-black transition-all duration-200 disabled:opacity-50 ${
                 liked
                   ? "bg-red-50 text-red-500"
                   : "text-slate-600 hover:bg-red-50 hover:text-red-500"
@@ -310,16 +247,32 @@ function MemoryCard({ memory, onCommentClick }) {
             <button
               type="button"
               onClick={handleCommentClick}
-              className="flex items-center gap-1.5 rounded-xl px-3 py-2 text-sm font-bold text-slate-600 transition-all duration-200 hover:bg-orange-50 hover:text-orange-500"
+              className="flex items-center gap-1.5 rounded-xl px-3 py-2 text-sm font-black text-slate-600 transition-all duration-200 hover:bg-orange-50 hover:text-orange-500"
             >
               <MessageCircle size={18} />
               <span>{memory.commentsCount || 0}</span>
             </button>
           </div>
 
-          <span className="rounded-full bg-slate-50 px-3 py-2 text-xs font-black text-slate-400 transition group-hover:bg-orange-50 group-hover:text-orange-500">
-            View story
-          </span>
+          <button
+            type="button"
+            onClick={handleBookmark}
+            disabled={bookmarkLoading}
+            className={`flex items-center gap-1.5 rounded-xl px-3 py-2 text-sm font-black transition disabled:opacity-60 ${
+              bookmarked
+                ? "bg-orange-50 text-orange-500"
+                : "text-slate-600 hover:bg-orange-50 hover:text-orange-500"
+            }`}
+            aria-label={bookmarked ? "Remove from saved" : "Save memory"}
+          >
+            <Bookmark
+              size={18}
+              className={bookmarked ? "fill-orange-500 text-orange-500" : ""}
+            />
+            <span className="hidden sm:inline">
+              {bookmarked ? "Saved" : "Save"}
+            </span>
+          </button>
         </div>
       </div>
     </article>

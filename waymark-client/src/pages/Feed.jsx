@@ -1,6 +1,7 @@
 import { useEffect, useMemo, useState } from "react";
 import { Plus } from "lucide-react";
 import { useNavigate } from "react-router-dom";
+
 import CommentsSheet from "../components/comments/CommentsSheet";
 import FeedMobileTopBar from "../components/navigation/FeedMobileTopBar";
 import MemoryCard from "../components/feed/MemoryCard";
@@ -65,6 +66,7 @@ function Feed() {
     user?.fullName?.split(" ")[0] || user?.username || "Traveler";
 
   const hour = new Date().getHours();
+
   const greeting =
     hour < 12 ? "Good morning" : hour < 18 ? "Good afternoon" : "Good evening";
 
@@ -93,37 +95,37 @@ function Feed() {
     <div className="min-h-screen bg-[#F7FAFC] text-[#002045]">
       <FeedMobileTopBar />
 
-      <main className="">
-        <div className="mx-auto grid max-w-[1500px] grid-cols-1 gap-10 px-5 pb-28 pt-8 md:px-10 xl:grid-cols-[minmax(0,1fr)_360px]">
+      <main>
+        <div className="mx-auto grid max-w-[1500px] grid-cols-1 gap-6 px-4 pb-28 pt-4 md:px-8 md:pt-5 xl:grid-cols-[minmax(0,1fr)_360px]">
           <section className="min-w-0">
-            <div className="mb-8 flex items-start justify-between gap-5">
-              <div>
-                <h1 className="max-w-[420px] text-4xl font-black leading-tight text-[#1A365D] md:text-5xl">
-                  {greeting}, {firstName}
-                </h1>
+            <div className="mb-4 flex items-center justify-between gap-3">
+              <div className="min-w-0">
+                <h2 className="truncate text-xl font-black tracking-tight text-[#002045] md:text-2xl">
+                  {greeting}, {firstName} ☀️
+                </h2>
 
-                <p className="mt-2 text-sm font-medium text-[#002045]/55 md:text-base">
-                  Ready for your next milestone?
+                <p className="mt-1 text-xs font-semibold text-slate-500 md:text-sm">
+                  See where travelers are going today.
                 </p>
               </div>
 
               <button
                 type="button"
                 onClick={() => navigate("/memories/create")}
-                className="mt-2 inline-flex shrink-0 items-center justify-center gap-2 rounded-2xl bg-[#F6AD55] px-5 py-4 text-sm font-black text-white shadow-md transition hover:bg-orange-400 md:px-7"
+                className="inline-flex shrink-0 items-center justify-center gap-1.5 rounded-xl bg-[#F6AD55] px-3.5 py-2.5 text-xs font-black text-white shadow-sm transition hover:bg-orange-400 md:rounded-2xl md:px-5 md:py-3 md:text-sm"
               >
-                <Plus size={18} />
-                <span className="hidden sm:inline">Share Memory</span>
-                <span className="sm:hidden">Share</span>
+                <Plus size={16} />
+                <span className="hidden sm:inline">Memory</span>
+                <span className="sm:hidden">Post</span>
               </button>
             </div>
 
-            <div className="mb-8 rounded-3xl border border-[#D8DEE6] bg-white p-1 shadow-sm">
+            <div className="mb-5 rounded-2xl border border-[#D8DEE6] bg-white p-1 shadow-sm">
               <div className="grid grid-cols-2 gap-1">
                 <button
                   type="button"
                   onClick={() => setActiveTab("discover")}
-                  className={`rounded-2xl px-4 py-3 text-sm font-black transition ${
+                  className={`rounded-xl px-4 py-2.5 text-sm font-black transition ${
                     activeTab === "discover"
                       ? "bg-[#002045] text-white shadow-sm"
                       : "text-[#002045]/55 hover:bg-[#F7FAFC] hover:text-[#002045]"
@@ -135,7 +137,7 @@ function Feed() {
                 <button
                   type="button"
                   onClick={() => setActiveTab("following")}
-                  className={`rounded-2xl px-4 py-3 text-sm font-black transition ${
+                  className={`rounded-xl px-4 py-2.5 text-sm font-black transition ${
                     activeTab === "following"
                       ? "bg-[#002045] text-white shadow-sm"
                       : "text-[#002045]/55 hover:bg-[#F7FAFC] hover:text-[#002045]"
@@ -149,10 +151,14 @@ function Feed() {
             {loading ? (
               <FeedSkeleton />
             ) : memories.length === 0 ? (
-              <div className="rounded-[2rem] border border-dashed border-[#D8DEE6] bg-white p-10 text-center shadow-sm">
-                <h2 className="text-2xl font-black">{emptyTitle}</h2>
+              <div className="rounded-[2rem] border border-dashed border-[#D8DEE6] bg-white p-8 text-center shadow-sm md:p-10">
+                <h2 className="text-xl font-black md:text-2xl">
+                  {emptyTitle}
+                </h2>
 
-                <p className="mt-3 text-[#002045]/60">{emptyMessage}</p>
+                <p className="mt-2 text-sm text-[#002045]/60 md:mt-3 md:text-base">
+                  {emptyMessage}
+                </p>
 
                 <button
                   type="button"
@@ -161,7 +167,7 @@ function Feed() {
                       ? navigate("/explore")
                       : navigate("/memories/create")
                   }
-                  className="mt-6 rounded-2xl bg-[#F6AD55] px-6 py-3 font-black text-white"
+                  className="mt-5 rounded-2xl bg-[#F6AD55] px-5 py-2.5 text-sm font-black text-white md:mt-6 md:px-6 md:py-3"
                 >
                   {activeTab === "following"
                     ? "Explore Travelers"
@@ -169,7 +175,7 @@ function Feed() {
                 </button>
               </div>
             ) : (
-              <div className="space-y-10">
+              <div className="space-y-6">
                 {featuredMemory && (
                   <MemoryCard
                     memory={featuredMemory}
@@ -178,7 +184,7 @@ function Feed() {
                 )}
 
                 {gridMemories.length > 0 && (
-                  <div className="grid grid-cols-1 gap-8 lg:grid-cols-2">
+                  <div className="grid grid-cols-1 gap-5 lg:grid-cols-2">
                     {gridMemories.map((memory) => (
                       <MemoryCard
                         key={memory._id}
@@ -195,6 +201,7 @@ function Feed() {
           <RightSidebar memories={memories} />
         </div>
       </main>
+
       <CommentsSheet
         open={commentsOpen}
         memory={selectedMemory}

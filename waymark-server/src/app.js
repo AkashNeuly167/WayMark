@@ -50,6 +50,15 @@ app.options(/.*/, cors(corsOptions));
 app.use(express.json());
 app.use(cookieParser());
 
+app.all("/api/health", (req, res) => {
+  return res.status(200).json({
+    success: true,
+    message: "WayMark API is running",
+    uptime: process.uptime(),
+    timestamp: new Date().toISOString(),
+  });
+});
+
 app.use("/api/auth", authRoutes);
 app.use("/api/users", userRoutes);
 app.use("/api/memories", memoryRoutes);
