@@ -440,7 +440,7 @@ function Profile() {
 
   return (
     <div className="min-h-screen bg-[#F7FAFC] text-[#002045]">
-      <main className="pb-28 md:ml-64">
+      <main className="pb-28 ">
         <section className="relative overflow-hidden">
           {/* ── Cover image ── */}
           <div className="relative h-56 overflow-hidden md:min-h-[600px]">

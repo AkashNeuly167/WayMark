@@ -93,7 +93,7 @@ function Feed() {
     <div className="min-h-screen bg-[#F7FAFC] text-[#002045]">
       <FeedMobileTopBar />
 
-      <main className="md:ml-64">
+      <main className="">
         <div className="mx-auto grid max-w-[1500px] grid-cols-1 gap-10 px-5 pb-28 pt-8 md:px-10 xl:grid-cols-[minmax(0,1fr)_360px]">
           <section className="min-w-0">
             <div className="mb-8 flex items-start justify-between gap-5">

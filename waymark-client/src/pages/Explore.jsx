@@ -79,7 +79,7 @@ function Explore() {
     <div className="min-h-screen bg-[#F7FAFC] text-[#002045]">
       
 
-      <main className="mx-auto max-w-6xl px-4 pb-28 pt-8 md:ml-64 md:px-8">
+      <main className="mx-auto max-w-6xl px-4 pb-28 pt-8  md:px-8">
         <h1 className="text-4xl font-bold">Explore</h1>
 
         <p className="mt-2 text-[#002045]/60">

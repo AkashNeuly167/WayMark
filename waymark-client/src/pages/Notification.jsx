@@ -270,7 +270,7 @@ function Notifications() {
     <div className="min-h-screen bg-[#F7FAFC] text-[#002045]">
      
 
-      <main className="mx-auto max-w-6xl px-4 pb-28 pt-8 md:px-8 md:ml-64">
+      <main className="mx-auto max-w-6xl px-4 pb-28 pt-8 md:px-8 ">
         <div className="mb-8 flex flex-col gap-4 md:flex-row md:items-end md:justify-between">
           <div>
             <p className="mb-2 text-xs font-black uppercase tracking-[0.18em] text-[#F6AD55]">

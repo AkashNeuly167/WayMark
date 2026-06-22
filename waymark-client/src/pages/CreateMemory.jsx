@@ -191,7 +191,7 @@ function CreateMemory() {
 
   return (
     <div className="min-h-screen bg-[#F7FAFC] text-[#002045]">
-      <main className="mx-auto max-w-[1280px] px-4 pb-36 pt-6 md:ml-64 md:px-8 md:pb-28 md:pt-8">
+      <main className="mx-auto max-w-[1280px] px-4 pb-36 pt-6  md:px-8 md:pb-28 md:pt-8">
         <div className="mb-6 flex flex-col gap-4 md:mb-8 md:flex-row md:items-end md:justify-between">
           <div>
             <p className="text-xs font-black uppercase tracking-[0.25em] text-[#F6AD55]">

@@ -366,7 +366,7 @@ function MemoryDetail() {
       />
 
       <div className="min-h-screen bg-[#F7FAFC] text-[#002045]">
-        <main className="mx-auto max-w-[1400px] px-4 pb-28 pt-6 md:ml-64 md:px-8 md:pt-8">
+        <main className="mx-auto max-w-[1400px] px-4 pb-28 pt-6  md:px-8 md:pt-8">
           {error && (
             <div className="mb-6 rounded-2xl border border-red-200 bg-red-50 px-5 py-4 text-red-600">
               {error}
