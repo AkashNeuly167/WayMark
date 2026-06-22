@@ -7,7 +7,6 @@ import {
   ExternalLink,
   Globe,
   Heart,
-  ImageOff,
   Loader2,
   MapPin,
   MessageCircle,
@@ -39,6 +38,7 @@ import { getSavedMemories } from "../services/bookmark.service";
 import { useAuth } from "../context/AuthContext";
 import { useToast } from "../context/useToast";
 import api from "../api/axios";
+import ImageCarousel from "../components/memory/ImageCarousel";
 
 function Profile() {
   const { id } = useParams();
@@ -808,26 +808,18 @@ function Profile() {
             ) : (
               <div className="space-y-6">
                 {userMemories.map((memory) => {
-                  const image = memory.images?.[0]?.url || memory.images?.[0];
-
                   return (
                     <Link
                       key={memory._id}
                       to={`/memories/${memory._id}`}
                       className="group flex flex-col overflow-hidden rounded-[2rem] border border-[#D8DEE6] bg-white shadow-sm transition hover:-translate-y-1 hover:shadow-xl md:flex-row"
                     >
-                      <div className="h-64 bg-[#E8EDF2] md:h-auto md:w-64 md:shrink-0">
-                        {image ? (
-                          <img
-                            src={image}
-                            alt={memory.title}
-                            className="h-full w-full object-cover transition duration-700 group-hover:scale-105"
-                          />
-                        ) : (
-                          <div className="flex h-full w-full items-center justify-center text-[#002045]/35">
-                            <ImageOff size={30} />
-                          </div>
-                        )}
+                      <div className="h-64 overflow-hidden bg-[#E8EDF2] md:h-auto md:w-64 md:shrink-0">
+                        <ImageCarousel
+                          images={memory.images || []}
+                          title={memory.title}
+                          className="h-full !aspect-auto"
+                        />
                       </div>
 
                       <div className="flex min-w-0 flex-1 flex-col justify-between p-6">

@@ -1,13 +1,12 @@
-import { Bookmark, Calendar, ImageOff, MapPin, Trash2 } from "lucide-react";
+import { Bookmark, Calendar, MapPin, Trash2 } from "lucide-react";
 import { useState } from "react";
 import { Link } from "react-router-dom";
 
 import { unsaveMemory } from "../../services/bookmark.service";
+import ImageCarousel from "./ImageCarousel";
 
 function SavedMemoryRow({ memory, onRemoved }) {
   const [loading, setLoading] = useState(false);
-
-  const image = memory.images?.[0]?.url || memory.images?.[0];
 
   const authorName =
     memory.author?.fullName || memory.author?.username || "Waymark Traveler";
@@ -45,17 +44,11 @@ function SavedMemoryRow({ memory, onRemoved }) {
       className="group flex gap-4 rounded-3xl border border-[#D8DEE6] bg-white p-3 shadow-sm transition hover:-translate-y-0.5 hover:border-orange-200 hover:shadow-md"
     >
       <div className="h-24 w-28 shrink-0 overflow-hidden rounded-2xl bg-[#E8EDF2] md:h-28 md:w-36">
-        {image ? (
-          <img
-            src={image}
-            alt={memory.title}
-            className="h-full w-full object-cover transition group-hover:scale-105"
-          />
-        ) : (
-          <div className="grid h-full w-full place-items-center text-[#002045]/35">
-            <ImageOff size={24} />
-          </div>
-        )}
+        <ImageCarousel
+          images={memory.images || []}
+          title={memory.title}
+          className="h-full !aspect-auto"
+        />
       </div>
 
       <div className="min-w-0 flex-1 py-1">
