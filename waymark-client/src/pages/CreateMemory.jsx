@@ -16,7 +16,6 @@ import L from "leaflet";
 
 import api from "../api/axios";
 
-
 delete L.Icon.Default.prototype._getIconUrl;
 
 L.Icon.Default.mergeOptions({
@@ -190,35 +189,37 @@ function CreateMemory() {
   };
 
   return (
-    <div className="min-h-screen bg-[#F7FAFC] text-[#002045]">
-      <main className="mx-auto max-w-[1280px] px-4 pb-36 pt-6  md:px-8 md:pb-28 md:pt-8">
-        <div className="mb-6 flex flex-col gap-4 md:mb-8 md:flex-row md:items-end md:justify-between">
-          <div>
-            <p className="text-xs font-black uppercase tracking-[0.25em] text-[#F6AD55]">
-              Preserve a journey
-            </p>
+    <div className="min-h-screen bg-transparent text-white">
+      <main className="mx-auto max-w-[1280px] px-4 pb-36 pt-5 md:px-8 md:pb-28 md:pt-7">
+        <div className="mb-6 rounded-[2rem] border border-white/10 bg-[#101D2E] p-5 shadow-[0_20px_70px_rgba(0,0,0,0.24)] md:mb-8 md:p-7">
+          <div className="flex flex-col gap-4 md:flex-row md:items-end md:justify-between">
+            <div>
+              <p className="text-xs font-black uppercase tracking-[0.25em] text-[#F6AD55]">
+                Preserve a journey
+              </p>
 
-            <h1 className="mt-2 text-3xl font-black text-[#1A365D] md:text-6xl">
-              Create Memory
-            </h1>
+              <h1 className="mt-2 text-3xl font-black tracking-tight text-white md:text-6xl">
+                Create Memory
+              </h1>
 
-            <p className="mt-3 max-w-2xl text-sm leading-6 text-[#002045]/60 md:text-base">
-              Upload your photos, write the story, anchor it on the map, and
-              preserve the moment.
-            </p>
+              <p className="mt-3 max-w-2xl text-sm leading-6 text-slate-400 md:text-base">
+                Upload your photos, write the story, anchor it on the map, and
+                preserve the moment.
+              </p>
+            </div>
+
+            <button
+              type="button"
+              onClick={() => navigate("/feed")}
+              className="hidden rounded-2xl border border-white/10 bg-white/[0.06] px-5 py-3 font-black text-white transition hover:bg-white/[0.1] md:block"
+            >
+              Cancel
+            </button>
           </div>
-
-          <button
-            type="button"
-            onClick={() => navigate("/feed")}
-            className="hidden rounded-2xl border border-[#D8DEE6] bg-white px-5 py-3 font-bold text-[#1A365D] transition hover:border-[#F6AD55] md:block"
-          >
-            Cancel
-          </button>
         </div>
 
         {error && (
-          <div className="mb-6 rounded-2xl border border-red-200 bg-red-50 px-5 py-4 font-semibold text-red-600">
+          <div className="mb-6 rounded-2xl border border-red-500/25 bg-red-500/10 px-5 py-4 font-semibold text-red-300">
             {error}
           </div>
         )}
@@ -239,7 +240,7 @@ function CreateMemory() {
               setSelectedMood={setSelectedMood}
             />
 
-            <div className="rounded-[2rem] border border-[#D8DEE6] bg-white shadow-sm">
+            <div className="rounded-[2rem] border border-white/10 bg-[#101D2E] shadow-[0_18px_55px_rgba(0,0,0,0.2)]">
               <button
                 type="button"
                 onClick={() => setLocationOpen((prev) => !prev)}
@@ -249,7 +250,7 @@ function CreateMemory() {
                   <p className="text-xs font-black uppercase tracking-widest text-[#F6AD55]">
                     Location
                   </p>
-                  <h2 className="mt-1 text-xl font-black text-[#1A365D]">
+                  <h2 className="mt-1 text-xl font-black text-white">
                     Map Anchor
                   </h2>
                 </div>
@@ -258,7 +259,7 @@ function CreateMemory() {
               </button>
 
               {locationOpen && (
-                <div className="space-y-5 border-t border-[#E5EAF0] p-5">
+                <div className="space-y-5 border-t border-white/10 p-5">
                   <LocationSection
                     formData={formData}
                     handleChange={handleChange}
@@ -337,7 +338,7 @@ function CreateMemory() {
             <button
               type="submit"
               disabled={submitting || uploading}
-              className="flex h-14 w-full items-center justify-center gap-3 rounded-2xl bg-[#F6AD55] text-base font-black text-white shadow-xl transition hover:bg-orange-400 disabled:opacity-60"
+              className="flex h-14 w-full items-center justify-center gap-3 rounded-2xl bg-[#F6AD55] text-base font-black text-[#06111F] shadow-[0_18px_45px_rgba(246,173,85,0.28)] transition hover:bg-orange-300 disabled:opacity-60"
             >
               {submitting ? (
                 <>
@@ -354,7 +355,6 @@ function CreateMemory() {
           </div>
         </form>
       </main>
-
     </div>
   );
 }
@@ -366,9 +366,9 @@ function StorySection({
   setSelectedMood,
 }) {
   return (
-    <section className="rounded-[2rem] border border-[#D8DEE6] bg-white p-5 shadow-[0_10px_25px_rgba(26,54,93,0.05)] md:p-8">
+    <section className="rounded-[2rem] border border-white/10 bg-[#101D2E] p-5 shadow-[0_18px_55px_rgba(0,0,0,0.2)] md:p-8">
       <div className="mb-8">
-        <label className="mb-3 block text-xs font-black uppercase tracking-widest text-[#1A365D]">
+        <label className="mb-3 block text-xs font-black uppercase tracking-widest text-[#F6AD55]">
           Journey Title
         </label>
 
@@ -377,29 +377,29 @@ function StorySection({
           value={formData.title}
           onChange={handleChange}
           placeholder="Where did the adventure lead?"
-          className="w-full border-none bg-transparent p-0 text-3xl font-black leading-tight text-[#002045] outline-none placeholder:text-[#CBD5E1] focus:ring-0 md:text-5xl"
+          className="dark-input w-full border-none bg-transparent p-0 text-3xl font-black leading-tight !text-white caret-[#F6AD55] outline-none placeholder:!text-slate-600 focus:ring-0 md:text-5xl"
         />
       </div>
 
       <div className="mb-8">
-        <div className="mb-4 flex flex-wrap items-center gap-2 border-b border-[#E5EAF0] pb-3">
+        <div className="mb-4 flex flex-wrap items-center gap-2 border-b border-white/10 pb-3">
           <button
             type="button"
-            className="rounded-xl p-2 text-[#74777F] transition hover:bg-[#F1F4F6]"
+            className="rounded-xl p-2 text-slate-500 transition hover:bg-white/[0.06] hover:text-white"
           >
             <Camera size={18} />
           </button>
 
           <button
             type="button"
-            className="rounded-xl p-2 text-[#74777F] transition hover:bg-[#F1F4F6]"
+            className="rounded-xl p-2 text-slate-500 transition hover:bg-white/[0.06] hover:text-white"
           >
             <Mountain size={18} />
           </button>
 
-          <div className="mx-2 h-6 w-px bg-[#E5EAF0]" />
+          <div className="mx-2 h-6 w-px bg-white/10" />
 
-          <span className="text-sm text-[#74777F]">Tell the story...</span>
+          <span className="text-sm text-slate-500">Tell the story...</span>
         </div>
 
         <textarea
@@ -408,12 +408,12 @@ function StorySection({
           onChange={handleChange}
           rows="7"
           placeholder="The dust had not settled yet when we reached the ridge line..."
-          className="w-full resize-none border-none bg-transparent p-0 text-base leading-7 text-[#43474E] outline-none placeholder:text-[#A8B0BA] focus:ring-0 md:text-lg md:leading-8"
+          className="dark-input w-full resize-none border-none bg-transparent p-0 text-base leading-7 !text-slate-200 caret-[#F6AD55] outline-none placeholder:!text-slate-600 focus:ring-0 md:text-lg md:leading-8"
         />
       </div>
 
       <div>
-        <label className="mb-4 block text-xs font-black uppercase tracking-widest text-[#1A365D]">
+        <label className="mb-4 block text-xs font-black uppercase tracking-widest text-[#F6AD55]">
           Current Mood
         </label>
 
@@ -426,10 +426,10 @@ function StorySection({
                 key={mood}
                 type="button"
                 onClick={() => setSelectedMood(mood)}
-                className={`rounded-full px-4 py-2 text-sm font-bold transition ${
+                className={`rounded-full px-4 py-2 text-sm font-black transition ${
                   active
-                    ? "bg-[#002045] text-white shadow-md"
-                    : "bg-[#F1F4F6] text-[#43474E] hover:bg-[#E5E9EB]"
+                    ? "bg-[#F6AD55] text-[#06111F] shadow-[0_12px_30px_rgba(246,173,85,0.22)]"
+                    : "border border-white/10 bg-white/[0.06] text-slate-400 hover:bg-white/[0.1] hover:text-white"
                 }`}
               >
                 {mood}
@@ -444,8 +444,8 @@ function StorySection({
 
 function GallerySection({ images, uploading, handleImageUpload, removeImage }) {
   return (
-    <section className="rounded-[2rem] border border-[#D8DEE6] bg-white p-5 shadow-[0_10px_25px_rgba(26,54,93,0.05)] md:p-8">
-      <label className="mb-4 block text-xs font-black uppercase tracking-widest text-[#1A365D]">
+    <section className="rounded-[2rem] border border-white/10 bg-[#101D2E] p-5 shadow-[0_18px_55px_rgba(0,0,0,0.2)] md:p-8">
+      <label className="mb-4 block text-xs font-black uppercase tracking-widest text-[#F6AD55]">
         Gallery Assets
       </label>
 
@@ -456,7 +456,7 @@ function GallerySection({ images, uploading, handleImageUpload, removeImage }) {
             className={`group relative aspect-square overflow-hidden rounded-2xl border ${
               index === 0
                 ? "border-2 border-[#F6AD55] ring-4 ring-[#F6AD55]/20"
-                : "border-[#D8DEE6]"
+                : "border-white/10"
             }`}
           >
             <img
@@ -466,7 +466,7 @@ function GallerySection({ images, uploading, handleImageUpload, removeImage }) {
             />
 
             {index === 0 && (
-              <span className="absolute left-2 top-2 rounded-full bg-[#F6AD55] px-2 py-1 text-[10px] font-black uppercase text-white">
+              <span className="absolute left-2 top-2 rounded-full bg-[#F6AD55] px-2 py-1 text-[10px] font-black uppercase text-[#06111F]">
                 Cover
               </span>
             )}
@@ -474,21 +474,21 @@ function GallerySection({ images, uploading, handleImageUpload, removeImage }) {
             <button
               type="button"
               onClick={() => removeImage(index)}
-              className="absolute right-2 top-2 grid h-7 w-7 place-items-center rounded-full bg-black/50 text-white opacity-100 transition md:opacity-0 md:group-hover:opacity-100"
+              className="absolute right-2 top-2 grid h-7 w-7 place-items-center rounded-full bg-black/60 text-white opacity-100 transition md:opacity-0 md:group-hover:opacity-100"
             >
               <X size={14} />
             </button>
           </div>
         ))}
 
-        <label className="flex aspect-square cursor-pointer flex-col items-center justify-center rounded-2xl border-2 border-dashed border-[#C4C6CF] bg-[#F7FAFC] text-[#74777F] transition hover:border-[#F6AD55] hover:bg-orange-50 hover:text-[#F6AD55]">
+        <label className="flex aspect-square cursor-pointer flex-col items-center justify-center rounded-2xl border-2 border-dashed border-white/10 bg-white/[0.04] text-slate-500 transition hover:border-[#F6AD55]/50 hover:bg-[#F6AD55]/10 hover:text-[#F6AD55]">
           {uploading ? (
             <Loader2 className="h-8 w-8 animate-spin" />
           ) : (
             <ImagePlus className="h-8 w-8" />
           )}
 
-          <span className="mt-2 text-sm font-bold">
+          <span className="mt-2 text-sm font-black">
             {uploading ? "Uploading" : "Add Media"}
           </span>
 
@@ -513,21 +513,21 @@ function LocationSection({
   compact = false,
 }) {
   return (
-    <section className="overflow-hidden rounded-[2rem] border border-[#1A365D]/20 bg-[#1A365D] text-white shadow-xl">
+    <section className="overflow-hidden rounded-[2rem] border border-[#F6AD55]/20 bg-gradient-to-br from-[#1A365D] to-[#06111F] text-white shadow-[0_24px_80px_rgba(0,0,0,0.32)]">
       <div className="p-5 md:p-6">
-        <label className="mb-4 block text-xs font-black uppercase tracking-widest text-blue-100">
+        <label className="mb-4 block text-xs font-black uppercase tracking-widest text-[#F6AD55]">
           Location Anchor
         </label>
 
         <div className="relative mb-4">
-          <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-blue-100/70" />
+          <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-slate-500" />
 
           <input
             name="locationName"
             value={formData.locationName}
             onChange={handleChange}
             placeholder="Search or name this place..."
-            className="w-full rounded-xl border-none bg-[#002045]/45 py-3 pl-10 pr-4 text-sm text-white outline-none placeholder:text-blue-100/50 focus:ring-1 focus:ring-[#F6AD55]"
+            className="dark-input w-full rounded-xl border border-white/10 bg-black/20 py-3 pl-10 pr-4 text-sm font-semibold !text-white caret-[#F6AD55] outline-none placeholder:!text-slate-500 focus:border-[#F6AD55]/60 focus:ring-4 focus:ring-[#F6AD55]/10"
           />
         </div>
 
@@ -551,7 +551,7 @@ function LocationSection({
           </MapContainer>
         </div>
 
-        <p className="mt-3 text-xs leading-5 text-blue-100/70">
+        <p className="mt-3 text-xs leading-5 text-slate-400">
           Click on the map to set exact coordinates for this memory.
         </p>
       </div>
@@ -561,8 +561,8 @@ function LocationSection({
 
 function MetadataSection({ formData, handleChange }) {
   return (
-    <section className="rounded-[2rem] border border-[#D8DEE6] bg-white p-5 shadow-[0_10px_25px_rgba(26,54,93,0.05)] md:p-6">
-      <label className="mb-6 block text-xs font-black uppercase tracking-widest text-[#1A365D]">
+    <section className="rounded-[2rem] border border-white/10 bg-[#101D2E] p-5 shadow-[0_18px_55px_rgba(0,0,0,0.2)] md:p-6">
+      <label className="mb-6 block text-xs font-black uppercase tracking-widest text-[#F6AD55]">
         Metadata
       </label>
 
@@ -607,8 +607,8 @@ function MetadataSection({ formData, handleChange }) {
 
 function ActivitySection({ selectedActivities, toggleActivity }) {
   return (
-    <section className="rounded-[2rem] border border-[#D8DEE6] bg-white p-5 shadow-[0_10px_25px_rgba(26,54,93,0.05)] md:p-6">
-      <label className="mb-4 block text-xs font-black uppercase tracking-widest text-[#1A365D]">
+    <section className="rounded-[2rem] border border-white/10 bg-[#101D2E] p-5 shadow-[0_18px_55px_rgba(0,0,0,0.2)] md:p-6">
+      <label className="mb-4 block text-xs font-black uppercase tracking-widest text-[#F6AD55]">
         Activity Context
       </label>
 
@@ -621,10 +621,10 @@ function ActivitySection({ selectedActivities, toggleActivity }) {
               key={activity}
               type="button"
               onClick={() => toggleActivity(activity)}
-              className={`rounded-full border px-3 py-2 text-xs font-bold transition ${
+              className={`rounded-full border px-3 py-2 text-xs font-black transition ${
                 active
-                  ? "border-[#F6AD55] bg-orange-50 text-[#F6AD55]"
-                  : "border-[#D8DEE6] text-[#43474E] hover:bg-[#F7FAFC]"
+                  ? "border-[#F6AD55]/50 bg-[#F6AD55]/15 text-[#F6AD55]"
+                  : "border-white/10 bg-white/[0.04] text-slate-400 hover:bg-white/[0.08] hover:text-white"
               }`}
             >
               {activity}
@@ -645,15 +645,15 @@ function PublishSection({
 }) {
   return (
     <section
-      className={`rounded-[2rem] bg-[#002045] p-6 text-white shadow-xl ${
+      className={`rounded-[2rem] border border-[#F6AD55]/20 bg-gradient-to-br from-[#1A365D] to-[#06111F] p-6 text-white shadow-[0_24px_80px_rgba(0,0,0,0.32)] ${
         mobile ? "pb-24" : ""
       }`}
     >
-      <label className="mb-5 block text-xs font-black uppercase tracking-widest text-blue-100">
+      <label className="mb-5 block text-xs font-black uppercase tracking-widest text-[#F6AD55]">
         Privacy Controls
       </label>
 
-      <div className="mb-6 grid grid-cols-3 rounded-xl bg-[#1A365D] p-1">
+      <div className="mb-6 grid grid-cols-3 rounded-xl border border-white/10 bg-black/20 p-1">
         {["public", "friends", "private"].map((item) => (
           <button
             key={item}
@@ -661,8 +661,8 @@ function PublishSection({
             onClick={() => setPrivacy(item)}
             className={`rounded-lg py-2 text-xs font-black capitalize transition ${
               privacy === item
-                ? "bg-white text-[#002045] shadow-sm"
-                : "text-blue-100/70"
+                ? "bg-[#F6AD55] text-[#06111F] shadow-sm"
+                : "text-slate-400 hover:text-white"
             }`}
           >
             {item}
@@ -673,7 +673,7 @@ function PublishSection({
       <button
         type="submit"
         disabled={submitting || uploading}
-        className="hidden h-14 w-full items-center justify-center gap-3 rounded-2xl bg-[#F6AD55] text-lg font-black text-white shadow-lg transition hover:bg-orange-400 disabled:opacity-60 lg:flex"
+        className="hidden h-14 w-full items-center justify-center gap-3 rounded-2xl bg-[#F6AD55] text-lg font-black text-[#06111F] shadow-[0_18px_45px_rgba(246,173,85,0.24)] transition hover:bg-orange-300 disabled:opacity-60 lg:flex"
       >
         {submitting ? (
           <>
@@ -688,7 +688,7 @@ function PublishSection({
         )}
       </button>
 
-      <p className="mt-4 text-center text-xs leading-5 text-blue-100/60">
+      <p className="mt-4 text-center text-xs leading-5 text-slate-400">
         This memory will be added to your WayMark feed and travel passport.
       </p>
     </section>
@@ -698,7 +698,7 @@ function PublishSection({
 function Field({ label, name, value, onChange, placeholder }) {
   return (
     <div>
-      <label className="mb-2 block text-xs font-black uppercase tracking-widest text-[#002045]/45">
+      <label className="mb-2 block text-xs font-black uppercase tracking-widest text-slate-500">
         {label}
       </label>
 
@@ -707,7 +707,7 @@ function Field({ label, name, value, onChange, placeholder }) {
         value={value}
         onChange={onChange}
         placeholder={placeholder}
-        className="w-full rounded-2xl border border-[#D8DEE6] bg-[#F7FAFC] px-4 py-3 text-sm font-semibold text-[#002045] outline-none transition placeholder:text-[#94A3B8] focus:border-[#F6AD55] focus:bg-white"
+        className="dark-input w-full rounded-2xl border border-white/10 bg-[#06111F] px-4 py-3 text-sm font-semibold !text-white caret-[#F6AD55] outline-none transition placeholder:!text-slate-600 focus:border-[#F6AD55]/60 focus:ring-4 focus:ring-[#F6AD55]/10"
       />
     </div>
   );

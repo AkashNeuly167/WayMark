@@ -7,21 +7,21 @@ function ToastItem({ toast, onClose }) {
   const styles = {
     success: {
       icon: <CheckCircle2 size={22} />,
-      iconClass: "text-green-500",
-      border: "border-green-100",
-      bg: "bg-green-50",
+      iconClass: "text-emerald-400",
+      border: "border-emerald-500/25",
+      bg: "bg-emerald-500/10",
     },
     error: {
       icon: <AlertCircle size={22} />,
-      iconClass: "text-red-500",
-      border: "border-red-100",
-      bg: "bg-red-50",
+      iconClass: "text-red-400",
+      border: "border-red-500/25",
+      bg: "bg-red-500/10",
     },
     info: {
       icon: <Info size={22} />,
       iconClass: "text-[#F6AD55]",
-      border: "border-orange-100",
-      bg: "bg-orange-50",
+      border: "border-[#F6AD55]/25",
+      bg: "bg-[#F6AD55]/10",
     },
   };
 
@@ -29,16 +29,16 @@ function ToastItem({ toast, onClose }) {
 
   return (
     <div
-      className={`w-full rounded-3xl border ${current.border} ${current.bg} p-4 shadow-xl`}
+      className={`w-full rounded-3xl border ${current.border} ${current.bg} p-4 text-white shadow-[0_20px_70px_rgba(0,0,0,0.35)] backdrop-blur-xl`}
     >
       <div className="flex items-start gap-3">
         <div className={`mt-0.5 ${current.iconClass}`}>{current.icon}</div>
 
         <div className="min-w-0 flex-1">
-          <h4 className="font-semibold text-[#002045]">{toast.title}</h4>
+          <h4 className="font-black text-white">{toast.title}</h4>
 
           {toast.message && (
-            <p className="mt-1 text-sm leading-5 text-[#002045]/60">
+            <p className="mt-1 text-sm leading-5 text-slate-400">
               {toast.message}
             </p>
           )}
@@ -47,7 +47,8 @@ function ToastItem({ toast, onClose }) {
         <button
           type="button"
           onClick={() => onClose(toast.id)}
-          className="rounded-full p-1 text-[#002045]/40 transition hover:bg-white hover:text-[#002045]"
+          className="rounded-full p-1 text-slate-500 transition hover:bg-white/10 hover:text-white"
+          aria-label="Close toast"
         >
           <X size={16} />
         </button>

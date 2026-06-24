@@ -90,21 +90,28 @@ function TravelWrapped() {
   ];
 
   return (
-    <div className="min-h-screen bg-[#F7FAFC] text-[#002045]">
-      <main className="mx-auto max-w-6xl px-4 pb-28 pt-8 md:px-8 ">
-        <section className="overflow-hidden rounded-[32px] border border-[#D8DEE6] bg-white shadow-sm">
-          <div className="bg-gradient-to-r from-[#0B132B] via-[#1A365D] to-[#F6AD55] p-8 text-white md:p-12">
-            <div className="flex items-start justify-between gap-5">
+    <div className="min-h-screen bg-transparent text-white">
+      <main className="mx-auto max-w-6xl px-4 pb-28 pt-5 md:px-8 md:pt-7">
+        <section className="overflow-hidden rounded-[2rem] border border-white/10 bg-[#101D2E] shadow-[0_20px_70px_rgba(0,0,0,0.24)]">
+          <div className="relative overflow-hidden bg-gradient-to-r from-[#06111F] via-[#1A365D] to-[#F6AD55] p-6 text-white md:p-10">
+            <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_right,rgba(255,255,255,0.24),transparent_28%)]" />
+            <div className="absolute inset-0 bg-gradient-to-b from-transparent to-[#101D2E]/20" />
+
+            <div className="relative z-10 flex flex-col gap-6 md:flex-row md:items-start md:justify-between">
               <div>
-                <div className="flex h-16 w-16 items-center justify-center rounded-3xl bg-white/15 backdrop-blur">
+                <div className="flex h-16 w-16 items-center justify-center rounded-3xl border border-white/15 bg-white/10 backdrop-blur">
                   <Award size={32} />
                 </div>
 
-                <h1 className="mt-6 text-4xl font-bold md:text-6xl">
+                <p className="mt-6 text-xs font-black uppercase tracking-[0.24em] text-[#F6AD55]">
+                  Year in travel
+                </p>
+
+                <h1 className="mt-2 text-4xl font-black tracking-tight md:text-6xl">
                   Travel Wrapped
                 </h1>
 
-                <p className="mt-4 max-w-2xl text-white/75">
+                <p className="mt-4 max-w-2xl text-sm leading-6 text-slate-300 md:text-base">
                   Your personal travel recap for memories, countries, cities,
                   likes, and favorite moments.
                 </p>
@@ -113,15 +120,15 @@ function TravelWrapped() {
               <select
                 value={year}
                 onChange={(e) => setYear(Number(e.target.value))}
-                className="rounded-2xl border border-white/20 bg-white/15 px-4 py-3 text-sm font-semibold text-white outline-none backdrop-blur"
+                className="dark-input w-fit rounded-2xl border border-white/15 bg-black/20 px-4 py-3 text-sm font-black !text-white outline-none backdrop-blur transition focus:border-[#F6AD55]/60 focus:ring-4 focus:ring-[#F6AD55]/10"
               >
-                <option className="text-[#002045]" value={currentYear}>
+                <option className="text-[#06111F]" value={currentYear}>
                   {currentYear}
                 </option>
-                <option className="text-[#002045]" value={currentYear - 1}>
+                <option className="text-[#06111F]" value={currentYear - 1}>
                   {currentYear - 1}
                 </option>
-                <option className="text-[#002045]" value={currentYear - 2}>
+                <option className="text-[#06111F]" value={currentYear - 2}>
                   {currentYear - 2}
                 </option>
               </select>
@@ -129,23 +136,29 @@ function TravelWrapped() {
           </div>
 
           {loading ? (
-            <div className="flex items-center justify-center p-10 text-[#002045]/60">
-              <Loader2 className="mr-2 h-5 w-5 animate-spin" />
+            <div className="flex items-center justify-center p-10 text-slate-400">
+              <Loader2 className="mr-2 h-5 w-5 animate-spin text-[#F6AD55]" />
               Loading travel wrapped...
             </div>
           ) : (
-            <div className="grid grid-cols-1 gap-5 p-6 md:grid-cols-4 md:p-8">
+            <div className="grid grid-cols-1 gap-4 p-5 md:grid-cols-4 md:p-7">
               {stats.map((stat) => {
                 const Icon = stat.icon;
 
                 return (
                   <div
                     key={stat.label}
-                    className="rounded-3xl bg-[#F7FAFC] p-5"
+                    className="rounded-3xl border border-white/10 bg-white/[0.04] p-5 transition hover:border-[#F6AD55]/30 hover:bg-white/[0.07]"
                   >
-                    <Icon className="text-[#F6AD55]" size={26} />
-                    <p className="mt-4 text-3xl font-bold">{stat.value}</p>
-                    <p className="mt-1 text-sm text-[#002045]/55">
+                    <div className="grid h-11 w-11 place-items-center rounded-2xl bg-[#F6AD55]/15 text-[#F6AD55]">
+                      <Icon size={24} />
+                    </div>
+
+                    <p className="mt-4 text-3xl font-black text-white">
+                      {stat.value}
+                    </p>
+
+                    <p className="mt-1 text-sm font-semibold text-slate-500">
                       {stat.label}
                     </p>
                   </div>
@@ -157,16 +170,26 @@ function TravelWrapped() {
 
         {!loading && (
           <>
-            <section className="mt-8 grid grid-cols-1 gap-6 lg:grid-cols-[1.2fr_0.8fr]">
-              <div className="rounded-3xl border border-[#D8DEE6] bg-white p-6 shadow-sm">
+            <section className="mt-7 grid grid-cols-1 gap-6 lg:grid-cols-[1.2fr_0.8fr]">
+              <div className="rounded-[2rem] border border-white/10 bg-[#101D2E] p-6 shadow-[0_20px_70px_rgba(0,0,0,0.22)]">
                 <div className="mb-5 flex items-center gap-3">
-                  <BarChart3 className="text-[#F6AD55]" size={24} />
-                  <h2 className="text-2xl font-bold">Your travel map</h2>
+                  <div className="grid h-11 w-11 place-items-center rounded-2xl bg-[#F6AD55]/15 text-[#F6AD55]">
+                    <BarChart3 size={23} />
+                  </div>
+
+                  <div>
+                    <p className="text-xs font-black uppercase tracking-[0.18em] text-[#F6AD55]">
+                      Recap
+                    </p>
+                    <h2 className="text-2xl font-black text-white">
+                      Your travel map
+                    </h2>
+                  </div>
                 </div>
 
                 {wrapped?.countries?.length > 0 ? (
                   <div>
-                    <p className="mb-4 text-[#002045]/60">
+                    <p className="mb-4 text-sm leading-6 text-slate-400">
                       Countries you shared memories from in {year}.
                     </p>
 
@@ -174,7 +197,7 @@ function TravelWrapped() {
                       {wrapped.countries.map((country) => (
                         <span
                           key={country}
-                          className="rounded-full bg-orange-50 px-4 py-2 text-sm font-semibold text-[#F6AD55]"
+                          className="rounded-full border border-[#F6AD55]/20 bg-[#F6AD55]/10 px-4 py-2 text-sm font-black text-[#F6AD55]"
                         >
                           {country}
                         </span>
@@ -182,93 +205,117 @@ function TravelWrapped() {
                     </div>
                   </div>
                 ) : (
-                  <p className="text-[#002045]/60">
+                  <p className="text-sm leading-6 text-slate-400">
                     No countries yet for this year. Add memories to build your
                     travel wrapped.
                   </p>
                 )}
               </div>
 
-              <div className="rounded-3xl border border-[#D8DEE6] bg-white p-6 shadow-sm">
+              <div className="rounded-[2rem] border border-white/10 bg-[#101D2E] p-6 shadow-[0_20px_70px_rgba(0,0,0,0.22)]">
                 <div className="mb-5 flex items-center gap-3">
-                  <MessageCircle className="text-[#F6AD55]" size={24} />
-                  <h2 className="text-2xl font-bold">Engagement</h2>
+                  <div className="grid h-11 w-11 place-items-center rounded-2xl bg-[#F6AD55]/15 text-[#F6AD55]">
+                    <MessageCircle size={23} />
+                  </div>
+
+                  <div>
+                    <p className="text-xs font-black uppercase tracking-[0.18em] text-[#F6AD55]">
+                      Community
+                    </p>
+                    <h2 className="text-2xl font-black text-white">
+                      Engagement
+                    </h2>
+                  </div>
                 </div>
 
                 <div className="space-y-4">
-                  <div className="rounded-2xl bg-[#F7FAFC] p-4">
-                    <p className="text-3xl font-bold">
-                      {wrapped?.totalComments || 0}
-                    </p>
-                    <p className="mt-1 text-sm text-[#002045]/55">
-                      Total comments
-                    </p>
-                  </div>
+                  <WrappedMetric
+                    label="Total comments"
+                    value={wrapped?.totalComments || 0}
+                  />
 
-                  <div className="rounded-2xl bg-[#F7FAFC] p-4">
-                    <p className="text-3xl font-bold">
-                      {wrapped?.totalLikes || 0}
-                    </p>
-                    <p className="mt-1 text-sm text-[#002045]/55">
-                      Total likes
-                    </p>
-                  </div>
+                  <WrappedMetric
+                    label="Total likes"
+                    value={wrapped?.totalLikes || 0}
+                    accent
+                  />
                 </div>
               </div>
             </section>
 
-            <section className="mt-8 rounded-3xl border border-[#D8DEE6] bg-white p-6 shadow-sm">
+            <section className="mt-7 rounded-[2rem] border border-white/10 bg-[#101D2E] p-6 shadow-[0_20px_70px_rgba(0,0,0,0.22)]">
               <div className="mb-5 flex items-center gap-3">
-                <Award className="text-[#F6AD55]" size={24} />
-                <h2 className="text-2xl font-bold">Top memory</h2>
+                <div className="grid h-11 w-11 place-items-center rounded-2xl bg-[#F6AD55]/15 text-[#F6AD55]">
+                  <Award size={23} />
+                </div>
+
+                <div>
+                  <p className="text-xs font-black uppercase tracking-[0.18em] text-[#F6AD55]">
+                    Highlight
+                  </p>
+                  <h2 className="text-2xl font-black text-white">
+                    Top memory
+                  </h2>
+                </div>
               </div>
 
               {topMemory ? (
                 <Link
                   to={`/memories/${topMemory._id}`}
-                  className="grid overflow-hidden rounded-3xl border border-[#D8DEE6] bg-[#F7FAFC] transition hover:-translate-y-0.5 hover:shadow-md md:grid-cols-[260px_1fr]"
+                  className="group grid overflow-hidden rounded-3xl border border-white/10 bg-white/[0.04] transition hover:-translate-y-0.5 hover:border-[#F6AD55]/30 hover:bg-white/[0.07] md:grid-cols-[260px_1fr]"
                 >
                   {topMemoryImage ? (
-                    <img
-                      src={topMemoryImage}
-                      alt={topMemory.title}
-                      className="h-56 w-full object-cover md:h-full"
-                    />
+                    <div className="h-56 overflow-hidden bg-[#06111F] md:h-full">
+                      <img
+                        src={topMemoryImage}
+                        alt={topMemory.title}
+                        className="h-full w-full object-cover transition duration-700 group-hover:scale-110"
+                      />
+                    </div>
                   ) : (
-                    <div className="flex h-56 items-center justify-center bg-[#E8EDF2] text-[#002045]/40">
+                    <div className="flex h-56 items-center justify-center bg-[#06111F] text-slate-600 md:h-full">
                       No image
                     </div>
                   )}
 
                   <div className="p-5">
-                    <div className="mb-3 flex items-center gap-2 text-sm font-semibold text-[#F6AD55]">
-                      <MapPin size={15} />
-                      {topMemory.city}, {topMemory.country}
-                    </div>
+                    {(topMemory.city || topMemory.country) && (
+                      <div className="mb-3 flex items-center gap-2 text-sm font-black text-[#F6AD55]">
+                        <MapPin size={15} />
+                        {[topMemory.city, topMemory.country]
+                          .filter(Boolean)
+                          .join(", ")}
+                      </div>
+                    )}
 
-                    <h3 className="text-2xl font-bold">{topMemory.title}</h3>
+                    <h3 className="text-2xl font-black text-white">
+                      {topMemory.title}
+                    </h3>
 
-                    <p className="mt-3 line-clamp-3 text-[#002045]/65">
+                    <p className="mt-3 line-clamp-3 text-sm leading-6 text-slate-400">
                       {topMemory.description}
                     </p>
 
-                    <div className="mt-5 flex gap-3 text-sm text-[#002045]/60">
+                    <div className="mt-5 flex gap-3 text-sm font-semibold text-slate-400">
                       <span className="flex items-center gap-1">
-                        <Heart size={16} />
+                        <Heart size={16} className="text-red-400" />
                         {topMemory.likes?.length || 0} likes
                       </span>
 
                       <span className="flex items-center gap-1">
-                        <MessageCircle size={16} />
+                        <MessageCircle size={16} className="text-[#F6AD55]" />
                         {topMemory.commentsCount || 0} comments
                       </span>
                     </div>
                   </div>
                 </Link>
               ) : (
-                <div className="rounded-3xl border border-dashed border-[#D8DEE6] bg-[#F7FAFC] p-8 text-center">
-                  <h3 className="text-xl font-bold">No top memory yet</h3>
-                  <p className="mt-2 text-[#002045]/60">
+                <div className="rounded-3xl border border-dashed border-white/10 bg-white/[0.04] p-8 text-center">
+                  <h3 className="text-xl font-black text-white">
+                    No top memory yet
+                  </h3>
+
+                  <p className="mt-2 text-sm leading-6 text-slate-400">
                     Share memories and collect likes to unlock your top memory.
                   </p>
                 </div>
@@ -277,6 +324,22 @@ function TravelWrapped() {
           </>
         )}
       </main>
+    </div>
+  );
+}
+
+function WrappedMetric({ label, value, accent }) {
+  return (
+    <div className="rounded-2xl border border-white/10 bg-white/[0.04] p-4">
+      <p
+        className={`text-3xl font-black ${
+          accent ? "text-[#F6AD55]" : "text-white"
+        }`}
+      >
+        {value}
+      </p>
+
+      <p className="mt-1 text-sm font-semibold text-slate-500">{label}</p>
     </div>
   );
 }

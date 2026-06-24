@@ -157,24 +157,46 @@ function MemoryCard({ memory, onCommentClick }) {
   return (
     <article
       onClick={handleCardClick}
-      className="group cursor-pointer overflow-hidden rounded-[1.75rem] border border-slate-200 bg-white shadow-[0_10px_30px_rgba(15,23,42,0.07)] transition-all duration-300 hover:-translate-y-1 hover:border-orange-200 hover:shadow-[0_18px_50px_rgba(15,23,42,0.14)]"
+      className="group cursor-pointer overflow-hidden rounded-[2rem] border border-white/10 bg-[#101D2E] shadow-[0_20px_70px_rgba(0,0,0,0.28)] transition-all duration-300 hover:-translate-y-1 hover:border-[#F6AD55]/35 hover:bg-[#14243A] hover:shadow-[0_28px_90px_rgba(0,0,0,0.38)]"
     >
-      <div className="flex items-center gap-3 px-4 py-3">
-        <div className="flex min-w-0 items-center gap-3">
+      <div className="relative overflow-hidden bg-[#06111F]">
+        <ImageCarousel
+          images={memory.images || []}
+          title={memory.title}
+          variant="feed"
+          className="h-[240px] !aspect-auto md:h-[300px] xl:h-[320px]"
+        />
+
+        {(memory.city || memory.country) && (
+          <div className="pointer-events-none absolute left-4 top-4 z-20 inline-flex max-w-[78%] items-center gap-2 rounded-full border border-white/15 bg-black/45 px-3.5 py-2 text-xs font-black text-white shadow-xl backdrop-blur-md">
+            <MapPin size={14} className="shrink-0 text-[#F6AD55]" />
+            <span className="truncate">
+              {[memory.locationName, memory.city, memory.country]
+                .filter(Boolean)
+                .join(", ")}
+            </span>
+          </div>
+        )}
+
+        <div className="pointer-events-none absolute inset-x-0 bottom-0 h-24 bg-gradient-to-t from-[#101D2E] to-transparent" />
+      </div>
+
+      <div className="px-4 pb-3 pt-3 md:px-5 md:pb-4">
+        <div className="mb-4 flex items-center gap-3">
           {avatarUrl ? (
             <img
               src={avatarUrl}
               alt={authorName}
-              className="h-10 w-10 shrink-0 rounded-2xl object-cover ring-2 ring-slate-100"
+              className="h-10 w-10 shrink-0 rounded-full object-cover ring-2 ring-white/10"
             />
           ) : (
-            <div className="grid h-10 w-10 shrink-0 place-items-center rounded-2xl bg-gradient-to-br from-[#1A365D] to-[#002045] text-sm font-black text-white shadow-md">
+            <div className="grid h-10 w-10 shrink-0 place-items-center rounded-full bg-gradient-to-br from-[#F6AD55] to-orange-600 text-sm font-black text-white shadow-lg">
               {authorInitial}
             </div>
           )}
 
-          <div className="min-w-0">
-            <h4 className="truncate text-sm font-black text-slate-950">
+          <div className="min-w-0 flex-1">
+            <h4 className="truncate text-sm font-black text-white">
               {authorName}
             </h4>
 
@@ -184,46 +206,16 @@ function MemoryCard({ memory, onCommentClick }) {
             </div>
           </div>
         </div>
-      </div>
 
-      <div className="relative overflow-hidden bg-slate-100">
-        <ImageCarousel
-          images={memory.images || []}
-          title={memory.title}
-          variant="feed"
-          className="h-[300px] !aspect-auto md:h-[390px] xl:h-[420px]"
-        />
-      </div>
+        <h3 className="line-clamp-1 text-xl font-black leading-tight text-white md:text-2xl">
+          {memory.title}
+        </h3>
 
-      <div className="p-4 md:p-5">
-        <div className="mb-3 flex items-start justify-between gap-3">
-          <div className="min-w-0">
-            <h3 className="line-clamp-1 text-xl font-black leading-tight text-[#002045] md:text-2xl">
-              {memory.title}
-            </h3>
-
-            {(memory.city || memory.country) && (
-              <div className="mt-2 flex max-w-full items-center gap-1.5 text-xs font-black text-orange-500">
-                <MapPin size={13} className="shrink-0" />
-                <span className="truncate">
-                  {[memory.locationName, memory.city, memory.country]
-                    .filter(Boolean)
-                    .join(", ")}
-                </span>
-              </div>
-            )}
-          </div>
-
-          <span className="mt-1 hidden shrink-0 rounded-full bg-slate-50 px-3 py-1.5 text-[10px] font-black uppercase tracking-[0.14em] text-slate-400 transition group-hover:bg-orange-50 group-hover:text-orange-500 md:inline-flex">
-            View
-          </span>
-        </div>
-
-        <p className="line-clamp-2 text-sm leading-6 text-slate-600">
+        <p className="mt-1.5 line-clamp-2 text-sm leading-5 text-slate-400">
           {memory.description}
         </p>
 
-        <div className="mt-4 flex items-center justify-between border-t border-slate-100 pt-3">
+        <div className="mt-3 flex items-center justify-between border-t border-white/10 pt-2.5">
           <div className="flex items-center gap-1">
             <button
               type="button"
@@ -231,15 +223,15 @@ function MemoryCard({ memory, onCommentClick }) {
               disabled={likeLoading}
               className={`flex items-center gap-1.5 rounded-xl px-3 py-2 text-sm font-black transition-all duration-200 disabled:opacity-50 ${
                 liked
-                  ? "bg-red-50 text-red-500"
-                  : "text-slate-600 hover:bg-red-50 hover:text-red-500"
+                  ? "bg-red-500/10 text-red-400"
+                  : "text-slate-300 hover:bg-red-500/10 hover:text-red-400"
               }`}
             >
               <Heart
-                size={18}
+                size={19}
                 className={`transition-transform duration-200 ${
                   likeAnimating ? "scale-125" : "scale-100"
-                } ${liked ? "fill-red-500 text-red-500" : ""}`}
+                } ${liked ? "fill-red-400 text-red-400" : ""}`}
               />
               <span>{likesCount}</span>
             </button>
@@ -247,9 +239,9 @@ function MemoryCard({ memory, onCommentClick }) {
             <button
               type="button"
               onClick={handleCommentClick}
-              className="flex items-center gap-1.5 rounded-xl px-3 py-2 text-sm font-black text-slate-600 transition-all duration-200 hover:bg-orange-50 hover:text-orange-500"
+              className="flex items-center gap-1.5 rounded-xl px-3 py-2 text-sm font-black text-slate-300 transition hover:bg-white/5 hover:text-[#F6AD55]"
             >
-              <MessageCircle size={18} />
+              <MessageCircle size={19} />
               <span>{memory.commentsCount || 0}</span>
             </button>
           </div>
@@ -260,14 +252,14 @@ function MemoryCard({ memory, onCommentClick }) {
             disabled={bookmarkLoading}
             className={`flex items-center gap-1.5 rounded-xl px-3 py-2 text-sm font-black transition disabled:opacity-60 ${
               bookmarked
-                ? "bg-orange-50 text-orange-500"
-                : "text-slate-600 hover:bg-orange-50 hover:text-orange-500"
+                ? "bg-[#F6AD55]/15 text-[#F6AD55]"
+                : "text-slate-300 hover:bg-[#F6AD55]/10 hover:text-[#F6AD55]"
             }`}
             aria-label={bookmarked ? "Remove from saved" : "Save memory"}
           >
             <Bookmark
-              size={18}
-              className={bookmarked ? "fill-orange-500 text-orange-500" : ""}
+              size={19}
+              className={bookmarked ? "fill-[#F6AD55] text-[#F6AD55]" : ""}
             />
             <span className="hidden sm:inline">
               {bookmarked ? "Saved" : "Save"}

@@ -117,8 +117,6 @@ function Journey() {
     }, 0);
   }, [memories]);
 
-
-
   const formatDate = (dateString) => {
     if (!dateString) return "Recently";
 
@@ -166,11 +164,11 @@ function Journey() {
   };
 
   return (
-    <div className="min-h-screen bg-[#F7FAFC] text-[#002045]">
+    <div className="min-h-screen bg-transparent text-white">
       <main className="mx-auto max-w-6xl px-4 pb-28 pt-6 md:px-8 md:pt-10">
-        <section className="mb-8 overflow-hidden rounded-[32px] border border-[#D8DEE6] bg-white shadow-sm">
-          <div className="bg-gradient-to-r from-[#0B132B] via-[#1A365D] to-[#F6AD55] p-8 text-white md:p-10">
-            <div className="grid h-16 w-16 place-items-center rounded-3xl bg-white/15 backdrop-blur">
+        <section className="mb-8 overflow-hidden rounded-[2rem] border border-white/10 bg-[#101D2E] shadow-[0_20px_70px_rgba(0,0,0,0.22)]">
+          <div className="bg-gradient-to-r from-[#06111F] via-[#1A365D] to-[#F6AD55] p-8 text-white md:p-10">
+            <div className="grid h-16 w-16 place-items-center rounded-3xl border border-white/10 bg-white/10 backdrop-blur">
               <Route size={32} />
             </div>
 
@@ -178,37 +176,35 @@ function Journey() {
               Your Journeys
             </h1>
 
-            <p className="mt-4 max-w-2xl text-white/75">
+            <p className="mt-4 max-w-2xl text-slate-300">
               See your memories grouped by countries and cities you have shared.
             </p>
           </div>
 
           <div className="grid grid-cols-2 gap-4 p-5 md:grid-cols-4 md:p-8">
-            <div className="rounded-3xl bg-[#F7FAFC] p-5">
-              <Sparkles className="text-[#F6AD55]" size={26} />
-              <p className="mt-4 text-3xl font-black">{memories.length}</p>
-              <p className="mt-1 text-sm text-[#002045]/55">Memories</p>
-            </div>
+            <JourneyStat
+              icon={<Sparkles size={26} />}
+              value={memories.length}
+              label="Memories"
+            />
 
-            <div className="rounded-3xl bg-[#F7FAFC] p-5">
-              <Map className="text-[#F6AD55]" size={26} />
-              <p className="mt-4 text-3xl font-black">
-                {journeyGroups.length}
-              </p>
-              <p className="mt-1 text-sm text-[#002045]/55">Countries</p>
-            </div>
+            <JourneyStat
+              icon={<Map size={26} />}
+              value={journeyGroups.length}
+              label="Countries"
+            />
 
-            <div className="rounded-3xl bg-[#F7FAFC] p-5">
-              <MapPin className="text-[#F6AD55]" size={26} />
-              <p className="mt-4 text-3xl font-black">{totalCities}</p>
-              <p className="mt-1 text-sm text-[#002045]/55">Cities</p>
-            </div>
+            <JourneyStat
+              icon={<MapPin size={26} />}
+              value={totalCities}
+              label="Cities"
+            />
 
-            <div className="rounded-3xl bg-[#F7FAFC] p-5">
-              <Heart className="text-[#F6AD55]" size={26} />
-              <p className="mt-4 text-3xl font-black">{totalLikes}</p>
-              <p className="mt-1 text-sm text-[#002045]/55">Likes</p>
-            </div>
+            <JourneyStat
+              icon={<Heart size={26} />}
+              value={totalLikes}
+              label="Likes"
+            />
           </div>
         </section>
 
@@ -217,26 +213,28 @@ function Journey() {
             {[1, 2, 3].map((item) => (
               <div
                 key={item}
-                className="h-56 animate-pulse rounded-3xl border border-[#D8DEE6] bg-white"
+                className="h-56 animate-pulse rounded-[2rem] border border-white/10 bg-[#101D2E]"
               />
             ))}
           </div>
         ) : memories.length === 0 ? (
-          <div className="rounded-3xl border border-dashed border-[#D8DEE6] bg-white p-10 text-center">
-            <div className="mx-auto grid h-16 w-16 place-items-center rounded-3xl bg-orange-50 text-[#F6AD55]">
+          <div className="rounded-[2rem] border border-dashed border-white/10 bg-[#101D2E] p-10 text-center shadow-[0_20px_70px_rgba(0,0,0,0.2)]">
+            <div className="mx-auto grid h-16 w-16 place-items-center rounded-3xl border border-[#F6AD55]/20 bg-[#F6AD55]/10 text-[#F6AD55]">
               <Route size={28} />
             </div>
 
-            <h2 className="mt-5 text-2xl font-black">No journeys yet</h2>
+            <h2 className="mt-5 text-2xl font-black text-white">
+              No journeys yet
+            </h2>
 
-            <p className="mx-auto mt-3 max-w-xl text-[#002045]/60">
+            <p className="mx-auto mt-3 max-w-xl text-slate-400">
               Create your first memory and your journeys will start appearing
               here.
             </p>
 
             <Link
               to="/memories/create"
-              className="mt-6 inline-flex rounded-2xl bg-[#F6AD55] px-5 py-3 font-black text-white transition hover:bg-orange-400"
+              className="mt-6 inline-flex rounded-2xl bg-[#F6AD55] px-5 py-3 font-black text-[#06111F] transition hover:bg-orange-300"
             >
               Share your first memory
             </Link>
@@ -246,7 +244,7 @@ function Journey() {
             {journeyGroups.map((group) => (
               <section
                 key={group.country}
-                className="rounded-[32px] border border-[#D8DEE6] bg-white p-5 shadow-sm md:p-6"
+                className="rounded-[2rem] border border-white/10 bg-[#101D2E] p-5 shadow-[0_20px_70px_rgba(0,0,0,0.22)] md:p-6"
               >
                 <div className="mb-5 flex flex-col gap-3 md:flex-row md:items-end md:justify-between">
                   <div>
@@ -255,11 +253,11 @@ function Journey() {
                       <span className="font-black">{group.country}</span>
                     </div>
 
-                    <h2 className="mt-2 text-3xl font-black">
+                    <h2 className="mt-2 text-3xl font-black text-white">
                       {group.country} Journey
                     </h2>
 
-                    <p className="mt-1 text-sm text-[#002045]/55">
+                    <p className="mt-1 text-sm text-slate-500">
                       {group.memories.length} memories · {group.cities.length}{" "}
                       cities
                     </p>
@@ -269,7 +267,7 @@ function Journey() {
                     {group.cities.slice(0, 4).map((city) => (
                       <span
                         key={city}
-                        className="rounded-full bg-orange-50 px-3 py-1 text-xs font-black text-[#F6AD55]"
+                        className="rounded-full border border-[#F6AD55]/20 bg-[#F6AD55]/10 px-3 py-1 text-xs font-black text-[#F6AD55]"
                       >
                         {city}
                       </span>
@@ -279,19 +277,18 @@ function Journey() {
 
                 <div className="grid grid-cols-1 gap-5 md:grid-cols-2">
                   {group.memories.map((memory) => {
-
                     return (
                       <article
                         key={memory._id}
                         onClick={() => navigate(`/memories/${memory._id}`)}
-                        className="group cursor-pointer overflow-hidden rounded-3xl border border-[#E8EDF2] bg-[#F7FAFC] transition hover:-translate-y-0.5 hover:shadow-md"
+                        className="group cursor-pointer overflow-hidden rounded-3xl border border-white/10 bg-white/[0.04] transition hover:-translate-y-0.5 hover:border-[#F6AD55]/35 hover:bg-[#14243A] hover:shadow-[0_18px_55px_rgba(0,0,0,0.24)]"
                       >
                         <div className="relative">
                           <ImageCarousel
-  images={memory.images || []}
-  title={memory.title}
-  className="h-64 rounded-none"
-/>
+                            images={memory.images || []}
+                            title={memory.title}
+                            className="h-64 rounded-none !aspect-auto"
+                          />
 
                           <div className="absolute right-3 top-3 flex gap-2">
                             <button
@@ -300,7 +297,8 @@ function Journey() {
                                 event.stopPropagation();
                                 navigate(`/memories/${memory._id}/edit`);
                               }}
-                              className="grid h-10 w-10 place-items-center rounded-full bg-white/95 text-[#1A365D] shadow-sm transition hover:bg-[#F6AD55] hover:text-white"
+                              className="grid h-10 w-10 place-items-center rounded-full border border-white/10 bg-black/45 text-white shadow-sm backdrop-blur transition hover:bg-[#F6AD55] hover:text-[#06111F]"
+                              aria-label="Edit memory"
                             >
                               <Pencil size={17} />
                             </button>
@@ -311,7 +309,8 @@ function Journey() {
                                 handleDeleteMemory(event, memory._id)
                               }
                               disabled={deletingId === memory._id}
-                              className="grid h-10 w-10 place-items-center rounded-full bg-white/95 text-red-500 shadow-sm transition hover:bg-red-500 hover:text-white disabled:opacity-60"
+                              className="grid h-10 w-10 place-items-center rounded-full border border-white/10 bg-black/45 text-red-300 shadow-sm backdrop-blur transition hover:bg-red-500 hover:text-white disabled:opacity-60"
+                              aria-label="Delete memory"
                             >
                               {deletingId === memory._id ? (
                                 <Loader2 size={17} className="animate-spin" />
@@ -329,15 +328,15 @@ function Journey() {
                             {memory.country || "Unknown Country"}
                           </div>
 
-                          <h3 className="line-clamp-1 text-xl font-black">
+                          <h3 className="line-clamp-1 text-xl font-black text-white">
                             {memory.title}
                           </h3>
 
-                          <p className="mt-2 line-clamp-2 text-sm leading-6 text-[#002045]/65">
+                          <p className="mt-2 line-clamp-2 text-sm leading-6 text-slate-400">
                             {memory.description}
                           </p>
 
-                          <div className="mt-4 flex flex-wrap items-center gap-4 text-xs font-semibold text-[#002045]/45">
+                          <div className="mt-4 flex flex-wrap items-center gap-4 text-xs font-semibold text-slate-500">
                             <span className="flex items-center gap-1">
                               <CalendarDays size={14} />
                               {formatDate(memory.createdAt)}
@@ -363,6 +362,16 @@ function Journey() {
           </div>
         )}
       </main>
+    </div>
+  );
+}
+
+function JourneyStat({ icon, value, label }) {
+  return (
+    <div className="rounded-3xl border border-white/10 bg-white/[0.04] p-5">
+      <div className="text-[#F6AD55]">{icon}</div>
+      <p className="mt-4 text-3xl font-black text-white">{value}</p>
+      <p className="mt-1 text-sm text-slate-500">{label}</p>
     </div>
   );
 }

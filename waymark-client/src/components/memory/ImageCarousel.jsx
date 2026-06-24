@@ -92,13 +92,13 @@ function ImageCarousel({
   if (!hasImages) {
     return (
       <div
-        className={`grid aspect-square w-full place-items-center bg-[#E8EDF2] text-[#002045]/35 ${className}`}
+        className={`grid aspect-square w-full place-items-center bg-[#06111F] text-slate-600 ${className}`}
       >
         <div className="flex flex-col items-center gap-2">
           <ImageOff size={30} />
 
           {!isThumb && (
-            <p className="text-xs font-bold text-[#002045]/40">No image</p>
+            <p className="text-xs font-black text-slate-600">No image</p>
           )}
         </div>
       </div>
@@ -107,7 +107,7 @@ function ImageCarousel({
 
   return (
     <div
-      className={`group/carousel relative aspect-square w-full overflow-hidden bg-black ${className}`}
+      className={`group/carousel relative aspect-square w-full overflow-hidden bg-[#06111F] ${className}`}
       onTouchStart={handleTouchStart}
       onTouchEnd={handleTouchEnd}
       onClickCapture={handleClickCapture}
@@ -132,14 +132,14 @@ function ImageCarousel({
 
       {hasMultipleImages && !isThumb && (
         <>
-          <div className="pointer-events-none absolute right-3 top-3 rounded-full bg-black/55 px-2.5 py-1 text-[11px] font-black text-white backdrop-blur">
+          <div className="pointer-events-none absolute right-3 top-3 rounded-full border border-white/10 bg-black/55 px-2.5 py-1 text-[11px] font-black text-white backdrop-blur">
             {safeActiveIndex + 1}/{normalizedImages.length}
           </div>
 
           <button
             type="button"
             onClick={goPrev}
-            className="absolute left-3 top-1/2 z-20 hidden h-9 w-9 -translate-y-1/2 place-items-center rounded-full bg-black/45 text-white backdrop-blur transition hover:bg-black/65 md:grid md:opacity-0 md:group-hover/carousel:opacity-100"
+            className="absolute left-3 top-1/2 z-20 hidden h-9 w-9 -translate-y-1/2 place-items-center rounded-full border border-white/10 bg-black/45 text-white backdrop-blur transition hover:bg-black/65 md:grid md:opacity-0 md:group-hover/carousel:opacity-100"
             aria-label="Previous image"
           >
             <ChevronLeft size={20} />
@@ -148,7 +148,7 @@ function ImageCarousel({
           <button
             type="button"
             onClick={goNext}
-            className="absolute right-3 top-1/2 z-20 hidden h-9 w-9 -translate-y-1/2 place-items-center rounded-full bg-black/45 text-white backdrop-blur transition hover:bg-black/65 md:grid md:opacity-0 md:group-hover/carousel:opacity-100"
+            className="absolute right-3 top-1/2 z-20 hidden h-9 w-9 -translate-y-1/2 place-items-center rounded-full border border-white/10 bg-black/45 text-white backdrop-blur transition hover:bg-black/65 md:grid md:opacity-0 md:group-hover/carousel:opacity-100"
             aria-label="Next image"
           >
             <ChevronRight size={20} />

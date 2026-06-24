@@ -9,9 +9,6 @@ import {
 } from "lucide-react";
 import { Link } from "react-router-dom";
 
-
-import MobileBottomNav from "../components/navigation/MobileBottomNav";
-import DesktopSidebar from "../components/navigation/DesktopSidebar";
 const moreItems = [
   {
     title: "Bucket List",
@@ -53,17 +50,22 @@ const moreItems = [
 
 function More() {
   return (
-    <div className="min-h-screen bg-[#F7FAFC] text-[#002045]">
-      <DesktopSidebar />
-
-      <main className="mx-auto max-w-5xl px-4 pb-28 pt-8 md:px-8">
-        <div className="mb-8">
-          <div className="flex h-16 w-16 items-center justify-center rounded-3xl bg-orange-50 text-[#F6AD55]">
+    <div className="min-h-screen bg-transparent text-white">
+      <main className="mx-auto max-w-5xl px-4 pb-28 pt-8 md:px-8 md:pt-10">
+        <div className="mb-8 rounded-[2rem] border border-white/10 bg-[#101D2E] p-6 shadow-[0_20px_70px_rgba(0,0,0,0.22)] md:p-8">
+          <div className="flex h-16 w-16 items-center justify-center rounded-3xl border border-[#F6AD55]/20 bg-[#F6AD55]/10 text-[#F6AD55]">
             <Compass size={30} />
           </div>
 
-          <h1 className="mt-5 text-4xl font-bold">More</h1>
-          <p className="mt-2 text-[#002045]/60">
+          <p className="mt-6 text-xs font-black uppercase tracking-[0.25em] text-[#F6AD55]">
+            WayMark tools
+          </p>
+
+          <h1 className="mt-2 text-4xl font-black text-white md:text-5xl">
+            More
+          </h1>
+
+          <p className="mt-3 max-w-2xl text-sm leading-6 text-slate-400 md:text-base">
             Quick access to your WayMark tools and travel features.
           </p>
         </div>
@@ -76,16 +78,19 @@ function More() {
               <Link
                 key={item.title}
                 to={item.path}
-                className="group rounded-3xl border border-[#D8DEE6] bg-white p-5 shadow-sm transition hover:-translate-y-0.5 hover:shadow-md"
+                className="group rounded-[2rem] border border-white/10 bg-[#101D2E] p-5 shadow-[0_18px_55px_rgba(0,0,0,0.18)] transition hover:-translate-y-0.5 hover:border-[#F6AD55]/35 hover:bg-[#14243A]"
               >
                 <div className="flex items-start gap-4">
-                  <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl bg-[#F7FAFC] text-[#F6AD55] transition group-hover:bg-orange-50">
+                  <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl border border-white/10 bg-white/[0.06] text-[#F6AD55] transition group-hover:border-[#F6AD55]/30 group-hover:bg-[#F6AD55]/10">
                     <Icon size={22} />
                   </div>
 
-                  <div>
-                    <h2 className="text-lg font-bold">{item.title}</h2>
-                    <p className="mt-1 text-sm text-[#002045]/60">
+                  <div className="min-w-0">
+                    <h2 className="text-lg font-black text-white">
+                      {item.title}
+                    </h2>
+
+                    <p className="mt-1 text-sm leading-6 text-slate-400">
                       {item.description}
                     </p>
                   </div>
@@ -95,8 +100,6 @@ function More() {
           })}
         </div>
       </main>
-
-      <MobileBottomNav />
     </div>
   );
 }

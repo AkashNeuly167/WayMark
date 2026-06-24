@@ -92,19 +92,19 @@ function Feed() {
   };
 
   return (
-    <div className="min-h-screen bg-[#F7FAFC] text-[#002045]">
+    <div className="min-h-screen bg-transparent text-white">
       <FeedMobileTopBar />
 
       <main>
-        <div className="mx-auto grid max-w-[1500px] grid-cols-1 gap-6 px-4 pb-28 pt-4 md:px-8 md:pt-5 xl:grid-cols-[minmax(0,1fr)_360px]">
+        <div className="mx-auto grid max-w-[1400px] grid-cols-1 gap-6 px-4 pb-28 pt-4 md:px-8 md:pt-5 xl:grid-cols-[minmax(0,1fr)_340px]">
           <section className="min-w-0">
             <div className="mb-4 flex items-center justify-between gap-3">
               <div className="min-w-0">
-                <h2 className="truncate text-xl font-black tracking-tight text-[#002045] md:text-2xl">
+                <h2 className="truncate text-xl font-black tracking-tight text-white md:text-2xl">
                   {greeting}, {firstName} ☀️
                 </h2>
 
-                <p className="mt-1 text-xs font-semibold text-slate-500 md:text-sm">
+                <p className="mt-1 text-xs font-semibold text-slate-400 md:text-sm">
                   See where travelers are going today.
                 </p>
               </div>
@@ -112,7 +112,7 @@ function Feed() {
               <button
                 type="button"
                 onClick={() => navigate("/memories/create")}
-                className="inline-flex shrink-0 items-center justify-center gap-1.5 rounded-xl bg-[#F6AD55] px-3.5 py-2.5 text-xs font-black text-white shadow-sm transition hover:bg-orange-400 md:rounded-2xl md:px-5 md:py-3 md:text-sm"
+                className="inline-flex shrink-0 items-center justify-center gap-1.5 rounded-xl bg-[#F6AD55] px-3.5 py-2.5 text-xs font-black text-[#06111F] shadow-[0_14px_35px_rgba(246,173,85,0.22)] transition hover:bg-orange-300 md:rounded-2xl md:px-5 md:py-3 md:text-sm"
               >
                 <Plus size={16} />
                 <span className="hidden sm:inline">Memory</span>
@@ -120,15 +120,15 @@ function Feed() {
               </button>
             </div>
 
-            <div className="mb-5 rounded-2xl border border-[#D8DEE6] bg-white p-1 shadow-sm">
+            <div className="mb-5 rounded-2xl border border-white/10 bg-white/[0.04] p-1 shadow-[inset_0_1px_0_rgba(255,255,255,0.04)]">
               <div className="grid grid-cols-2 gap-1">
                 <button
                   type="button"
                   onClick={() => setActiveTab("discover")}
                   className={`rounded-xl px-4 py-2.5 text-sm font-black transition ${
                     activeTab === "discover"
-                      ? "bg-[#002045] text-white shadow-sm"
-                      : "text-[#002045]/55 hover:bg-[#F7FAFC] hover:text-[#002045]"
+                      ? "bg-[#F6AD55] text-[#06111F] shadow-sm"
+                      : "text-slate-400 hover:bg-white/5 hover:text-white"
                   }`}
                 >
                   Discover
@@ -139,8 +139,8 @@ function Feed() {
                   onClick={() => setActiveTab("following")}
                   className={`rounded-xl px-4 py-2.5 text-sm font-black transition ${
                     activeTab === "following"
-                      ? "bg-[#002045] text-white shadow-sm"
-                      : "text-[#002045]/55 hover:bg-[#F7FAFC] hover:text-[#002045]"
+                      ? "bg-[#F6AD55] text-[#06111F] shadow-sm"
+                      : "text-slate-400 hover:bg-white/5 hover:text-white"
                   }`}
                 >
                   Following
@@ -151,12 +151,12 @@ function Feed() {
             {loading ? (
               <FeedSkeleton />
             ) : memories.length === 0 ? (
-              <div className="rounded-[2rem] border border-dashed border-[#D8DEE6] bg-white p-8 text-center shadow-sm md:p-10">
-                <h2 className="text-xl font-black md:text-2xl">
+              <div className="rounded-[2rem] border border-dashed border-white/10 bg-[#101D2E] p-8 text-center shadow-[0_20px_70px_rgba(0,0,0,0.18)] md:p-10">
+                <h2 className="text-xl font-black text-white md:text-2xl">
                   {emptyTitle}
                 </h2>
 
-                <p className="mt-2 text-sm text-[#002045]/60 md:mt-3 md:text-base">
+                <p className="mt-2 text-sm text-slate-400 md:mt-3 md:text-base">
                   {emptyMessage}
                 </p>
 
@@ -167,7 +167,7 @@ function Feed() {
                       ? navigate("/explore")
                       : navigate("/memories/create")
                   }
-                  className="mt-5 rounded-2xl bg-[#F6AD55] px-5 py-2.5 text-sm font-black text-white md:mt-6 md:px-6 md:py-3"
+                  className="mt-5 rounded-2xl bg-[#F6AD55] px-5 py-2.5 text-sm font-black text-[#06111F] transition hover:bg-orange-300 md:mt-6 md:px-6 md:py-3"
                 >
                   {activeTab === "following"
                     ? "Explore Travelers"

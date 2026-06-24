@@ -10,9 +10,6 @@ import {
 import { useNavigate } from "react-router-dom";
 
 import { useToast } from "../context/useToast";
-
-
-import MobileBottomNav from "../components/navigation/MobileBottomNav";
 import NotificationSkeleton from "../components/ui/NotificationSkeleton";
 
 import {
@@ -116,7 +113,7 @@ function Notifications() {
   const getTypeBadge = (type) => {
     if (type === "like") {
       return (
-        <div className="absolute -bottom-1 -right-1 grid h-6 w-6 place-items-center rounded-full bg-red-500 text-white ring-2 ring-white">
+        <div className="absolute -bottom-1 -right-1 grid h-6 w-6 place-items-center rounded-full bg-red-500 text-white ring-2 ring-[#101D2E]">
           <Heart size={13} className="fill-white" />
         </div>
       );
@@ -124,14 +121,14 @@ function Notifications() {
 
     if (type === "comment") {
       return (
-        <div className="absolute -bottom-1 -right-1 grid h-6 w-6 place-items-center rounded-full bg-[#1A365D] text-white ring-2 ring-white">
+        <div className="absolute -bottom-1 -right-1 grid h-6 w-6 place-items-center rounded-full bg-sky-500 text-white ring-2 ring-[#101D2E]">
           <MessageCircle size={13} />
         </div>
       );
     }
 
     return (
-      <div className="absolute -bottom-1 -right-1 grid h-6 w-6 place-items-center rounded-full bg-[#F6AD55] text-white ring-2 ring-white">
+      <div className="absolute -bottom-1 -right-1 grid h-6 w-6 place-items-center rounded-full bg-[#F6AD55] text-[#06111F] ring-2 ring-[#101D2E]">
         <UserPlus size={13} />
       </div>
     );
@@ -267,45 +264,45 @@ function Notifications() {
   };
 
   return (
-    <div className="min-h-screen bg-[#F7FAFC] text-[#002045]">
-     
+    <div className="min-h-screen bg-transparent text-white">
+      <main className="mx-auto max-w-6xl px-4 pb-28 pt-5 md:px-8 md:pt-7">
+        <section className="mb-7 rounded-[2rem] border border-white/10 bg-[#101D2E] p-5 shadow-[0_20px_70px_rgba(0,0,0,0.24)] md:p-7">
+          <div className="flex flex-col gap-4 md:flex-row md:items-end md:justify-between">
+            <div>
+              <p className="mb-2 text-xs font-black uppercase tracking-[0.2em] text-[#F6AD55]">
+                Waymark Activity
+              </p>
 
-      <main className="mx-auto max-w-6xl px-4 pb-28 pt-8 md:px-8 ">
-        <div className="mb-8 flex flex-col gap-4 md:flex-row md:items-end md:justify-between">
-          <div>
-            <p className="mb-2 text-xs font-black uppercase tracking-[0.18em] text-[#F6AD55]">
-              Waymark Activity
-            </p>
+              <h1 className="text-3xl font-black tracking-tight text-white md:text-5xl">
+                Activity & Alerts
+              </h1>
 
-            <h1 className="text-4xl font-black text-[#1A365D] md:text-5xl">
-              Activity & Alerts
-            </h1>
+              <p className="mt-2 max-w-2xl text-sm leading-6 text-slate-400 md:text-base">
+                Stay updated with follows, likes, and comments from your travel
+                community.
+              </p>
+            </div>
 
-            <p className="mt-2 max-w-2xl text-[#002045]/60">
-              Stay updated with follows, likes, and comments from your travel
-              community.
-            </p>
+            <button
+              type="button"
+              onClick={handleMarkAllRead}
+              disabled={unreadCount === 0 || markingAll}
+              className="inline-flex items-center justify-center gap-2 rounded-2xl border border-white/10 bg-white/[0.06] px-5 py-3 text-sm font-black text-white transition hover:bg-white/[0.1] disabled:cursor-not-allowed disabled:opacity-50"
+            >
+              {markingAll ? (
+                <Loader2 size={17} className="animate-spin" />
+              ) : (
+                <CheckCheck size={17} />
+              )}
+              {markingAll ? "Updating..." : "Mark all as read"}
+            </button>
           </div>
+        </section>
 
-          <button
-            type="button"
-            onClick={handleMarkAllRead}
-            disabled={unreadCount === 0 || markingAll}
-            className="inline-flex items-center justify-center gap-2 rounded-2xl border border-[#D8DEE6] bg-white px-5 py-3 text-sm font-black text-[#002045] shadow-sm transition hover:bg-[#F7FAFC] disabled:cursor-not-allowed disabled:opacity-50"
-          >
-            {markingAll ? (
-              <Loader2 size={17} className="animate-spin" />
-            ) : (
-              <CheckCheck size={17} />
-            )}
-            {markingAll ? "Updating..." : "Mark all as read"}
-          </button>
-        </div>
-
-        <div className="grid grid-cols-1 gap-8 lg:grid-cols-12">
+        <div className="grid grid-cols-1 gap-6 lg:grid-cols-12">
           <section className="lg:col-span-8">
-            <div className="mb-6 overflow-x-auto border-b border-[#D8DEE6]">
-              <div className="flex min-w-max gap-8">
+            <div className="mb-5 overflow-x-auto rounded-2xl border border-white/10 bg-[#101D2E] p-1">
+              <div className="grid min-w-max grid-cols-4 gap-1">
                 {tabs.map((tab) => {
                   const isActive = activeTab === tab.value;
 
@@ -320,20 +317,22 @@ function Notifications() {
                       key={tab.value}
                       type="button"
                       onClick={() => setActiveTab(tab.value)}
-                      className={`relative pb-3 text-sm font-black transition ${
+                      className={`rounded-xl px-4 py-2.5 text-sm font-black transition ${
                         isActive
-                          ? "text-[#1A365D]"
-                          : "text-[#002045]/45 hover:text-[#1A365D]"
+                          ? "bg-[#F6AD55] text-[#06111F]"
+                          : "text-slate-400 hover:bg-white/[0.06] hover:text-white"
                       }`}
                     >
                       {tab.label}
-                      <span className="ml-2 rounded-full bg-[#E8EDF2] px-2 py-0.5 text-[10px] font-black text-[#002045]/55">
+                      <span
+                        className={`ml-2 rounded-full px-2 py-0.5 text-[10px] font-black ${
+                          isActive
+                            ? "bg-[#06111F]/15 text-[#06111F]"
+                            : "bg-white/[0.06] text-slate-500"
+                        }`}
+                      >
                         {count}
                       </span>
-
-                      {isActive && (
-                        <span className="absolute bottom-[-1px] left-0 right-0 h-0.5 rounded-full bg-[#F6AD55]" />
-                      )}
                     </button>
                   );
                 })}
@@ -343,28 +342,18 @@ function Notifications() {
             {loading ? (
               <NotificationSkeleton />
             ) : notifications.length === 0 ? (
-              <div className="rounded-3xl border border-dashed border-[#D8DEE6] bg-white p-10 text-center">
-                <div className="mx-auto grid h-16 w-16 place-items-center rounded-3xl bg-orange-50 text-[#F6AD55]">
-                  <Bell size={28} />
-                </div>
-
-                <h2 className="mt-5 text-2xl font-black">
-                  No notifications yet
-                </h2>
-
-                <p className="mt-3 text-[#002045]/60">
-                  When someone follows, likes, or comments, it will appear here.
-                </p>
-              </div>
+              <EmptyState
+                icon={<Bell size={28} />}
+                title="No notifications yet"
+                message="When someone follows, likes, or comments, it will appear here."
+              />
             ) : filteredNotifications.length === 0 ? (
-              <div className="rounded-3xl border border-dashed border-[#D8DEE6] bg-white p-10 text-center">
-                <h2 className="text-2xl font-black">Nothing here yet</h2>
-                <p className="mt-3 text-[#002045]/60">
-                  No {activeTab} notifications found.
-                </p>
-              </div>
+              <EmptyState
+                title="Nothing here yet"
+                message={`No ${activeTab} notifications found.`}
+              />
             ) : (
-              <div className="space-y-4">
+              <div className="space-y-3">
                 {filteredNotifications.map((notification) => {
                   const senderAvatar = getAvatarUrl(notification.sender);
                   const senderInitial = getInitial(notification.sender);
@@ -375,14 +364,14 @@ function Notifications() {
                     <article
                       key={notification._id}
                       onClick={() => handleNotificationClick(notification)}
-                      className={`group flex cursor-pointer items-start gap-4 rounded-2xl border p-4 text-left transition hover:-translate-y-0.5 hover:border-[#1A365D]/20 hover:shadow-[0_10px_25px_rgba(26,54,93,0.08)] md:p-5 ${
+                      className={`group flex cursor-pointer items-start gap-4 rounded-2xl border p-4 text-left transition hover:-translate-y-0.5 hover:border-[#F6AD55]/35 hover:bg-[#14243A] md:p-5 ${
                         notification.isRead
-                          ? "border-[#D8DEE6] bg-white"
-                          : "border-orange-200 bg-orange-50/80"
+                          ? "border-white/10 bg-[#101D2E]"
+                          : "border-[#F6AD55]/25 bg-[#F6AD55]/10"
                       }`}
                     >
                       <div className="relative shrink-0">
-                        <div className="grid h-12 w-12 place-items-center overflow-hidden rounded-full border-2 border-white bg-[#1A365D] text-sm font-black text-white shadow-sm">
+                        <div className="grid h-12 w-12 place-items-center overflow-hidden rounded-full bg-gradient-to-br from-[#F6AD55] to-orange-600 text-sm font-black text-white shadow-sm ring-1 ring-white/10">
                           {senderAvatar ? (
                             <img
                               src={senderAvatar}
@@ -398,12 +387,12 @@ function Notifications() {
                       </div>
 
                       <div className="min-w-0 flex-1">
-                        <p className="text-sm leading-6 text-[#002045]/80 md:text-base">
-                          <span className="font-black text-[#1A365D]">
+                        <p className="text-sm leading-6 text-slate-300 md:text-base">
+                          <span className="font-black text-white">
                             {message.senderName}
                           </span>{" "}
                           {message.action}{" "}
-                          <span className="font-black text-[#002045] underline decoration-[#F6AD55]/40 underline-offset-2">
+                          <span className="font-black text-white underline decoration-[#F6AD55]/40 underline-offset-2">
                             {message.target}
                           </span>
                           {message.suffix}
@@ -411,13 +400,13 @@ function Notifications() {
 
                         {notification.type === "comment" &&
                           notification.commentText && (
-                            <p className="mt-3 rounded-2xl border-l-4 border-[#F6AD55] bg-[#F7FAFC] px-4 py-3 text-sm italic leading-6 text-[#002045]/60">
+                            <p className="mt-3 rounded-2xl border-l-4 border-[#F6AD55] bg-white/[0.05] px-4 py-3 text-sm italic leading-6 text-slate-400">
                               “{notification.commentText}”
                             </p>
                           )}
 
                         <div className="mt-2 flex flex-wrap items-center gap-3">
-                          <span className="text-xs font-semibold text-[#002045]/45">
+                          <span className="text-xs font-semibold text-slate-500">
                             {formatTime(notification.createdAt)}
                           </span>
 
@@ -431,7 +420,7 @@ function Notifications() {
 
                       <div className="flex shrink-0 items-center gap-3">
                         {memoryImage && (
-                          <div className="hidden h-16 w-16 overflow-hidden rounded-2xl border border-[#D8DEE6] bg-[#E8EDF2] sm:block md:h-20 md:w-20">
+                          <div className="hidden h-16 w-16 overflow-hidden rounded-2xl border border-white/10 bg-[#06111F] sm:block md:h-20 md:w-20">
                             <img
                               src={memoryImage}
                               alt={notification.memory?.title || "Memory"}
@@ -446,7 +435,7 @@ function Notifications() {
                             onClick={(e) =>
                               handleMarkReadOnly(e, notification._id)
                             }
-                            className="hidden rounded-full border border-orange-200 bg-white px-3 py-1.5 text-xs font-black text-[#F6AD55] transition hover:bg-orange-50 md:inline-flex"
+                            className="hidden rounded-full border border-[#F6AD55]/30 bg-[#F6AD55]/10 px-3 py-1.5 text-xs font-black text-[#F6AD55] transition hover:bg-[#F6AD55]/20 md:inline-flex"
                           >
                             Mark read
                           </button>
@@ -464,59 +453,34 @@ function Notifications() {
           </section>
 
           <aside className="space-y-6 lg:col-span-4">
-            <section className="rounded-3xl border border-[#D8DEE6] bg-white p-6 shadow-sm">
-              <h3 className="text-xl font-black text-[#1A365D]">
+            <section className="rounded-[2rem] border border-white/10 bg-[#101D2E] p-6 shadow-[0_20px_70px_rgba(0,0,0,0.22)]">
+              <h3 className="text-xl font-black text-white">
                 Notification Summary
               </h3>
 
               <div className="mt-5 space-y-3">
-                <div className="flex items-center justify-between rounded-2xl bg-[#F7FAFC] p-4">
-                  <span className="text-sm font-semibold text-[#002045]/60">
-                    Total
-                  </span>
-                  <span className="font-black text-[#1A365D]">
-                    {notifications.length}
-                  </span>
-                </div>
-
-                <div className="flex items-center justify-between rounded-2xl bg-orange-50 p-4">
-                  <span className="text-sm font-semibold text-[#002045]/60">
-                    Unread
-                  </span>
-                  <span className="font-black text-[#F6AD55]">
-                    {unreadCount}
-                  </span>
-                </div>
-
-                <div className="flex items-center justify-between rounded-2xl bg-[#F7FAFC] p-4">
-                  <span className="text-sm font-semibold text-[#002045]/60">
-                    Likes
-                  </span>
-                  <span className="font-black text-red-500">
-                    {
-                      notifications.filter((item) => item.type === "like")
-                        .length
-                    }
-                  </span>
-                </div>
-
-                <div className="flex items-center justify-between rounded-2xl bg-[#F7FAFC] p-4">
-                  <span className="text-sm font-semibold text-[#002045]/60">
-                    Comments
-                  </span>
-                  <span className="font-black text-[#1A365D]">
-                    {
-                      notifications.filter((item) => item.type === "comment")
-                        .length
-                    }
-                  </span>
-                </div>
+                <SummaryRow label="Total" value={notifications.length} />
+                <SummaryRow label="Unread" value={unreadCount} accent />
+                <SummaryRow
+                  label="Likes"
+                  value={
+                    notifications.filter((item) => item.type === "like").length
+                  }
+                  red
+                />
+                <SummaryRow
+                  label="Comments"
+                  value={
+                    notifications.filter((item) => item.type === "comment")
+                      .length
+                  }
+                />
               </div>
             </section>
 
-            <section className="rounded-3xl bg-[#1A365D] p-6 text-white shadow-xl">
+            <section className="rounded-[2rem] border border-[#F6AD55]/20 bg-gradient-to-br from-[#1A365D] to-[#06111F] p-6 text-white shadow-[0_24px_80px_rgba(0,0,0,0.32)]">
               <h3 className="text-xl font-black">Activity tip</h3>
-              <p className="mt-3 text-sm leading-6 text-white/70">
+              <p className="mt-3 text-sm leading-6 text-slate-400">
                 Click any notification to jump directly to the related memory or
                 traveler profile.
               </p>
@@ -524,8 +488,39 @@ function Notifications() {
           </aside>
         </div>
       </main>
+    </div>
+  );
+}
 
-      <MobileBottomNav />
+function SummaryRow({ label, value, accent, red }) {
+  return (
+    <div className="flex items-center justify-between rounded-2xl border border-white/10 bg-white/[0.04] p-4">
+      <span className="text-sm font-semibold text-slate-400">{label}</span>
+      <span
+        className={`font-black ${
+          accent ? "text-[#F6AD55]" : red ? "text-red-400" : "text-white"
+        }`}
+      >
+        {value}
+      </span>
+    </div>
+  );
+}
+
+function EmptyState({ icon, title, message }) {
+  return (
+    <div className="rounded-[2rem] border border-dashed border-white/10 bg-[#101D2E] p-10 text-center shadow-[0_20px_70px_rgba(0,0,0,0.18)]">
+      {icon && (
+        <div className="mx-auto grid h-16 w-16 place-items-center rounded-3xl bg-[#F6AD55]/15 text-[#F6AD55]">
+          {icon}
+        </div>
+      )}
+
+      <h2 className="mt-5 text-2xl font-black text-white">{title}</h2>
+
+      <p className="mx-auto mt-3 max-w-md text-sm leading-6 text-slate-400">
+        {message}
+      </p>
     </div>
   );
 }

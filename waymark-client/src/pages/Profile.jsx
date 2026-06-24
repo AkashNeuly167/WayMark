@@ -417,7 +417,7 @@ function Profile() {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-[#F7FAFC] text-[#002045]">
+      <div className="min-h-screen bg-transparent text-white">
         <ProfileSkeleton />
       </div>
     );
@@ -425,13 +425,11 @@ function Profile() {
 
   if (!profileUser) {
     return (
-      <div className="min-h-screen bg-[#F7FAFC] text-[#002045]">
+      <div className="min-h-screen bg-transparent text-white">
         <main className="flex min-h-[70vh] items-center justify-center px-4">
-          <div className="rounded-3xl border border-[#D8DEE6] bg-white p-8 text-center">
-            <h2 className="text-2xl font-black">User not found</h2>
-            <p className="mt-2 text-[#002045]/60">
-              This profile does not exist.
-            </p>
+          <div className="rounded-[2rem] border border-white/10 bg-[#101D2E] p-8 text-center shadow-[0_20px_70px_rgba(0,0,0,0.22)]">
+            <h2 className="text-2xl font-black text-white">User not found</h2>
+            <p className="mt-2 text-slate-400">This profile does not exist.</p>
           </div>
         </main>
       </div>
@@ -439,10 +437,9 @@ function Profile() {
   }
 
   return (
-    <div className="min-h-screen bg-[#F7FAFC] text-[#002045]">
-      <main className="pb-28 ">
+    <div className="min-h-screen bg-transparent text-white">
+      <main className="pb-28">
         <section className="relative overflow-hidden">
-          {/* ── Cover image ── */}
           <div className="relative h-56 overflow-hidden md:min-h-[600px]">
             {coverImage ? (
               <img
@@ -451,14 +448,14 @@ function Profile() {
                 className="absolute inset-0 h-full w-full object-cover"
               />
             ) : (
-              <div className="absolute inset-0 bg-[radial-gradient(circle_at_20%_20%,rgba(246,173,85,0.45),transparent_28%),linear-gradient(135deg,#0B132B_0%,#1A365D_55%,#F6AD55_140%)]" />
+              <div className="absolute inset-0 bg-[radial-gradient(circle_at_20%_20%,rgba(246,173,85,0.45),transparent_28%),linear-gradient(135deg,#06111F_0%,#1A365D_55%,#F6AD55_140%)]" />
             )}
 
-            <div className="absolute inset-0 bg-gradient-to-t from-[#002045]/95 via-[#002045]/45 to-[#002045]/10" />
+            <div className="absolute inset-0 bg-gradient-to-t from-[#06111F] via-[#06111F]/65 to-[#06111F]/20" />
 
             {isOwnProfile && (
               <div className="absolute right-4 top-4 z-10 flex gap-2 md:right-8 md:top-8">
-                <label className="inline-flex cursor-pointer items-center gap-2 rounded-full border border-white/20 bg-white/15 px-4 py-2 text-xs font-black text-white backdrop-blur transition hover:bg-white/25">
+                <label className="inline-flex cursor-pointer items-center gap-2 rounded-full border border-white/15 bg-black/30 px-4 py-2 text-xs font-black text-white backdrop-blur transition hover:bg-white/15">
                   {coverLoading ? (
                     <Loader2 size={15} className="animate-spin" />
                   ) : (
@@ -480,7 +477,7 @@ function Profile() {
                     type="button"
                     onClick={handleCoverDelete}
                     disabled={coverLoading}
-                    className="inline-flex items-center gap-2 rounded-full border border-white/20 bg-white/15 px-4 py-2 text-xs font-black text-white backdrop-blur transition hover:bg-red-500 disabled:opacity-60"
+                    className="inline-flex items-center gap-2 rounded-full border border-white/15 bg-black/30 px-4 py-2 text-xs font-black text-white backdrop-blur transition hover:bg-red-500 disabled:opacity-60"
                   >
                     <Trash2 size={15} />
                     Remove
@@ -490,15 +487,12 @@ function Profile() {
             )}
           </div>
 
-          {/* ── Profile info overlaid on cover ──
-              FIX: increased pb from pb-8 → pb-16 on desktop so the
-              avatar/name row has enough clearance before the stats cards. */}
           <div className="relative z-10 -mt-16 px-4 pb-4 md:-mt-[210px] md:px-8 md:pb-16">
             <div className="mx-auto max-w-6xl">
               <div className="flex flex-col gap-5 md:flex-row md:items-end md:justify-between">
                 <div className="flex flex-col gap-4 md:flex-row md:items-end">
                   <div className="relative h-28 w-28 shrink-0 md:h-44 md:w-44">
-                    <div className="h-28 w-28 overflow-hidden rounded-[1.75rem] border-4 border-white bg-[#1A365D] text-4xl font-black text-white shadow-2xl md:h-44 md:w-44 md:rounded-[2rem] md:text-5xl">
+                    <div className="h-28 w-28 overflow-hidden rounded-[1.75rem] border-4 border-[#06111F] bg-gradient-to-br from-[#F6AD55] to-orange-600 text-4xl font-black text-white shadow-2xl md:h-44 md:w-44 md:rounded-[2rem] md:text-5xl">
                       {avatarUrl ? (
                         <img
                           src={avatarUrl}
@@ -515,7 +509,7 @@ function Profile() {
                     </div>
 
                     {isOwnProfile && (
-                      <label className="absolute -bottom-2 -right-2 grid h-10 w-10 cursor-pointer place-items-center rounded-full border-4 border-white bg-[#F6AD55] text-white shadow-xl transition hover:bg-orange-400 md:h-12 md:w-12">
+                      <label className="absolute -bottom-2 -right-2 grid h-10 w-10 cursor-pointer place-items-center rounded-full border-4 border-[#06111F] bg-[#F6AD55] text-[#06111F] shadow-xl transition hover:bg-orange-300 md:h-12 md:w-12">
                         {avatarLoading ? (
                           <Loader2 size={18} className="animate-spin" />
                         ) : (
@@ -533,22 +527,22 @@ function Profile() {
                     )}
                   </div>
 
-                  <div className="text-[#002045] md:text-white">
-                    <div className="mb-2 inline-flex rounded-full border border-[#D8DEE6] bg-white px-3 py-1 text-[10px] font-black uppercase tracking-[0.16em] text-[#F6AD55] shadow-sm md:border-white/20 md:bg-white/10 md:px-4 md:py-1.5 md:text-xs md:backdrop-blur">
+                  <div className="text-white">
+                    <div className="mb-2 inline-flex rounded-full border border-white/15 bg-white/10 px-3 py-1 text-[10px] font-black uppercase tracking-[0.16em] text-[#F6AD55] shadow-sm backdrop-blur md:px-4 md:py-1.5 md:text-xs">
                       Waymark Traveler
                     </div>
 
-                    <h1 className="text-3xl font-black leading-tight md:text-6xl">
+                    <h1 className="text-3xl font-black leading-tight text-white md:text-6xl">
                       {profileUser.fullName || profileUser.username}
                     </h1>
 
-                    <p className="mt-1 text-sm font-semibold text-[#002045]/55 md:text-lg md:text-white/70">
+                    <p className="mt-1 text-sm font-semibold text-slate-400 md:text-lg">
                       @{profileUser.username}
                     </p>
 
                     <div className="mt-4 flex flex-wrap gap-2 md:gap-3">
                       {profileUser.country?.trim() && (
-                        <span className="inline-flex items-center gap-2 rounded-full border border-[#D8DEE6] bg-white px-3 py-1.5 text-xs font-bold text-[#002045]/70 shadow-sm md:border-white/20 md:bg-white/10 md:px-4 md:py-2 md:text-sm md:text-white/85 md:backdrop-blur">
+                        <span className="inline-flex items-center gap-2 rounded-full border border-white/15 bg-white/10 px-3 py-1.5 text-xs font-bold text-white/85 shadow-sm backdrop-blur md:px-4 md:py-2 md:text-sm">
                           <MapPin size={14} />
                           {profileUser.country}
                         </span>
@@ -559,7 +553,7 @@ function Profile() {
                           href={profileUser.website}
                           target="_blank"
                           rel="noreferrer"
-                          className="inline-flex items-center gap-2 rounded-full border border-[#D8DEE6] bg-white px-3 py-1.5 text-xs font-bold text-[#002045]/70 shadow-sm transition hover:text-[#F6AD55] md:border-white/20 md:bg-white/10 md:px-4 md:py-2 md:text-sm md:text-white/85 md:backdrop-blur"
+                          className="inline-flex items-center gap-2 rounded-full border border-white/15 bg-white/10 px-3 py-1.5 text-xs font-bold text-white/85 shadow-sm backdrop-blur transition hover:text-[#F6AD55] md:px-4 md:py-2 md:text-sm"
                         >
                           <Globe size={14} />
                           Website
@@ -576,7 +570,7 @@ function Profile() {
                       <button
                         type="button"
                         onClick={() => setEditOpen(true)}
-                        className="inline-flex items-center justify-center gap-2 rounded-2xl bg-white px-5 py-3 text-sm font-black text-[#002045] shadow-sm transition hover:bg-[#F7FAFC] md:px-6 md:shadow-xl"
+                        className="inline-flex items-center justify-center gap-2 rounded-2xl bg-[#F6AD55] px-5 py-3 text-sm font-black text-[#06111F] shadow-[0_16px_40px_rgba(246,173,85,0.22)] transition hover:bg-orange-300 md:px-6"
                       >
                         <Pencil size={17} />
                         Edit profile
@@ -587,7 +581,7 @@ function Profile() {
                           type="button"
                           onClick={handleAvatarDelete}
                           disabled={avatarLoading}
-                          className="inline-flex items-center justify-center gap-2 rounded-2xl border border-red-100 bg-red-50 px-5 py-3 text-sm font-black text-red-500 shadow-sm transition hover:bg-red-500 hover:text-white disabled:opacity-60 md:border-white/25 md:bg-white/10 md:text-white md:backdrop-blur"
+                          className="inline-flex items-center justify-center gap-2 rounded-2xl border border-red-500/20 bg-red-500/10 px-5 py-3 text-sm font-black text-red-300 transition hover:bg-red-500 hover:text-white disabled:opacity-60"
                         >
                           {avatarLoading ? (
                             <Loader2 size={17} className="animate-spin" />
@@ -603,10 +597,10 @@ function Profile() {
                       type="button"
                       onClick={handleFollowToggle}
                       disabled={followLoading}
-                      className={`inline-flex items-center justify-center gap-2 rounded-2xl px-6 py-3 text-sm font-black shadow-sm transition disabled:opacity-60 md:shadow-xl ${
+                      className={`inline-flex items-center justify-center gap-2 rounded-2xl px-6 py-3 text-sm font-black shadow-[0_16px_40px_rgba(0,0,0,0.22)] transition disabled:opacity-60 ${
                         isFollowing
-                          ? "border border-[#D8DEE6] bg-white text-[#002045] hover:bg-[#F7FAFC] md:border-white/25 md:bg-white/10 md:text-white md:backdrop-blur md:hover:bg-white/20"
-                          : "bg-[#F6AD55] text-white hover:bg-orange-400"
+                          ? "border border-white/15 bg-white/10 text-white backdrop-blur hover:bg-white/20"
+                          : "bg-[#F6AD55] text-[#06111F] hover:bg-orange-300"
                       }`}
                     >
                       <UserPlus size={17} />
@@ -623,29 +617,19 @@ function Profile() {
           </div>
         </section>
 
-        {/* ── Stats cards ──
-            FIX: removed md:-mt-10 negative margin that caused cards to
-            overlap the hero section. Now uses a clean positive mt-6 gap. */}
         <section className="relative z-10 mx-auto mt-6 max-w-6xl px-4 md:mt-8 md:px-8">
           <div className="grid grid-cols-3 gap-2 md:gap-6">
-            <div className="rounded-2xl border border-[#D8DEE6] bg-white p-3 text-center shadow-sm md:rounded-3xl md:p-7">
-              <p className="text-2xl font-black text-[#1A365D] md:text-4xl">
-                {userMemories.length}
-              </p>
-              <p className="mt-1 text-[10px] font-black uppercase tracking-[0.14em] text-[#002045]/45 md:text-xs">
-                Memories
-              </p>
-            </div>
+            <StatCard label="Memories" value={userMemories.length} />
 
             <button
               type="button"
               onClick={() => handleOpenFollowList("followers")}
-              className="rounded-2xl border border-[#D8DEE6] bg-white p-3 text-center shadow-sm transition hover:-translate-y-0.5 hover:border-orange-200 hover:shadow-md md:rounded-3xl md:p-7"
+              className="rounded-2xl border border-white/10 bg-[#101D2E] p-3 text-center shadow-[0_18px_55px_rgba(0,0,0,0.18)] transition hover:-translate-y-0.5 hover:border-[#F6AD55]/35 hover:bg-[#14243A] md:rounded-3xl md:p-7"
             >
-              <p className="text-2xl font-black text-[#1A365D] md:text-4xl">
+              <p className="text-2xl font-black text-white md:text-4xl">
                 {followersCount}
               </p>
-              <p className="mt-1 text-[10px] font-black uppercase tracking-[0.14em] text-[#002045]/45 md:text-xs">
+              <p className="mt-1 text-[10px] font-black uppercase tracking-[0.14em] text-slate-500 md:text-xs">
                 Followers
               </p>
             </button>
@@ -653,12 +637,12 @@ function Profile() {
             <button
               type="button"
               onClick={() => handleOpenFollowList("following")}
-              className="rounded-2xl border border-[#D8DEE6] bg-white p-3 text-center shadow-sm transition hover:-translate-y-0.5 hover:border-orange-200 hover:shadow-md md:rounded-3xl md:p-7"
+              className="rounded-2xl border border-white/10 bg-[#101D2E] p-3 text-center shadow-[0_18px_55px_rgba(0,0,0,0.18)] transition hover:-translate-y-0.5 hover:border-[#F6AD55]/35 hover:bg-[#14243A] md:rounded-3xl md:p-7"
             >
-              <p className="text-2xl font-black text-[#1A365D] md:text-4xl">
+              <p className="text-2xl font-black text-white md:text-4xl">
                 {followingCount}
               </p>
-              <p className="mt-1 text-[10px] font-black uppercase tracking-[0.14em] text-[#002045]/45 md:text-xs">
+              <p className="mt-1 text-[10px] font-black uppercase tracking-[0.14em] text-slate-500 md:text-xs">
                 Following
               </p>
             </button>
@@ -667,19 +651,16 @@ function Profile() {
 
         <section className="mx-auto grid max-w-6xl grid-cols-1 gap-8 px-4 py-10 md:px-8 lg:grid-cols-12">
           <aside className="space-y-6 lg:col-span-4">
-            <div className="rounded-[2rem] border border-[#D8DEE6] bg-white p-6 shadow-sm">
-              <h2 className="text-xl font-black text-[#1A365D]">About</h2>
+            <div className="rounded-[2rem] border border-white/10 bg-[#101D2E] p-6 shadow-[0_20px_70px_rgba(0,0,0,0.22)]">
+              <h2 className="text-xl font-black text-white">About</h2>
 
-              <p className="mt-4 leading-7 text-[#002045]/70">
+              <p className="mt-4 leading-7 text-slate-400">
                 {profileUser.bio || "No bio added yet."}
               </p>
 
               <div className="mt-6 space-y-3">
                 {profileUser.country?.trim() && (
-                  <div className="flex items-center gap-3 rounded-2xl bg-[#F7FAFC] p-4 text-sm font-semibold text-[#002045]/70">
-                    <MapPin size={18} className="text-[#F6AD55]" />
-                    {profileUser.country}
-                  </div>
+                  <InfoRow icon={MapPin}>{profileUser.country}</InfoRow>
                 )}
 
                 {profileUser.website?.trim() && (
@@ -687,7 +668,7 @@ function Profile() {
                     href={profileUser.website}
                     target="_blank"
                     rel="noreferrer"
-                    className="flex items-center gap-3 rounded-2xl bg-[#F7FAFC] p-4 text-sm font-semibold text-[#002045]/70 transition hover:text-[#F6AD55]"
+                    className="flex items-center gap-3 rounded-2xl border border-white/10 bg-white/[0.04] p-4 text-sm font-semibold text-slate-400 transition hover:bg-white/[0.07] hover:text-[#F6AD55]"
                   >
                     <Globe size={18} className="text-[#F6AD55]" />
                     <span className="min-w-0 flex-1 truncate">
@@ -697,44 +678,24 @@ function Profile() {
                   </a>
                 )}
 
-                <div className="flex items-center gap-3 rounded-2xl bg-[#F7FAFC] p-4 text-sm font-semibold text-[#002045]/70">
-                  <CalendarDays size={18} className="text-[#F6AD55]" />
+                <InfoRow icon={CalendarDays}>
                   Joined {formatDate(profileUser.createdAt)}
-                </div>
+                </InfoRow>
               </div>
             </div>
 
-            <div className="rounded-[2rem] bg-[#1A365D] p-6 text-white shadow-xl">
+            <div className="rounded-[2rem] border border-[#F6AD55]/20 bg-gradient-to-br from-[#1A365D] to-[#06111F] p-6 text-white shadow-[0_24px_80px_rgba(0,0,0,0.32)]">
               <h3 className="text-xl font-black">Travel Snapshot</h3>
 
               <div className="mt-5 space-y-3">
-                <div className="flex items-center justify-between rounded-2xl border border-white/10 bg-white/10 p-4">
-                  <span className="text-sm font-semibold text-white/70">
-                    Shared Memories
-                  </span>
-                  <span className="font-black text-[#F6AD55]">
-                    {userMemories.length}
-                  </span>
-                </div>
-
-                <div className="flex items-center justify-between rounded-2xl border border-white/10 bg-white/10 p-4">
-                  <span className="text-sm font-semibold text-white/70">
-                    Community
-                  </span>
-                  <span className="font-black text-[#F6AD55]">
-                    {followersCount + followingCount}
-                  </span>
-                </div>
+                <SnapshotRow label="Shared Memories" value={userMemories.length} />
+                <SnapshotRow
+                  label="Community"
+                  value={followersCount + followingCount}
+                />
 
                 {isOwnProfile && (
-                  <div className="flex items-center justify-between rounded-2xl border border-white/10 bg-white/10 p-4">
-                    <span className="text-sm font-semibold text-white/70">
-                      Saved
-                    </span>
-                    <span className="font-black text-[#F6AD55]">
-                      {savedMemories.length}
-                    </span>
-                  </div>
+                  <SnapshotRow label="Saved" value={savedMemories.length} />
                 )}
               </div>
             </div>
@@ -742,14 +703,14 @@ function Profile() {
 
           <section className="lg:col-span-8">
             {isOwnProfile && (
-              <div className="mb-6 flex rounded-2xl border border-[#D8DEE6] bg-white p-1 shadow-sm">
+              <div className="mb-6 flex rounded-2xl border border-white/10 bg-[#101D2E] p-1 shadow-[0_18px_55px_rgba(0,0,0,0.18)]">
                 <button
                   type="button"
                   onClick={() => setActiveTab("memories")}
                   className={`flex-1 rounded-xl px-4 py-3 text-sm font-black transition ${
                     activeTab === "memories"
-                      ? "bg-[#002045] text-white"
-                      : "text-[#002045]/55 hover:bg-[#F7FAFC]"
+                      ? "bg-[#F6AD55] text-[#06111F]"
+                      : "text-slate-400 hover:bg-white/[0.06] hover:text-white"
                   }`}
                 >
                   My Memories
@@ -760,8 +721,8 @@ function Profile() {
                   onClick={() => setActiveTab("saved")}
                   className={`flex-1 rounded-xl px-4 py-3 text-sm font-black transition ${
                     activeTab === "saved"
-                      ? "bg-[#002045] text-white"
-                      : "text-[#002045]/55 hover:bg-[#F7FAFC]"
+                      ? "bg-[#F6AD55] text-[#06111F]"
+                      : "text-slate-400 hover:bg-white/[0.06] hover:text-white"
                   }`}
                 >
                   Saved
@@ -771,23 +732,25 @@ function Profile() {
 
             <div className="mb-6 flex items-center justify-between">
               <div>
-                <h2 className="text-3xl font-black text-[#002045]">
+                <h2 className="text-3xl font-black text-white">
                   {sectionTitle}
                 </h2>
-                <p className="mt-1 text-[#002045]/55">{sectionSubtitle}</p>
+                <p className="mt-1 text-slate-500">{sectionSubtitle}</p>
               </div>
 
               {activeTab === "saved" ? (
-                <Bookmark className="hidden text-[#002045]/30 md:block" />
+                <Bookmark className="hidden text-slate-700 md:block" />
               ) : (
-                <Users className="hidden text-[#002045]/30 md:block" />
+                <Users className="hidden text-slate-700 md:block" />
               )}
             </div>
 
             {displayedMemories.length === 0 ? (
-              <div className="rounded-3xl border border-dashed border-[#D8DEE6] bg-white p-10 text-center">
-                <h3 className="text-2xl font-black">{emptyTitle}</h3>
-                <p className="mt-2 text-[#002045]/60">{emptyMessage}</p>
+              <div className="rounded-[2rem] border border-dashed border-white/10 bg-[#101D2E] p-10 text-center shadow-[0_20px_70px_rgba(0,0,0,0.18)]">
+                <h3 className="text-2xl font-black text-white">
+                  {emptyTitle}
+                </h3>
+                <p className="mt-2 text-slate-400">{emptyMessage}</p>
               </div>
             ) : activeTab === "saved" ? (
               <div className="space-y-4">
@@ -812,9 +775,9 @@ function Profile() {
                     <Link
                       key={memory._id}
                       to={`/memories/${memory._id}`}
-                      className="group flex flex-col overflow-hidden rounded-[2rem] border border-[#D8DEE6] bg-white shadow-sm transition hover:-translate-y-1 hover:shadow-xl md:flex-row"
+                      className="group flex flex-col overflow-hidden rounded-[2rem] border border-white/10 bg-[#101D2E] shadow-[0_20px_70px_rgba(0,0,0,0.2)] transition hover:-translate-y-1 hover:border-[#F6AD55]/35 hover:bg-[#14243A] md:flex-row"
                     >
-                      <div className="h-64 overflow-hidden bg-[#E8EDF2] md:h-auto md:w-64 md:shrink-0">
+                      <div className="h-64 overflow-hidden bg-[#06111F] md:h-auto md:w-64 md:shrink-0">
                         <ImageCarousel
                           images={memory.images || []}
                           title={memory.title}
@@ -824,34 +787,39 @@ function Profile() {
 
                       <div className="flex min-w-0 flex-1 flex-col justify-between p-6">
                         <div>
-                          <div className="mb-3 flex items-center gap-2 text-sm font-bold text-[#F6AD55]">
+                          <div className="mb-3 flex items-center gap-2 text-sm font-black text-[#F6AD55]">
                             <MapPin size={15} />
                             <span className="truncate">
-                              {memory.city}, {memory.country}
+                              {[memory.city, memory.country]
+                                .filter(Boolean)
+                                .join(", ")}
                             </span>
                           </div>
 
-                          <h3 className="line-clamp-1 text-2xl font-black text-[#002045]">
+                          <h3 className="line-clamp-1 text-2xl font-black text-white">
                             {memory.title}
                           </h3>
 
-                          <p className="mt-3 line-clamp-3 text-sm leading-6 text-[#002045]/65">
+                          <p className="mt-3 line-clamp-3 text-sm leading-6 text-slate-400">
                             {memory.description}
                           </p>
                         </div>
 
-                        <div className="mt-5 flex items-center gap-5 text-sm font-black text-[#002045]/45">
+                        <div className="mt-5 flex items-center gap-5 text-sm font-black text-slate-500">
                           <span className="inline-flex items-center gap-1">
-                            <Heart size={16} />
+                            <Heart size={16} className="text-red-400" />
                             {memory.likes?.length || 0}
                           </span>
 
                           <span className="inline-flex items-center gap-1">
-                            <MessageCircle size={16} />
+                            <MessageCircle
+                              size={16}
+                              className="text-[#F6AD55]"
+                            />
                             {memory.commentsCount || 0}
                           </span>
 
-                          <span className="ml-auto text-xs uppercase tracking-[0.16em] text-[#002045]/35">
+                          <span className="ml-auto text-xs uppercase tracking-[0.16em] text-slate-600">
                             {formatDate(memory.createdAt)}
                           </span>
                         </div>
@@ -880,6 +848,35 @@ function Profile() {
         loading={followListLoading}
         onClose={() => setFollowModalOpen(false)}
       />
+    </div>
+  );
+}
+
+function StatCard({ label, value }) {
+  return (
+    <div className="rounded-2xl border border-white/10 bg-[#101D2E] p-3 text-center shadow-[0_18px_55px_rgba(0,0,0,0.18)] md:rounded-3xl md:p-7">
+      <p className="text-2xl font-black text-white md:text-4xl">{value}</p>
+      <p className="mt-1 text-[10px] font-black uppercase tracking-[0.14em] text-slate-500 md:text-xs">
+        {label}
+      </p>
+    </div>
+  );
+}
+
+function InfoRow({ icon: Icon, children }) {
+  return (
+    <div className="flex items-center gap-3 rounded-2xl border border-white/10 bg-white/[0.04] p-4 text-sm font-semibold text-slate-400">
+      <Icon size={18} className="text-[#F6AD55]" />
+      {children}
+    </div>
+  );
+}
+
+function SnapshotRow({ label, value }) {
+  return (
+    <div className="flex items-center justify-between rounded-2xl border border-white/10 bg-white/10 p-4">
+      <span className="text-sm font-semibold text-slate-400">{label}</span>
+      <span className="font-black text-[#F6AD55]">{value}</span>
     </div>
   );
 }

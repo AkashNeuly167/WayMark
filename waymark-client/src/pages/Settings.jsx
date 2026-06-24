@@ -149,28 +149,28 @@ function Settings() {
   ];
 
   return (
-    <div className="min-h-screen bg-[#F7FAFC] text-[#002045]">
-      <main className="mx-auto max-w-6xl px-4 pb-28 pt-6 md:px-8 md:pt-10">
-        <div className="mb-8">
-          <p className="mb-2 text-xs font-black uppercase tracking-[0.18em] text-[#F6AD55]">
+    <div className="min-h-screen bg-transparent text-white">
+      <main className="mx-auto max-w-6xl px-4 pb-28 pt-5 md:px-8 md:pt-7">
+        <section className="mb-7 rounded-[2rem] border border-white/10 bg-[#101D2E] p-5 shadow-[0_20px_70px_rgba(0,0,0,0.24)] md:p-7">
+          <p className="mb-2 text-xs font-black uppercase tracking-[0.2em] text-[#F6AD55]">
             Account Center
           </p>
 
-          <h1 className="text-4xl font-black text-[#1A365D] md:text-5xl">
+          <h1 className="text-3xl font-black tracking-tight text-white md:text-5xl">
             Settings
           </h1>
 
-          <p className="mt-2 max-w-2xl text-[#002045]/60">
+          <p className="mt-2 max-w-2xl text-sm leading-6 text-slate-400 md:text-base">
             Manage your Waymark profile, account shortcuts, and preferences.
           </p>
-        </div>
+        </section>
 
-        <div className="grid grid-cols-1 gap-8 lg:grid-cols-12">
+        <div className="grid grid-cols-1 gap-6 lg:grid-cols-12">
           <section className="space-y-6 lg:col-span-8">
-            <div className="rounded-[2rem] border border-[#DDE3EA] bg-white p-6 shadow-sm">
+            <div className="rounded-[2rem] border border-white/10 bg-[#101D2E] p-5 shadow-[0_20px_70px_rgba(0,0,0,0.22)] md:p-6">
               <div className="flex flex-col gap-5 sm:flex-row sm:items-center sm:justify-between">
-                <div className="flex items-center gap-4">
-                  <div className="grid h-16 w-16 shrink-0 place-items-center overflow-hidden rounded-full border-2 border-[#F6AD55] bg-[#1A365D] text-xl font-black text-white">
+                <div className="flex min-w-0 items-center gap-4">
+                  <div className="grid h-16 w-16 shrink-0 place-items-center overflow-hidden rounded-full border-2 border-[#F6AD55] bg-gradient-to-br from-[#F6AD55] to-orange-600 text-xl font-black text-white shadow-xl">
                     {avatarUrl ? (
                       <img
                         src={avatarUrl}
@@ -183,15 +183,15 @@ function Settings() {
                   </div>
 
                   <div className="min-w-0">
-                    <h2 className="truncate text-xl font-black text-[#002045]">
+                    <h2 className="truncate text-xl font-black text-white">
                       {profileName}
                     </h2>
 
-                    <p className="mt-1 truncate text-sm text-[#002045]/60">
+                    <p className="mt-1 truncate text-sm text-slate-400">
                       {user?.email || "Manage your Waymark account"}
                     </p>
 
-                    <p className="mt-1 text-xs font-bold text-[#F6AD55]">
+                    <p className="mt-1 text-xs font-black text-[#F6AD55]">
                       @{user?.username || "waymark"}
                     </p>
                   </div>
@@ -200,7 +200,7 @@ function Settings() {
                 <button
                   type="button"
                   onClick={() => navigate("/profile/me")}
-                  className="rounded-full bg-[#F6AD55] px-5 py-3 text-sm font-black text-white transition hover:bg-orange-400"
+                  className="rounded-full bg-[#F6AD55] px-5 py-3 text-sm font-black text-[#06111F] shadow-[0_16px_40px_rgba(246,173,85,0.22)] transition hover:-translate-y-0.5 hover:bg-orange-300"
                 >
                   View Profile
                 </button>
@@ -209,66 +209,54 @@ function Settings() {
 
             <form
               onSubmit={handleProfileSave}
-              className="rounded-[2rem] border border-[#DDE3EA] bg-white p-6 shadow-sm"
+              className="rounded-[2rem] border border-white/10 bg-[#101D2E] p-5 shadow-[0_20px_70px_rgba(0,0,0,0.22)] md:p-6"
             >
               <div className="mb-6">
-                <h3 className="text-xl font-black text-[#1A365D]">
+                <p className="text-xs font-black uppercase tracking-[0.18em] text-[#F6AD55]">
+                  Public details
+                </p>
+
+                <h3 className="mt-1 text-xl font-black text-white">
                   Profile Settings
                 </h3>
 
-                <p className="mt-1 text-sm text-[#002045]/55">
+                <p className="mt-1 text-sm leading-6 text-slate-400">
                   These details appear on your public traveler profile.
                 </p>
               </div>
 
               <div className="grid gap-5 md:grid-cols-2">
-                <div>
-                  <label className="mb-2 block text-sm font-black text-[#002045]">
-                    Full Name
-                  </label>
+                <SettingsField
+                  label="Full Name"
+                  type="text"
+                  name="fullName"
+                  value={formData.fullName}
+                  onChange={handleChange}
+                  placeholder="Your full name"
+                />
 
-                  <input
-                    type="text"
-                    name="fullName"
-                    value={formData.fullName}
-                    onChange={handleChange}
-                    placeholder="Your full name"
-                    className="w-full rounded-2xl border border-[#D8DEE6] bg-[#F7FAFC] px-4 py-3 text-sm font-semibold outline-none transition focus:border-[#F6AD55] focus:bg-white"
-                  />
-                </div>
-
-                <div>
-                  <label className="mb-2 block text-sm font-black text-[#002045]">
-                    Country
-                  </label>
-
-                  <input
-                    type="text"
-                    name="country"
-                    value={formData.country}
-                    onChange={handleChange}
-                    placeholder="India"
-                    className="w-full rounded-2xl border border-[#D8DEE6] bg-[#F7FAFC] px-4 py-3 text-sm font-semibold outline-none transition focus:border-[#F6AD55] focus:bg-white"
-                  />
-                </div>
+                <SettingsField
+                  label="Country"
+                  type="text"
+                  name="country"
+                  value={formData.country}
+                  onChange={handleChange}
+                  placeholder="India"
+                />
 
                 <div className="md:col-span-2">
-                  <label className="mb-2 block text-sm font-black text-[#002045]">
-                    Website
-                  </label>
-
-                  <input
+                  <SettingsField
+                    label="Website"
                     type="url"
                     name="website"
                     value={formData.website}
                     onChange={handleChange}
                     placeholder="https://yourwebsite.com"
-                    className="w-full rounded-2xl border border-[#D8DEE6] bg-[#F7FAFC] px-4 py-3 text-sm font-semibold outline-none transition focus:border-[#F6AD55] focus:bg-white"
                   />
                 </div>
 
                 <div className="md:col-span-2">
-                  <label className="mb-2 block text-sm font-black text-[#002045]">
+                  <label className="mb-2 block text-sm font-black text-slate-300">
                     Bio
                   </label>
 
@@ -278,7 +266,7 @@ function Settings() {
                     onChange={handleChange}
                     rows={5}
                     placeholder="Tell travelers about yourself..."
-                    className="w-full resize-none rounded-2xl border border-[#D8DEE6] bg-[#F7FAFC] px-4 py-3 text-sm font-semibold outline-none transition focus:border-[#F6AD55] focus:bg-white"
+                    className="dark-input w-full resize-none rounded-2xl border border-white/10 bg-[#06111F] px-4 py-3 text-sm font-semibold !text-white caret-[#F6AD55] outline-none transition placeholder:!text-slate-600 focus:border-[#F6AD55]/60 focus:ring-4 focus:ring-[#F6AD55]/10"
                   />
                 </div>
               </div>
@@ -287,7 +275,7 @@ function Settings() {
                 <button
                   type="submit"
                   disabled={saving}
-                  className="inline-flex items-center gap-2 rounded-full bg-[#1A365D] px-6 py-3 text-sm font-black text-white transition hover:bg-[#002045] disabled:cursor-not-allowed disabled:opacity-60"
+                  className="inline-flex items-center gap-2 rounded-full bg-[#F6AD55] px-6 py-3 text-sm font-black text-[#06111F] shadow-[0_16px_40px_rgba(246,173,85,0.22)] transition hover:bg-orange-300 disabled:cursor-not-allowed disabled:opacity-60"
                 >
                   {saving ? (
                     <Loader2 size={18} className="animate-spin" />
@@ -300,7 +288,7 @@ function Settings() {
             </form>
 
             <section>
-              <h3 className="mb-3 text-lg font-black text-[#002045]">
+              <h3 className="mb-3 text-lg font-black text-white">
                 Quick Actions
               </h3>
 
@@ -313,24 +301,22 @@ function Settings() {
                       key={item.title}
                       type="button"
                       onClick={item.action}
-                      className="flex items-center gap-4 rounded-[1.7rem] border border-[#DDE3EA] bg-white p-5 text-left shadow-sm transition hover:border-[#F6AD55] hover:shadow-md"
+                      className="group flex items-center gap-4 rounded-[1.7rem] border border-white/10 bg-[#101D2E] p-5 text-left shadow-[0_18px_55px_rgba(0,0,0,0.18)] transition hover:-translate-y-0.5 hover:border-[#F6AD55]/35 hover:bg-[#14243A]"
                     >
-                      <div className="grid h-12 w-12 shrink-0 place-items-center rounded-2xl bg-orange-50 text-[#F6AD55]">
+                      <div className="grid h-12 w-12 shrink-0 place-items-center rounded-2xl bg-[#F6AD55]/15 text-[#F6AD55]">
                         <Icon size={22} />
                       </div>
 
                       <div className="min-w-0 flex-1">
-                        <h4 className="font-black text-[#002045]">
-                          {item.title}
-                        </h4>
+                        <h4 className="font-black text-white">{item.title}</h4>
 
-                        <p className="mt-1 text-sm leading-5 text-[#002045]/60">
+                        <p className="mt-1 text-sm leading-5 text-slate-400">
                           {item.description}
                         </p>
                       </div>
 
                       <ChevronRight
-                        className="shrink-0 text-[#002045]/35"
+                        className="shrink-0 text-slate-600 transition group-hover:text-[#F6AD55]"
                         size={20}
                       />
                     </button>
@@ -341,43 +327,24 @@ function Settings() {
           </section>
 
           <aside className="space-y-6 lg:col-span-4">
-            <section className="rounded-[2rem] border border-[#DDE3EA] bg-white p-6 shadow-sm">
-              <h3 className="text-xl font-black text-[#1A365D]">
-                Account Info
-              </h3>
+            <section className="rounded-[2rem] border border-white/10 bg-[#101D2E] p-6 shadow-[0_20px_70px_rgba(0,0,0,0.22)]">
+              <h3 className="text-xl font-black text-white">Account Info</h3>
 
               <div className="mt-5 space-y-3">
-                <div className="rounded-2xl bg-[#F7FAFC] p-4">
-                  <p className="text-xs font-black uppercase tracking-[0.14em] text-[#002045]/40">
-                    Username
-                  </p>
-                  <p className="mt-1 truncate font-black text-[#002045]">
-                    @{user?.username || "waymark"}
-                  </p>
-                </div>
+                <InfoBox label="Username" value={`@${user?.username || "waymark"}`} />
+                <InfoBox label="Email" value={user?.email || "Not available"} />
 
-                <div className="rounded-2xl bg-[#F7FAFC] p-4">
-                  <p className="text-xs font-black uppercase tracking-[0.14em] text-[#002045]/40">
-                    Email
-                  </p>
-                  <p className="mt-1 truncate font-black text-[#002045]">
-                    {user?.email || "Not available"}
-                  </p>
-                </div>
-
-                <div className="rounded-2xl bg-orange-50 p-4">
+                <div className="rounded-2xl border border-[#F6AD55]/20 bg-[#F6AD55]/10 p-4">
                   <p className="text-xs font-black uppercase tracking-[0.14em] text-[#F6AD55]">
                     Account Status
                   </p>
-                  <p className="mt-1 font-black text-[#002045]">Active</p>
+                  <p className="mt-1 font-black text-white">Active</p>
                 </div>
               </div>
             </section>
 
-            <section className="rounded-[2rem] border border-[#DDE3EA] bg-white p-6 shadow-sm">
-              <h3 className="text-xl font-black text-[#1A365D]">
-                Coming Soon
-              </h3>
+            <section className="rounded-[2rem] border border-white/10 bg-[#101D2E] p-6 shadow-[0_20px_70px_rgba(0,0,0,0.22)]">
+              <h3 className="text-xl font-black text-white">Coming Soon</h3>
 
               <div className="mt-5 space-y-4">
                 {comingSoonItems.map((item) => {
@@ -386,17 +353,15 @@ function Settings() {
                   return (
                     <div
                       key={item.title}
-                      className="rounded-[1.4rem] border border-dashed border-[#C8D0DA] bg-[#F7FAFC] p-4"
+                      className="rounded-[1.4rem] border border-dashed border-white/10 bg-white/[0.04] p-4"
                     >
-                      <div className="mb-3 grid h-10 w-10 place-items-center rounded-xl bg-white text-[#002045]/45">
+                      <div className="mb-3 grid h-10 w-10 place-items-center rounded-xl bg-white/[0.06] text-slate-500">
                         <Icon size={20} />
                       </div>
 
-                      <h4 className="font-black text-[#002045]">
-                        {item.title}
-                      </h4>
+                      <h4 className="font-black text-white">{item.title}</h4>
 
-                      <p className="mt-2 text-sm leading-6 text-[#002045]/55">
+                      <p className="mt-2 text-sm leading-6 text-slate-500">
                         {item.description}
                       </p>
                     </div>
@@ -405,10 +370,10 @@ function Settings() {
               </div>
             </section>
 
-            <section className="rounded-[2rem] border border-red-100 bg-red-50 p-6">
-              <h3 className="text-lg font-black text-red-600">Danger Zone</h3>
+            <section className="rounded-[2rem] border border-red-500/20 bg-red-500/10 p-6">
+              <h3 className="text-lg font-black text-red-300">Danger Zone</h3>
 
-              <p className="mt-2 text-sm leading-6 text-red-500/75">
+              <p className="mt-2 text-sm leading-6 text-red-200/70">
                 Logout from this device. You can login again anytime.
               </p>
 
@@ -424,6 +389,37 @@ function Settings() {
           </aside>
         </div>
       </main>
+    </div>
+  );
+}
+
+function SettingsField({ label, type, name, value, onChange, placeholder }) {
+  return (
+    <div>
+      <label className="mb-2 block text-sm font-black text-slate-300">
+        {label}
+      </label>
+
+      <input
+        type={type}
+        name={name}
+        value={value}
+        onChange={onChange}
+        placeholder={placeholder}
+        className="dark-input w-full rounded-2xl border border-white/10 bg-[#06111F] px-4 py-3 text-sm font-semibold !text-white caret-[#F6AD55] outline-none transition placeholder:!text-slate-600 focus:border-[#F6AD55]/60 focus:ring-4 focus:ring-[#F6AD55]/10"
+      />
+    </div>
+  );
+}
+
+function InfoBox({ label, value }) {
+  return (
+    <div className="rounded-2xl border border-white/10 bg-white/[0.04] p-4">
+      <p className="text-xs font-black uppercase tracking-[0.14em] text-slate-500">
+        {label}
+      </p>
+
+      <p className="mt-1 truncate font-black text-white">{value}</p>
     </div>
   );
 }

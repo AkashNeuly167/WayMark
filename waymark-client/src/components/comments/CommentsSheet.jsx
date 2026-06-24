@@ -1,4 +1,4 @@
-import { X, Send, Loader2, } from "lucide-react";
+import { X, Send, Loader2 } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 
 import {
@@ -160,14 +160,14 @@ function CommentsSheet({ open, memory, onClose, onCommentCountChange }) {
         type="button"
         aria-label="Close comments"
         onClick={onClose}
-        className="absolute inset-0 bg-black/40"
+        className="absolute inset-0 bg-black/70 backdrop-blur-sm"
       />
 
-      <section className="absolute bottom-0 left-0 right-0 flex max-h-[82vh] flex-col rounded-t-[2rem] bg-white shadow-2xl md:left-1/2 md:top-1/2 md:max-h-[760px] md:w-[560px] md:-translate-x-1/2 md:-translate-y-1/2 md:rounded-[2rem]">
-        <div className="flex items-center justify-between border-b border-[#E5EAF0] px-5 py-4">
-          <div>
-            <h2 className="text-lg font-black text-[#002045]">Comments</h2>
-            <p className="text-xs font-medium text-[#002045]/45">
+      <section className="absolute bottom-0 left-0 right-0 flex max-h-[82vh] flex-col overflow-hidden rounded-t-[2rem] border border-white/10 bg-[#101D2E] text-white shadow-[0_30px_100px_rgba(0,0,0,0.5)] md:left-1/2 md:top-1/2 md:max-h-[760px] md:w-[560px] md:-translate-x-1/2 md:-translate-y-1/2 md:rounded-[2rem]">
+        <div className="flex items-center justify-between border-b border-white/10 px-5 py-4">
+          <div className="min-w-0">
+            <h2 className="text-lg font-black text-white">Comments</h2>
+            <p className="truncate text-xs font-medium text-slate-500">
               {memory.title}
             </p>
           </div>
@@ -175,7 +175,7 @@ function CommentsSheet({ open, memory, onClose, onCommentCountChange }) {
           <button
             type="button"
             onClick={onClose}
-            className="grid h-10 w-10 place-items-center rounded-full bg-[#F7FAFC] text-[#002045] transition hover:bg-[#E8EDF2]"
+            className="grid h-10 w-10 shrink-0 place-items-center rounded-full border border-white/10 bg-white/[0.06] text-slate-300 transition hover:bg-white/[0.1] hover:text-white"
           >
             <X size={20} />
           </button>
@@ -188,8 +188,8 @@ function CommentsSheet({ open, memory, onClose, onCommentCountChange }) {
             </div>
           ) : comments.length === 0 ? (
             <div className="py-10 text-center">
-              <h3 className="font-black text-[#002045]">No comments yet</h3>
-              <p className="mt-1 text-sm text-[#002045]/50">
+              <h3 className="font-black text-white">No comments yet</h3>
+              <p className="mt-1 text-sm text-slate-500">
                 Be the first one to add to this memory.
               </p>
             </div>
@@ -209,7 +209,7 @@ function CommentsSheet({ open, memory, onClose, onCommentCountChange }) {
 
                 return (
                   <div key={comment._id} className="flex gap-3">
-                    <div className="grid h-10 w-10 shrink-0 place-items-center overflow-hidden rounded-full bg-[#1A365D] text-xs font-black text-white">
+                    <div className="grid h-10 w-10 shrink-0 place-items-center overflow-hidden rounded-full bg-gradient-to-br from-[#F6AD55] to-orange-600 text-xs font-black text-white ring-1 ring-white/10">
                       {authorAvatar ? (
                         <img
                           src={authorAvatar}
@@ -223,20 +223,20 @@ function CommentsSheet({ open, memory, onClose, onCommentCountChange }) {
 
                     <div className="min-w-0 flex-1">
                       <div className="flex flex-wrap items-center gap-2">
-                        <span className="text-sm font-black text-[#1A365D]">
+                        <span className="text-sm font-black text-white">
                           {authorName}
                         </span>
 
-                        <span className="text-xs font-medium text-[#002045]/40">
+                        <span className="text-xs font-medium text-slate-600">
                           {formatCommentTime(comment.createdAt)}
                         </span>
                       </div>
 
-                      <p className="mt-1 text-sm leading-6 text-[#002045]/75">
+                      <p className="mt-1 text-sm leading-6 text-slate-300">
                         {comment.text}
                       </p>
 
-                      <div className="mt-2 flex items-center gap-4 text-xs font-black text-[#002045]/45">
+                      <div className="mt-2 flex items-center gap-4 text-xs font-black text-slate-500">
                         <button
                           type="button"
                           onClick={() => {
@@ -257,9 +257,11 @@ function CommentsSheet({ open, memory, onClose, onCommentCountChange }) {
                           <button
                             type="button"
                             onClick={() => handleDelete(comment._id)}
-                            className="transition hover:text-red-500"
+                            className="transition hover:text-red-400"
                           >
-                            {deletingId === comment._id ? "Deleting..." : "Delete"}
+                            {deletingId === comment._id
+                              ? "Deleting..."
+                              : "Delete"}
                           </button>
                         )}
                       </div>
@@ -273,9 +275,9 @@ function CommentsSheet({ open, memory, onClose, onCommentCountChange }) {
 
         <form
           onSubmit={handleSubmit}
-          className="flex items-center gap-3 border-t border-[#E5EAF0] bg-white px-5 py-4"
+          className="flex items-center gap-3 border-t border-white/10 bg-[#06111F]/70 px-5 py-4"
         >
-          <div className="grid h-10 w-10 shrink-0 place-items-center overflow-hidden rounded-full bg-[#1A365D] text-xs font-black text-white">
+          <div className="grid h-10 w-10 shrink-0 place-items-center overflow-hidden rounded-full bg-gradient-to-br from-[#F6AD55] to-orange-600 text-xs font-black text-white ring-1 ring-white/10">
             {getAvatarUrl(user) ? (
               <img
                 src={getAvatarUrl(user)}
@@ -292,15 +294,19 @@ function CommentsSheet({ open, memory, onClose, onCommentCountChange }) {
             value={commentText}
             onChange={(e) => setCommentText(e.target.value)}
             placeholder="Add a comment..."
-            className="min-w-0 flex-1 rounded-full bg-[#F7FAFC] px-4 py-3 text-sm text-[#002045] outline-none placeholder:text-[#002045]/35"
+            className="dark-input min-w-0 flex-1 rounded-full border border-white/10 bg-[#06111F] px-4 py-3 text-sm font-semibold !text-white caret-[#F6AD55] outline-none placeholder:!text-slate-600 focus:border-[#F6AD55]/60 focus:ring-4 focus:ring-[#F6AD55]/10"
           />
 
           <button
             type="submit"
             disabled={posting || !commentText.trim()}
-            className="rounded-full bg-[#F6AD55] px-4 py-3 text-sm font-black text-white transition hover:bg-orange-400 disabled:cursor-not-allowed disabled:opacity-50"
+            className="grid h-11 w-11 shrink-0 place-items-center rounded-full bg-[#F6AD55] text-[#06111F] transition hover:bg-orange-300 disabled:cursor-not-allowed disabled:opacity-50"
           >
-            {posting ? "..." : <Send size={17} />}
+            {posting ? (
+              <Loader2 size={17} className="animate-spin" />
+            ) : (
+              <Send size={17} />
+            )}
           </button>
         </form>
       </section>

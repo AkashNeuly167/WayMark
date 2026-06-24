@@ -268,9 +268,9 @@ function EditMemory() {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-[#F7FAFC] text-[#002045]">
+      <div className="min-h-screen bg-transparent text-white">
         <main className="mx-auto grid min-h-screen max-w-6xl place-items-center px-4">
-          <div className="flex items-center gap-3 rounded-3xl border border-[#D8DEE6] bg-white px-6 py-5 font-black text-[#1A365D] shadow-sm">
+          <div className="flex items-center gap-3 rounded-3xl border border-white/10 bg-[#101D2E] px-6 py-5 font-black text-white shadow-[0_20px_70px_rgba(0,0,0,0.22)]">
             <Loader2 className="animate-spin text-[#F6AD55]" size={24} />
             Loading memory...
           </div>
@@ -280,7 +280,7 @@ function EditMemory() {
   }
 
   return (
-    <div className="min-h-screen bg-[#F7FAFC] text-[#002045]">
+    <div className="min-h-screen bg-transparent text-white">
       <main className="mx-auto max-w-[1280px] px-4 pb-36 pt-6 md:px-8 md:pb-28 md:pt-8">
         <div className="mb-6 flex flex-col gap-4 md:mb-8 md:flex-row md:items-end md:justify-between">
           <div>
@@ -288,11 +288,11 @@ function EditMemory() {
               Refine your journey
             </p>
 
-            <h1 className="mt-2 text-3xl font-black text-[#1A365D] md:text-6xl">
+            <h1 className="mt-2 text-3xl font-black text-white md:text-6xl">
               Edit Memory
             </h1>
 
-            <p className="mt-3 max-w-2xl text-sm leading-6 text-[#002045]/60 md:text-base">
+            <p className="mt-3 max-w-2xl text-sm leading-6 text-slate-400 md:text-base">
               Update your story, refresh your gallery, and adjust the map
               location.
             </p>
@@ -301,14 +301,14 @@ function EditMemory() {
           <button
             type="button"
             onClick={() => navigate(`/memories/${id}`)}
-            className="hidden rounded-2xl border border-[#D8DEE6] bg-white px-5 py-3 font-bold text-[#1A365D] transition hover:border-[#F6AD55] md:block"
+            className="hidden rounded-2xl border border-white/10 bg-[#101D2E] px-5 py-3 font-bold text-white transition hover:border-[#F6AD55]/60 hover:bg-[#14243A] md:block"
           >
             Cancel
           </button>
         </div>
 
         {error && (
-          <div className="mb-6 rounded-2xl border border-red-200 bg-red-50 px-5 py-4 font-semibold text-red-600">
+          <div className="mb-6 rounded-2xl border border-red-500/25 bg-red-500/10 px-5 py-4 font-semibold text-red-300">
             {error}
           </div>
         )}
@@ -329,7 +329,7 @@ function EditMemory() {
               setSelectedMood={setSelectedMood}
             />
 
-            <div className="rounded-[2rem] border border-[#D8DEE6] bg-white shadow-sm">
+            <div className="rounded-[2rem] border border-white/10 bg-[#101D2E] shadow-[0_20px_70px_rgba(0,0,0,0.2)]">
               <button
                 type="button"
                 onClick={() => setLocationOpen((prev) => !prev)}
@@ -339,7 +339,7 @@ function EditMemory() {
                   <p className="text-xs font-black uppercase tracking-widest text-[#F6AD55]">
                     Location
                   </p>
-                  <h2 className="mt-1 text-xl font-black text-[#1A365D]">
+                  <h2 className="mt-1 text-xl font-black text-white">
                     Map Anchor
                   </h2>
                 </div>
@@ -348,7 +348,7 @@ function EditMemory() {
               </button>
 
               {locationOpen && (
-                <div className="space-y-5 border-t border-[#E5EAF0] p-5">
+                <div className="space-y-5 border-t border-white/10 p-5">
                   <LocationSection
                     formData={formData}
                     handleChange={handleChange}
@@ -427,7 +427,7 @@ function EditMemory() {
             <button
               type="submit"
               disabled={submitting || uploading}
-              className="flex h-14 w-full items-center justify-center gap-3 rounded-2xl bg-[#F6AD55] text-base font-black text-white shadow-xl transition hover:bg-orange-400 disabled:opacity-60"
+              className="flex h-14 w-full items-center justify-center gap-3 rounded-2xl bg-[#F6AD55] text-base font-black text-[#06111F] shadow-[0_18px_45px_rgba(246,173,85,0.28)] transition hover:bg-orange-300 disabled:opacity-60"
             >
               {submitting ? (
                 <>
@@ -455,9 +455,9 @@ function StorySection({
   setSelectedMood,
 }) {
   return (
-    <section className="rounded-[2rem] border border-[#D8DEE6] bg-white p-5 shadow-[0_10px_25px_rgba(26,54,93,0.05)] md:p-8">
+    <section className="rounded-[2rem] border border-white/10 bg-[#101D2E] p-5 shadow-[0_20px_70px_rgba(0,0,0,0.2)] md:p-8">
       <div className="mb-8">
-        <label className="mb-3 block text-xs font-black uppercase tracking-widest text-[#1A365D]">
+        <label className="mb-3 block text-xs font-black uppercase tracking-widest text-[#F6AD55]">
           Journey Title
         </label>
 
@@ -466,29 +466,29 @@ function StorySection({
           value={formData.title}
           onChange={handleChange}
           placeholder="Where did the adventure lead?"
-          className="w-full border-none bg-transparent p-0 text-3xl font-black leading-tight text-[#002045] outline-none placeholder:text-[#CBD5E1] focus:ring-0 md:text-5xl"
+          className="dark-input w-full border-none bg-transparent p-0 text-3xl font-black leading-tight !text-white caret-[#F6AD55] outline-none placeholder:!text-slate-600 focus:ring-0 md:text-5xl"
         />
       </div>
 
       <div className="mb-8">
-        <div className="mb-4 flex flex-wrap items-center gap-2 border-b border-[#E5EAF0] pb-3">
+        <div className="mb-4 flex flex-wrap items-center gap-2 border-b border-white/10 pb-3">
           <button
             type="button"
-            className="rounded-xl p-2 text-[#74777F] transition hover:bg-[#F1F4F6]"
+            className="rounded-xl p-2 text-slate-500 transition hover:bg-white/[0.06] hover:text-white"
           >
             <Camera size={18} />
           </button>
 
           <button
             type="button"
-            className="rounded-xl p-2 text-[#74777F] transition hover:bg-[#F1F4F6]"
+            className="rounded-xl p-2 text-slate-500 transition hover:bg-white/[0.06] hover:text-white"
           >
             <Mountain size={18} />
           </button>
 
-          <div className="mx-2 h-6 w-px bg-[#E5EAF0]" />
+          <div className="mx-2 h-6 w-px bg-white/10" />
 
-          <span className="text-sm text-[#74777F]">Tell the story...</span>
+          <span className="text-sm text-slate-500">Tell the story...</span>
         </div>
 
         <textarea
@@ -497,12 +497,12 @@ function StorySection({
           onChange={handleChange}
           rows="7"
           placeholder="The dust had not settled yet when we reached the ridge line..."
-          className="w-full resize-none border-none bg-transparent p-0 text-base leading-7 text-[#43474E] outline-none placeholder:text-[#A8B0BA] focus:ring-0 md:text-lg md:leading-8"
+          className="dark-input w-full resize-none border-none bg-transparent p-0 text-base font-medium leading-7 !text-slate-300 caret-[#F6AD55] outline-none placeholder:!text-slate-600 focus:ring-0 md:text-lg md:leading-8"
         />
       </div>
 
       <div>
-        <label className="mb-4 block text-xs font-black uppercase tracking-widest text-[#1A365D]">
+        <label className="mb-4 block text-xs font-black uppercase tracking-widest text-[#F6AD55]">
           Current Mood
         </label>
 
@@ -517,8 +517,8 @@ function StorySection({
                 onClick={() => setSelectedMood(mood)}
                 className={`rounded-full px-4 py-2 text-sm font-bold transition ${
                   active
-                    ? "bg-[#002045] text-white shadow-md"
-                    : "bg-[#F1F4F6] text-[#43474E] hover:bg-[#E5E9EB]"
+                    ? "bg-[#F6AD55] text-[#06111F] shadow-[0_12px_30px_rgba(246,173,85,0.2)]"
+                    : "bg-white/[0.06] text-slate-400 hover:bg-white/[0.1] hover:text-white"
                 }`}
               >
                 {mood}
@@ -533,8 +533,8 @@ function StorySection({
 
 function GallerySection({ images, uploading, handleImageUpload, removeImage }) {
   return (
-    <section className="rounded-[2rem] border border-[#D8DEE6] bg-white p-5 shadow-[0_10px_25px_rgba(26,54,93,0.05)] md:p-8">
-      <label className="mb-4 block text-xs font-black uppercase tracking-widest text-[#1A365D]">
+    <section className="rounded-[2rem] border border-white/10 bg-[#101D2E] p-5 shadow-[0_20px_70px_rgba(0,0,0,0.2)] md:p-8">
+      <label className="mb-4 block text-xs font-black uppercase tracking-widest text-[#F6AD55]">
         Gallery Assets
       </label>
 
@@ -545,7 +545,7 @@ function GallerySection({ images, uploading, handleImageUpload, removeImage }) {
             className={`group relative aspect-square overflow-hidden rounded-2xl border ${
               index === 0
                 ? "border-2 border-[#F6AD55] ring-4 ring-[#F6AD55]/20"
-                : "border-[#D8DEE6]"
+                : "border-white/10"
             }`}
           >
             <img
@@ -555,7 +555,7 @@ function GallerySection({ images, uploading, handleImageUpload, removeImage }) {
             />
 
             {index === 0 && (
-              <span className="absolute left-2 top-2 rounded-full bg-[#F6AD55] px-2 py-1 text-[10px] font-black uppercase text-white">
+              <span className="absolute left-2 top-2 rounded-full bg-[#F6AD55] px-2 py-1 text-[10px] font-black uppercase text-[#06111F]">
                 Cover
               </span>
             )}
@@ -563,14 +563,14 @@ function GallerySection({ images, uploading, handleImageUpload, removeImage }) {
             <button
               type="button"
               onClick={() => removeImage(index)}
-              className="absolute right-2 top-2 grid h-7 w-7 place-items-center rounded-full bg-black/50 text-white opacity-100 transition md:opacity-0 md:group-hover:opacity-100"
+              className="absolute right-2 top-2 grid h-7 w-7 place-items-center rounded-full bg-black/60 text-white opacity-100 transition hover:bg-red-500 md:opacity-0 md:group-hover:opacity-100"
             >
               <X size={14} />
             </button>
           </div>
         ))}
 
-        <label className="flex aspect-square cursor-pointer flex-col items-center justify-center rounded-2xl border-2 border-dashed border-[#C4C6CF] bg-[#F7FAFC] text-[#74777F] transition hover:border-[#F6AD55] hover:bg-orange-50 hover:text-[#F6AD55]">
+        <label className="flex aspect-square cursor-pointer flex-col items-center justify-center rounded-2xl border-2 border-dashed border-white/10 bg-white/[0.04] text-slate-500 transition hover:border-[#F6AD55]/60 hover:bg-[#F6AD55]/10 hover:text-[#F6AD55]">
           {uploading ? (
             <Loader2 className="h-8 w-8 animate-spin" />
           ) : (
@@ -602,21 +602,21 @@ function LocationSection({
   compact = false,
 }) {
   return (
-    <section className="overflow-hidden rounded-[2rem] border border-[#1A365D]/20 bg-[#1A365D] text-white shadow-xl">
+    <section className="overflow-hidden rounded-[2rem] border border-[#F6AD55]/20 bg-gradient-to-br from-[#101D2E] to-[#06111F] text-white shadow-[0_20px_70px_rgba(0,0,0,0.24)]">
       <div className="p-5 md:p-6">
-        <label className="mb-4 block text-xs font-black uppercase tracking-widest text-blue-100">
+        <label className="mb-4 block text-xs font-black uppercase tracking-widest text-[#F6AD55]">
           Location Anchor
         </label>
 
         <div className="relative mb-4">
-          <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-blue-100/70" />
+          <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-slate-500" />
 
           <input
             name="locationName"
             value={formData.locationName}
             onChange={handleChange}
             placeholder="Search or name this place..."
-            className="w-full rounded-xl border-none bg-[#002045]/45 py-3 pl-10 pr-4 text-sm text-white outline-none placeholder:text-blue-100/50 focus:ring-1 focus:ring-[#F6AD55]"
+            className="dark-input w-full rounded-xl border border-white/10 bg-[#06111F] py-3 pl-10 pr-4 text-sm font-semibold !text-white caret-[#F6AD55] outline-none placeholder:!text-slate-600 focus:border-[#F6AD55]/60 focus:ring-4 focus:ring-[#F6AD55]/10"
           />
         </div>
 
@@ -640,7 +640,7 @@ function LocationSection({
           </MapContainer>
         </div>
 
-        <p className="mt-3 text-xs leading-5 text-blue-100/70">
+        <p className="mt-3 text-xs leading-5 text-slate-500">
           Click on the map to set exact coordinates for this memory.
         </p>
       </div>
@@ -650,8 +650,8 @@ function LocationSection({
 
 function MetadataSection({ formData, handleChange }) {
   return (
-    <section className="rounded-[2rem] border border-[#D8DEE6] bg-white p-5 shadow-[0_10px_25px_rgba(26,54,93,0.05)] md:p-6">
-      <label className="mb-6 block text-xs font-black uppercase tracking-widest text-[#1A365D]">
+    <section className="rounded-[2rem] border border-white/10 bg-[#101D2E] p-5 shadow-[0_20px_70px_rgba(0,0,0,0.2)] md:p-6">
+      <label className="mb-6 block text-xs font-black uppercase tracking-widest text-[#F6AD55]">
         Metadata
       </label>
 
@@ -696,8 +696,8 @@ function MetadataSection({ formData, handleChange }) {
 
 function ActivitySection({ selectedActivities, toggleActivity }) {
   return (
-    <section className="rounded-[2rem] border border-[#D8DEE6] bg-white p-5 shadow-[0_10px_25px_rgba(26,54,93,0.05)] md:p-6">
-      <label className="mb-4 block text-xs font-black uppercase tracking-widest text-[#1A365D]">
+    <section className="rounded-[2rem] border border-white/10 bg-[#101D2E] p-5 shadow-[0_20px_70px_rgba(0,0,0,0.2)] md:p-6">
+      <label className="mb-4 block text-xs font-black uppercase tracking-widest text-[#F6AD55]">
         Activity Context
       </label>
 
@@ -712,8 +712,8 @@ function ActivitySection({ selectedActivities, toggleActivity }) {
               onClick={() => toggleActivity(activity)}
               className={`rounded-full border px-3 py-2 text-xs font-bold transition ${
                 active
-                  ? "border-[#F6AD55] bg-orange-50 text-[#F6AD55]"
-                  : "border-[#D8DEE6] text-[#43474E] hover:bg-[#F7FAFC]"
+                  ? "border-[#F6AD55] bg-[#F6AD55]/10 text-[#F6AD55]"
+                  : "border-white/10 text-slate-400 hover:bg-white/[0.06] hover:text-white"
               }`}
             >
               {activity}
@@ -734,15 +734,15 @@ function PublishSection({
 }) {
   return (
     <section
-      className={`rounded-[2rem] bg-[#002045] p-6 text-white shadow-xl ${
+      className={`rounded-[2rem] border border-[#F6AD55]/20 bg-[#101D2E] p-6 text-white shadow-[0_20px_70px_rgba(0,0,0,0.22)] ${
         mobile ? "pb-24" : ""
       }`}
     >
-      <label className="mb-5 block text-xs font-black uppercase tracking-widest text-blue-100">
+      <label className="mb-5 block text-xs font-black uppercase tracking-widest text-[#F6AD55]">
         Privacy Controls
       </label>
 
-      <div className="mb-6 grid grid-cols-3 rounded-xl bg-[#1A365D] p-1">
+      <div className="mb-6 grid grid-cols-3 rounded-xl border border-white/10 bg-[#06111F] p-1">
         {["public", "friends", "private"].map((item) => (
           <button
             key={item}
@@ -750,8 +750,8 @@ function PublishSection({
             onClick={() => setPrivacy(item)}
             className={`rounded-lg py-2 text-xs font-black capitalize transition ${
               privacy === item
-                ? "bg-white text-[#002045] shadow-sm"
-                : "text-blue-100/70"
+                ? "bg-[#F6AD55] text-[#06111F] shadow-sm"
+                : "text-slate-500 hover:text-white"
             }`}
           >
             {item}
@@ -762,7 +762,7 @@ function PublishSection({
       <button
         type="submit"
         disabled={submitting || uploading}
-        className="hidden h-14 w-full items-center justify-center gap-3 rounded-2xl bg-[#F6AD55] text-lg font-black text-white shadow-lg transition hover:bg-orange-400 disabled:opacity-60 lg:flex"
+        className="hidden h-14 w-full items-center justify-center gap-3 rounded-2xl bg-[#F6AD55] text-lg font-black text-[#06111F] shadow-[0_18px_45px_rgba(246,173,85,0.22)] transition hover:bg-orange-300 disabled:opacity-60 lg:flex"
       >
         {submitting ? (
           <>
@@ -777,7 +777,7 @@ function PublishSection({
         )}
       </button>
 
-      <p className="mt-4 text-center text-xs leading-5 text-blue-100/60">
+      <p className="mt-4 text-center text-xs leading-5 text-slate-500">
         Your updated memory will stay connected to your Waymark travel passport.
       </p>
     </section>
@@ -787,7 +787,7 @@ function PublishSection({
 function Field({ label, name, value, onChange, placeholder }) {
   return (
     <div>
-      <label className="mb-2 block text-xs font-black uppercase tracking-widest text-[#002045]/45">
+      <label className="mb-2 block text-xs font-black uppercase tracking-widest text-slate-500">
         {label}
       </label>
 
@@ -796,7 +796,7 @@ function Field({ label, name, value, onChange, placeholder }) {
         value={value}
         onChange={onChange}
         placeholder={placeholder}
-        className="w-full rounded-2xl border border-[#D8DEE6] bg-[#F7FAFC] px-4 py-3 text-sm font-semibold text-[#002045] outline-none transition placeholder:text-[#94A3B8] focus:border-[#F6AD55] focus:bg-white"
+        className="dark-input w-full rounded-2xl border border-white/10 bg-[#06111F] px-4 py-3 text-sm font-semibold !text-white caret-[#F6AD55] outline-none transition placeholder:!text-slate-600 focus:border-[#F6AD55]/60 focus:ring-4 focus:ring-[#F6AD55]/10"
       />
     </div>
   );

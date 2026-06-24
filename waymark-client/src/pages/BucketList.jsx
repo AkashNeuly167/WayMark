@@ -290,7 +290,7 @@ function BucketList() {
       />
 
       {formOpen && (
-        <div className="fixed inset-0 z-[120] flex items-end justify-center bg-black/50 px-0 backdrop-blur-sm sm:items-center sm:px-4">
+        <div className="fixed inset-0 z-[120] flex items-end justify-center bg-black/70 px-0 backdrop-blur-md sm:items-center sm:px-4">
           <button
             type="button"
             onClick={closeForm}
@@ -299,15 +299,20 @@ function BucketList() {
             aria-label="Close bucket form"
           />
 
-          <div className="relative w-full rounded-t-[32px] bg-white px-5 pb-6 pt-5 shadow-2xl sm:max-w-xl sm:rounded-[32px] sm:p-6">
-            <div className="mx-auto mb-5 h-1.5 w-12 rounded-full bg-[#D8DEE6] sm:hidden" />
+          <div className="relative w-full rounded-t-[32px] border border-white/10 bg-[#101D2E] px-5 pb-6 pt-5 text-white shadow-[0_30px_100px_rgba(0,0,0,0.5)] sm:max-w-xl sm:rounded-[32px] sm:p-6">
+            <div className="mx-auto mb-5 h-1.5 w-12 rounded-full bg-white/15 sm:hidden" />
 
             <div className="mb-6 flex items-start justify-between gap-4">
               <div>
-                <h2 className="text-2xl font-bold text-[#002045]">
+                <p className="text-xs font-black uppercase tracking-[0.2em] text-[#F6AD55]">
+                  Bucket List
+                </p>
+
+                <h2 className="mt-1 text-2xl font-black text-white">
                   {editingItem ? "Edit destination" : "Add destination"}
                 </h2>
-                <p className="mt-1 text-sm text-[#002045]/60">
+
+                <p className="mt-1 text-sm text-slate-400">
                   Save places you want to visit next.
                 </p>
               </div>
@@ -316,65 +321,51 @@ function BucketList() {
                 type="button"
                 onClick={closeForm}
                 disabled={saving}
-                className="rounded-full p-2 text-[#002045]/50 transition hover:bg-[#F1F5F9] hover:text-[#002045]"
+                className="rounded-full p-2 text-slate-500 transition hover:bg-white/10 hover:text-white"
               >
                 <X size={18} />
               </button>
             </div>
 
             <form onSubmit={handleSubmit} className="space-y-5">
-              <div>
-                <label className="mb-2 block text-sm font-semibold text-[#002045]">
-                  Place name
-                </label>
-                <input
-                  name="title"
-                  value={formData.title}
+              <BucketField
+                label="Place name"
+                name="title"
+                value={formData.title}
+                onChange={handleChange}
+                placeholder="Ladakh road trip"
+              />
+
+              <div className="grid grid-cols-1 gap-5 sm:grid-cols-2">
+                <BucketField
+                  label="Country"
+                  name="country"
+                  value={formData.country}
                   onChange={handleChange}
-                  placeholder="Ladakh road trip"
-                  className="w-full rounded-2xl border border-[#D8DEE6] px-4 py-3 outline-none transition focus:border-[#F6AD55]"
+                  placeholder="India"
+                />
+
+                <BucketField
+                  label="City"
+                  name="city"
+                  value={formData.city}
+                  onChange={handleChange}
+                  placeholder="Leh"
                 />
               </div>
 
-              <div className="grid grid-cols-1 gap-5 sm:grid-cols-2">
-                <div>
-                  <label className="mb-2 block text-sm font-semibold text-[#002045]">
-                    Country
-                  </label>
-                  <input
-                    name="country"
-                    value={formData.country}
-                    onChange={handleChange}
-                    placeholder="India"
-                    className="w-full rounded-2xl border border-[#D8DEE6] px-4 py-3 outline-none transition focus:border-[#F6AD55]"
-                  />
-                </div>
-
-                <div>
-                  <label className="mb-2 block text-sm font-semibold text-[#002045]">
-                    City
-                  </label>
-                  <input
-                    name="city"
-                    value={formData.city}
-                    onChange={handleChange}
-                    placeholder="Leh"
-                    className="w-full rounded-2xl border border-[#D8DEE6] px-4 py-3 outline-none transition focus:border-[#F6AD55]"
-                  />
-                </div>
-              </div>
-
               <div>
-                <label className="mb-2 block text-sm font-semibold text-[#002045]">
+                <label className="mb-2 block text-sm font-black text-slate-300">
                   Notes
                 </label>
+
                 <textarea
                   name="notes"
                   value={formData.notes}
                   onChange={handleChange}
                   placeholder="Why do you want to visit this place?"
                   rows={4}
-                  className="w-full resize-none rounded-2xl border border-[#D8DEE6] px-4 py-3 outline-none transition focus:border-[#F6AD55]"
+                  className="dark-input w-full resize-none rounded-2xl border border-white/10 bg-[#06111F] px-4 py-3 font-semibold !text-white caret-[#F6AD55] outline-none transition placeholder:!text-slate-600 focus:border-[#F6AD55]/60 focus:ring-4 focus:ring-[#F6AD55]/10"
                 />
               </div>
 
@@ -383,7 +374,7 @@ function BucketList() {
                   type="button"
                   onClick={closeForm}
                   disabled={saving}
-                  className="w-full rounded-2xl border border-[#D8DEE6] px-5 py-3 font-semibold text-[#002045] transition hover:bg-[#F7FAFC] disabled:opacity-60"
+                  className="w-full rounded-2xl border border-white/10 px-5 py-3 font-black text-white transition hover:bg-white/10 disabled:opacity-60"
                 >
                   Cancel
                 </button>
@@ -391,7 +382,7 @@ function BucketList() {
                 <button
                   type="submit"
                   disabled={saving}
-                  className="flex w-full items-center justify-center gap-2 rounded-2xl bg-[#F6AD55] px-5 py-3 font-semibold text-white transition hover:bg-orange-400 disabled:opacity-60"
+                  className="flex w-full items-center justify-center gap-2 rounded-2xl bg-[#F6AD55] px-5 py-3 font-black text-[#06111F] shadow-[0_16px_40px_rgba(246,173,85,0.22)] transition hover:bg-orange-300 disabled:opacity-60"
                 >
                   {saving ? (
                     <Loader2 size={18} className="animate-spin" />
@@ -410,52 +401,62 @@ function BucketList() {
         </div>
       )}
 
-      <div className="min-h-screen bg-[#F7FAFC] text-[#002045]">
-        <main className="mx-auto max-w-6xl px-4 pb-28 pt-8  md:px-8">
-          <div className="mb-8 flex flex-col gap-4 md:flex-row md:items-end md:justify-between">
-            <div>
-              <h1 className="text-4xl font-bold">Bucket List</h1>
-              <p className="mt-2 text-[#002045]/60">
-                Plan future trips and mark places once you visit them.
-              </p>
-            </div>
+      <div className="min-h-screen bg-transparent text-white">
+        <main className="mx-auto max-w-6xl px-4 pb-28 pt-5 md:px-8 md:pt-7">
+          <section className="mb-7 rounded-[2rem] border border-white/10 bg-[#101D2E] p-5 shadow-[0_20px_70px_rgba(0,0,0,0.24)] md:p-7">
+            <div className="flex flex-col gap-4 md:flex-row md:items-end md:justify-between">
+              <div>
+                <p className="text-xs font-black uppercase tracking-[0.22em] text-[#F6AD55]">
+                  Future Trips
+                </p>
 
-            <button
-              type="button"
-              onClick={openCreateForm}
-              className="flex items-center justify-center gap-2 rounded-2xl bg-[#F6AD55] px-5 py-3 font-semibold text-white transition hover:bg-orange-400"
-            >
-              <Plus size={18} />
-              Add destination
-            </button>
-          </div>
+                <h1 className="mt-2 text-3xl font-black tracking-tight text-white md:text-5xl">
+                  Bucket List
+                </h1>
+
+                <p className="mt-2 max-w-2xl text-sm leading-6 text-slate-400 md:text-base">
+                  Plan future trips and mark places once you visit them.
+                </p>
+              </div>
+
+              <button
+                type="button"
+                onClick={openCreateForm}
+                className="flex items-center justify-center gap-2 rounded-2xl bg-[#F6AD55] px-5 py-3 font-black text-[#06111F] shadow-[0_16px_40px_rgba(246,173,85,0.22)] transition hover:-translate-y-0.5 hover:bg-orange-300"
+              >
+                <Plus size={18} />
+                Add destination
+              </button>
+            </div>
+          </section>
 
           {loading ? (
             <div className="grid grid-cols-1 gap-5 md:grid-cols-2">
               {[1, 2, 3, 4].map((item) => (
                 <div
                   key={item}
-                  className="h-44 animate-pulse rounded-3xl border border-[#D8DEE6] bg-white"
+                  className="h-44 animate-pulse rounded-[2rem] border border-white/10 bg-[#101D2E]"
                 />
               ))}
             </div>
           ) : bucketItems.length === 0 ? (
-            <div className="rounded-3xl border border-dashed border-[#D8DEE6] bg-white p-10 text-center">
-              <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-3xl bg-orange-50 text-[#F6AD55]">
+            <div className="rounded-[2rem] border border-dashed border-white/10 bg-[#101D2E] p-10 text-center shadow-[0_20px_70px_rgba(0,0,0,0.18)]">
+              <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-3xl bg-[#F6AD55]/15 text-[#F6AD55]">
                 <MapPin size={28} />
               </div>
 
-              <h2 className="mt-5 text-2xl font-bold">
+              <h2 className="mt-5 text-2xl font-black text-white">
                 Your bucket list is empty
               </h2>
-              <p className="mx-auto mt-3 max-w-xl text-[#002045]/60">
+
+              <p className="mx-auto mt-3 max-w-xl text-sm leading-6 text-slate-400">
                 Add destinations you dream of visiting and track them as you go.
               </p>
 
               <button
                 type="button"
                 onClick={openCreateForm}
-                className="mt-6 inline-flex items-center gap-2 rounded-2xl bg-[#F6AD55] px-5 py-3 font-semibold text-white transition hover:bg-orange-400"
+                className="mt-6 inline-flex items-center gap-2 rounded-2xl bg-[#F6AD55] px-5 py-3 font-black text-[#06111F] shadow-[0_16px_40px_rgba(246,173,85,0.22)] transition hover:bg-orange-300"
               >
                 <Plus size={18} />
                 Add first destination
@@ -472,30 +473,34 @@ function BucketList() {
                 return (
                   <article
                     key={item._id}
-                    className="rounded-3xl border border-[#D8DEE6] bg-white p-5 shadow-sm transition hover:-translate-y-0.5 hover:shadow-md"
+                    className="group rounded-[2rem] border border-white/10 bg-[#101D2E] p-5 shadow-[0_20px_70px_rgba(0,0,0,0.2)] transition hover:-translate-y-0.5 hover:border-[#F6AD55]/35 hover:bg-[#14243A]"
                   >
                     <div className="flex items-start justify-between gap-4">
-                      <div>
-                        <div className="mb-3 flex items-center gap-2 text-sm font-semibold text-[#F6AD55]">
+                      <div className="min-w-0">
+                        <div className="mb-3 flex items-center gap-2 text-sm font-black text-[#F6AD55]">
                           <MapPin size={15} />
-                          {item.city ? `${item.city}, ` : ""}
-                          {item.country}
+                          <span className="truncate">
+                            {item.city ? `${item.city}, ` : ""}
+                            {item.country}
+                          </span>
                         </div>
 
-                        <h2 className="text-2xl font-bold">{title}</h2>
+                        <h2 className="line-clamp-1 text-2xl font-black text-white">
+                          {title}
+                        </h2>
 
                         <span
-                          className={`mt-3 inline-flex rounded-full px-3 py-1 text-xs font-bold ${
+                          className={`mt-3 inline-flex rounded-full px-3 py-1 text-xs font-black ${
                             visited
-                              ? "bg-green-50 text-green-600"
-                              : "bg-orange-50 text-[#F6AD55]"
+                              ? "bg-emerald-500/15 text-emerald-400"
+                              : "bg-[#F6AD55]/15 text-[#F6AD55]"
                           }`}
                         >
                           {visited ? "Visited" : "Want to visit"}
                         </span>
 
                         {notes && (
-                          <p className="mt-3 line-clamp-2 text-[#002045]/65">
+                          <p className="mt-3 line-clamp-2 text-sm leading-6 text-slate-400">
                             {notes}
                           </p>
                         )}
@@ -506,8 +511,8 @@ function BucketList() {
                         onClick={() => handleToggleVisited(item)}
                         className={`rounded-full p-2 transition ${
                           visited
-                            ? "bg-green-50 text-green-600"
-                            : "bg-[#F7FAFC] text-[#002045]/40 hover:text-green-600"
+                            ? "bg-emerald-500/15 text-emerald-400"
+                            : "bg-white/[0.06] text-slate-500 hover:text-emerald-400"
                         }`}
                         title={visited ? "Visited" : "Mark visited"}
                       >
@@ -515,11 +520,11 @@ function BucketList() {
                       </button>
                     </div>
 
-                    <div className="mt-5 flex gap-3 border-t border-[#E5EAF0] pt-4">
+                    <div className="mt-5 flex gap-3 border-t border-white/10 pt-4">
                       <button
                         type="button"
                         onClick={() => openEditForm(item)}
-                        className="flex flex-1 items-center justify-center gap-2 rounded-2xl border border-[#D8DEE6] px-4 py-2.5 text-sm font-semibold transition hover:bg-[#F7FAFC]"
+                        className="flex flex-1 items-center justify-center gap-2 rounded-2xl border border-white/10 px-4 py-2.5 text-sm font-black text-slate-300 transition hover:bg-white/[0.06] hover:text-white"
                       >
                         <Pencil size={16} />
                         Edit
@@ -528,7 +533,7 @@ function BucketList() {
                       <button
                         type="button"
                         onClick={() => setDeleteItemId(item._id)}
-                        className="flex flex-1 items-center justify-center gap-2 rounded-2xl border border-red-100 px-4 py-2.5 text-sm font-semibold text-red-500 transition hover:bg-red-50"
+                        className="flex flex-1 items-center justify-center gap-2 rounded-2xl border border-red-500/20 px-4 py-2.5 text-sm font-black text-red-400 transition hover:bg-red-500/10"
                       >
                         <Trash2 size={16} />
                         Delete
@@ -542,6 +547,24 @@ function BucketList() {
         </main>
       </div>
     </>
+  );
+}
+
+function BucketField({ label, name, value, onChange, placeholder }) {
+  return (
+    <div>
+      <label className="mb-2 block text-sm font-black text-slate-300">
+        {label}
+      </label>
+
+      <input
+        name={name}
+        value={value}
+        onChange={onChange}
+        placeholder={placeholder}
+        className="dark-input w-full rounded-2xl border border-white/10 bg-[#06111F] px-4 py-3 font-semibold !text-white caret-[#F6AD55] outline-none transition placeholder:!text-slate-600 focus:border-[#F6AD55]/60 focus:ring-4 focus:ring-[#F6AD55]/10"
+      />
+    </div>
   );
 }
 

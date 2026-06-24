@@ -42,7 +42,7 @@ function DesktopSidebar() {
     typeof user?.avatar === "string" ? user.avatar : user?.avatar?.url;
 
   return (
-    <aside className="fixed left-0 top-0 z-50 hidden h-screen w-64 flex-col bg-[#002045] p-6 text-white md:flex">
+    <aside className="fixed left-0 top-0 z-50 hidden h-screen w-64 flex-col bg-transparent p-6 text-white md:flex">
       <div>
         <h1 className="text-3xl font-black text-[#F6AD55]">Waymark</h1>
         <p className="mt-1 text-sm text-white/60">Modern Adventure</p>
