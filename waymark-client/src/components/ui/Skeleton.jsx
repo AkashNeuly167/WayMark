@@ -1,7 +1,7 @@
 function Skeleton({ className = "" }) {
   return (
     <div
-      className={`animate-pulse rounded-2xl bg-gradient-to-r from-[#E8EDF2] via-[#F3F6FA] to-[#E8EDF2] ${className}`}
+      className={`animate-pulse rounded-2xl bg-gradient-to-r from-white/[0.06] via-white/[0.12] to-white/[0.06] ${className}`}
     />
   );
 }
