@@ -12,7 +12,7 @@ const options = {
 
     servers: [
       {
-         url: "waymark-production-c107.up.railway.app",
+         url: "https://waymark-production-c107.up.railway.app",
          description: "Railway production server",
       },
       {
