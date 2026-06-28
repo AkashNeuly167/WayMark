@@ -12,8 +12,16 @@ body {
   margin: 0;
   min-height: 100vh;
   background:
-    radial-gradient(circle at top left, rgba(246, 173, 85, 0.12), transparent 32%),
-    radial-gradient(circle at top right, rgba(26, 54, 93, 0.35), transparent 35%),
+    radial-gradient(
+      circle at top left,
+      rgba(246, 173, 85, 0.12),
+      transparent 32%
+    ),
+    radial-gradient(
+      circle at top right,
+      rgba(26, 54, 93, 0.35),
+      transparent 35%
+    ),
     #06111f;
   color: white;
   font-family:
@@ -58,7 +66,7 @@ button:disabled {
   background: rgba(246, 173, 85, 0.5);
 }
 
-/* Default form fields */
+/* Default light form fields */
 input,
 textarea,
 select {
@@ -70,50 +78,84 @@ textarea::placeholder {
   color: rgba(0, 32, 69, 0.4);
 }
 
-
+/* Dark form inputs */
 .dark-input,
+.dark-field,
 .dark-input input,
 .dark-input textarea,
-.dark-input select {
-  color: white;
+.dark-input select,
+.dark-field input,
+.dark-field textarea,
+.dark-field select {
+  color: white !important;
+  caret-color: white !important;
 }
 
 .dark-input::placeholder,
 .dark-input input::placeholder,
-.dark-input textarea::placeholder {
-  color: rgb(71 85 105);
-}
-/* Dark form helper class */
-.dark-field,
-.dark-field input,
-.dark-field textarea,
-.dark-field select {
-  color: white;
-}
-
+.dark-input textarea::placeholder,
+.dark-field::placeholder,
 .dark-field input::placeholder,
 .dark-field textarea::placeholder {
-  color: rgba(255, 255, 255, 0.4);
+  color: rgb(71 85 105) !important;
 }
 
-/* Autofill fix */
+/* Default light autofill */
 input:-webkit-autofill,
 textarea:-webkit-autofill,
 select:-webkit-autofill {
   -webkit-text-fill-color: #002045;
+  caret-color: #002045;
   transition: background-color 9999s ease-in-out 0s;
 }
 
+/* Dark autofill fix */
+.dark-input:-webkit-autofill,
+.dark-input:-webkit-autofill:hover,
+.dark-input:-webkit-autofill:focus,
+.dark-input:-webkit-autofill:active,
+.dark-field:-webkit-autofill,
+.dark-field:-webkit-autofill:hover,
+.dark-field:-webkit-autofill:focus,
+.dark-field:-webkit-autofill:active,
+.dark-input input:-webkit-autofill,
+.dark-input input:-webkit-autofill:hover,
+.dark-input input:-webkit-autofill:focus,
+.dark-input input:-webkit-autofill:active,
 .dark-field input:-webkit-autofill,
+.dark-field input:-webkit-autofill:hover,
+.dark-field input:-webkit-autofill:focus,
+.dark-field input:-webkit-autofill:active,
+.dark-input textarea:-webkit-autofill,
+.dark-input textarea:-webkit-autofill:hover,
+.dark-input textarea:-webkit-autofill:focus,
+.dark-input textarea:-webkit-autofill:active,
 .dark-field textarea:-webkit-autofill,
-.dark-field select:-webkit-autofill {
-  -webkit-text-fill-color: white;
+.dark-field textarea:-webkit-autofill:hover,
+.dark-field textarea:-webkit-autofill:focus,
+.dark-field textarea:-webkit-autofill:active {
+  -webkit-text-fill-color: white !important;
+  caret-color: white !important;
+
+  -webkit-box-shadow: 0 0 0px 1000px rgba(255, 255, 255, 0.05) inset !important;
+  box-shadow: 0 0 0px 1000px rgba(255, 255, 255, 0.05) inset !important;
+
+  transition: background-color 9999s ease-in-out 0s;
+}
+
+.dark-input:-webkit-autofill::first-line,
+.dark-field:-webkit-autofill::first-line,
+.dark-input input:-webkit-autofill::first-line,
+.dark-field input:-webkit-autofill::first-line,
+.dark-input textarea:-webkit-autofill::first-line,
+.dark-field textarea:-webkit-autofill::first-line {
+  color: white !important;
+  font-weight: 600;
 }
 
 /* Remove ugly browser image drag highlight */
 img {
   user-select: none;
-  
 }
 
 /* Better text selection */
