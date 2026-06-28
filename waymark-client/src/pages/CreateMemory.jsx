@@ -59,7 +59,7 @@ function CreateMemory() {
   const [images, setImages] = useState([]);
   const [selectedMood, setSelectedMood] = useState("Adventure");
   const [selectedActivities, setSelectedActivities] = useState(["Hiking"]);
-  const [privacy, setPrivacy] = useState("public");
+
   const [locationOpen, setLocationOpen] = useState(false);
 
   const [uploading, setUploading] = useState(false);
@@ -168,11 +168,11 @@ function CreateMemory() {
       setSubmitting(true);
 
       await api.post("/memories", {
-        title: formData.title,
-        description: formData.description,
-        country: formData.country,
-        city: formData.city,
-        locationName: formData.locationName,
+        title: formData.title.trim(),
+        description: formData.description.trim(),
+        country: formData.country.trim(),
+        city: formData.city.trim(),
+        locationName: formData.locationName.trim(),
         coordinates: {
           lat,
           lng,
@@ -281,13 +281,7 @@ function CreateMemory() {
               toggleActivity={toggleActivity}
             />
 
-            <PublishSection
-              privacy={privacy}
-              setPrivacy={setPrivacy}
-              submitting={submitting}
-              uploading={uploading}
-              mobile
-            />
+            
           </div>
 
           <div className="hidden grid-cols-1 items-start gap-6 lg:grid lg:grid-cols-12">
@@ -325,16 +319,11 @@ function CreateMemory() {
                 toggleActivity={toggleActivity}
               />
 
-              <PublishSection
-                privacy={privacy}
-                setPrivacy={setPrivacy}
-                submitting={submitting}
-                uploading={uploading}
-              />
+              <SubmitSection submitting={submitting} uploading={uploading} />
             </aside>
           </div>
 
-          <div className="fixed bottom-20 left-4 right-4 z-40 lg:hidden">
+          <div className="fixed bottom-24 left-4 right-4 z-40 lg:hidden">
             <button
               type="submit"
               disabled={submitting || uploading}
@@ -636,44 +625,22 @@ function ActivitySection({ selectedActivities, toggleActivity }) {
   );
 }
 
-function PublishSection({
-  privacy,
-  setPrivacy,
-  submitting,
-  uploading,
-  mobile = false,
-}) {
+function SubmitSection({ submitting, uploading }) {
   return (
-    <section
-      className={`rounded-[2rem] border border-[#F6AD55]/20 bg-gradient-to-br from-[#1A365D] to-[#06111F] p-6 text-white shadow-[0_24px_80px_rgba(0,0,0,0.32)] ${
-        mobile ? "pb-24" : ""
-      }`}
-    >
+    <section className="rounded-[2rem] border border-[#F6AD55]/20 bg-gradient-to-br from-[#1A365D] to-[#06111F] p-6 text-white shadow-[0_24px_80px_rgba(0,0,0,0.32)]">
       <label className="mb-5 block text-xs font-black uppercase tracking-widest text-[#F6AD55]">
-        Privacy Controls
+        Ready to Publish
       </label>
 
-      <div className="mb-6 grid grid-cols-3 rounded-xl border border-white/10 bg-black/20 p-1">
-        {["public", "friends", "private"].map((item) => (
-          <button
-            key={item}
-            type="button"
-            onClick={() => setPrivacy(item)}
-            className={`rounded-lg py-2 text-xs font-black capitalize transition ${
-              privacy === item
-                ? "bg-[#F6AD55] text-[#06111F] shadow-sm"
-                : "text-slate-400 hover:text-white"
-            }`}
-          >
-            {item}
-          </button>
-        ))}
-      </div>
+      <p className="mb-6 text-sm leading-6 text-slate-400">
+        Your memory will be shared publicly on WayMark for other travelers to
+        discover.
+      </p>
 
       <button
         type="submit"
         disabled={submitting || uploading}
-        className="hidden h-14 w-full items-center justify-center gap-3 rounded-2xl bg-[#F6AD55] text-lg font-black text-[#06111F] shadow-[0_18px_45px_rgba(246,173,85,0.24)] transition hover:bg-orange-300 disabled:opacity-60 lg:flex"
+        className="flex h-14 w-full items-center justify-center gap-3 rounded-2xl bg-[#F6AD55] text-lg font-black text-[#06111F] shadow-[0_18px_45px_rgba(246,173,85,0.24)] transition hover:bg-orange-300 disabled:opacity-60"
       >
         {submitting ? (
           <>
@@ -688,8 +655,8 @@ function PublishSection({
         )}
       </button>
 
-      <p className="mt-4 text-center text-xs leading-5 text-slate-400">
-        This memory will be added to your WayMark feed and travel passport.
+      <p className="mt-4 text-center text-xs leading-5 text-slate-500">
+        Public by default. You can edit or delete this memory later.
       </p>
     </section>
   );
