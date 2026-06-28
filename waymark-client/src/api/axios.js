@@ -3,7 +3,8 @@ import axios from "axios";
 const API_BASE_URL =
   window.location.hostname === "localhost"
     ? "http://localhost:5000/api"
-    : "https://waymark-5a5v.onrender.com/api";
+    : "https://waymark-production-c107.up.railway.app/api";
+
 
 const api = axios.create({
   baseURL: API_BASE_URL,
