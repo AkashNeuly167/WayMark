@@ -22,6 +22,8 @@ const app = express();
 const allowedOrigins = [
   "http://localhost:5173",
   "https://way-mark-xi.vercel.app",
+  "https://waymark-production-c107.up.railway.app",
+
   process.env.CLIENT_URL,
 ].filter(Boolean);
 
@@ -45,7 +47,6 @@ const corsOptions = {
 
 app.use(cors(corsOptions));
 app.options(/.*/, cors(corsOptions));
-
 
 app.use(express.json());
 app.use(cookieParser());
@@ -72,20 +73,12 @@ app.use("/api/travel-wrapped", travelWrappedRoutes);
 app.use("/api/explore", exploreRoutes);
 app.use("/api/bookmarks", bookmarkRoutes);
 
-
-
-app.use(
-  "/api-docs",
-  swaggerUi.serve,
-  swaggerUi.setup(swaggerSpec)
-);
-
-
+app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerSpec));
 
 app.get("/", (req, res) => {
   res.json({
     success: true,
-    message: "Waymark API Running"
+    message: "Waymark API Running",
   });
 });
 
