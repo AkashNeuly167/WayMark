@@ -32,7 +32,7 @@ const moreItems = [
     title: "Passport",
     description: "Open your traveler profile.",
     icon: User,
-    path: "/profile/me",
+    path: "/passport",
   },
   {
     title: "Travel Wrapped",

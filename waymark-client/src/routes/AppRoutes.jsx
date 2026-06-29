@@ -17,6 +17,7 @@ import TravelWrapped from "../pages/TravelWrapped";
 import Settings from "../pages/Settings";
 import Landing from "../pages/Landing";
 import EditMemory from "../pages/EditMemory";
+import Passport from "../pages/Passport";
 
 function AppRoutes() {
   return (
@@ -34,7 +35,6 @@ function AppRoutes() {
             <MainLayout>
               <Feed />
             </MainLayout>
-            
           </ProtectedRoute>
         }
       />
@@ -46,7 +46,6 @@ function AppRoutes() {
             <MainLayout>
               <Explore />
             </MainLayout>
-            
           </ProtectedRoute>
         }
       />
@@ -56,7 +55,7 @@ function AppRoutes() {
         element={
           <ProtectedRoute>
             <MainLayout>
-            <Journey />
+              <Journey />
             </MainLayout>
           </ProtectedRoute>
         }
@@ -67,7 +66,7 @@ function AppRoutes() {
         element={
           <ProtectedRoute>
             <MainLayout>
-            <BucketList />
+              <BucketList />
             </MainLayout>
           </ProtectedRoute>
         }
@@ -78,7 +77,7 @@ function AppRoutes() {
         element={
           <ProtectedRoute>
             <MainLayout>
-            <CreateMemory />
+              <CreateMemory />
             </MainLayout>
           </ProtectedRoute>
         }
@@ -89,7 +88,7 @@ function AppRoutes() {
         element={
           <ProtectedRoute>
             <MainLayout>
-            <MemoryDetail />
+              <MemoryDetail />
             </MainLayout>
           </ProtectedRoute>
         }
@@ -100,7 +99,7 @@ function AppRoutes() {
         element={
           <ProtectedRoute>
             <MainLayout>
-            <Profile />
+              <Profile />
             </MainLayout>
           </ProtectedRoute>
         }
@@ -111,7 +110,7 @@ function AppRoutes() {
         element={
           <ProtectedRoute>
             <MainLayout>
-            <Notification />
+              <Notification />
             </MainLayout>
           </ProtectedRoute>
         }
@@ -122,7 +121,7 @@ function AppRoutes() {
         element={
           <ProtectedRoute>
             <MainLayout>
-            <More />
+              <More />
             </MainLayout>
           </ProtectedRoute>
         }
@@ -133,7 +132,7 @@ function AppRoutes() {
         element={
           <ProtectedRoute>
             <MainLayout>
-            <TravelWrapped />
+              <TravelWrapped />
             </MainLayout>
           </ProtectedRoute>
         }
@@ -144,22 +143,33 @@ function AppRoutes() {
         element={
           <ProtectedRoute>
             <MainLayout>
-            <Settings />
+              <Settings />
             </MainLayout>
           </ProtectedRoute>
         }
       />
 
       <Route
-  path="/memories/:id/edit"
-  element={
-    <ProtectedRoute>
-      <MainLayout>
-        <EditMemory />
-      </MainLayout>
-    </ProtectedRoute>
-  }
-/>
+        path="/memories/:id/edit"
+        element={
+          <ProtectedRoute>
+            <MainLayout>
+              <EditMemory />
+            </MainLayout>
+          </ProtectedRoute>
+        }
+      />
+
+      <Route
+        path="/passport"
+        element={
+          <ProtectedRoute>
+            <MainLayout>
+              <Passport />
+            </MainLayout>
+          </ProtectedRoute>
+        }
+      />
 
       {/* 404 fallback must stay LAST */}
       <Route path="*" element={<Navigate to="/feed" />} />

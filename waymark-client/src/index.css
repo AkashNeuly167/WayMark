@@ -163,3 +163,20 @@ img {
   background: rgba(246, 173, 85, 0.35);
   color: white;
 }
+
+.leaflet-container {
+  z-index: 0;
+}
+
+.leaflet-pane,
+.leaflet-top,
+.leaflet-bottom {
+  z-index: 0 !important;
+}
+
+.leaflet-marker-icon,
+.leaflet-marker-shadow,
+.leaflet-popup,
+.leaflet-tooltip {
+  z-index: 10 !important;
+}
