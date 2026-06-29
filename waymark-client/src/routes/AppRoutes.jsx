@@ -1,179 +1,180 @@
+import { lazy, Suspense } from "react";
 import { Routes, Route, Navigate } from "react-router-dom";
-import MainLayout from "../layouts/MainLayout";
 
-import Login from "../pages/Login";
-import Register from "../pages/Register";
-import MemoryDetail from "../pages/MemoryDetail";
-import Feed from "../pages/Feed";
-import Explore from "../pages/Explore";
-import Journey from "../pages/Journey";
-import Profile from "../pages/Profile";
-import CreateMemory from "../pages/CreateMemory";
-import Notification from "../pages/Notification";
-import BucketList from "../pages/BucketList";
+import MainLayout from "../layouts/MainLayout";
 import ProtectedRoute from "./ProtectedRoute";
-import More from "../pages/More";
-import TravelWrapped from "../pages/TravelWrapped";
-import Settings from "../pages/Settings";
-import Landing from "../pages/Landing";
-import EditMemory from "../pages/EditMemory";
-import Passport from "../pages/Passport";
+
+const Landing = lazy(() => import("../pages/Landing"));
+const Login = lazy(() => import("../pages/Login"));
+const Register = lazy(() => import("../pages/Register"));
+
+const Feed = lazy(() => import("../pages/Feed"));
+const Explore = lazy(() => import("../pages/Explore"));
+const Journey = lazy(() => import("../pages/Journey"));
+const Profile = lazy(() => import("../pages/Profile"));
+const CreateMemory = lazy(() => import("../pages/CreateMemory"));
+const MemoryDetail = lazy(() => import("../pages/MemoryDetail"));
+const EditMemory = lazy(() => import("../pages/EditMemory"));
+const Notification = lazy(() => import("../pages/Notification"));
+const BucketList = lazy(() => import("../pages/BucketList"));
+const More = lazy(() => import("../pages/More"));
+const TravelWrapped = lazy(() => import("../pages/TravelWrapped"));
+const Settings = lazy(() => import("../pages/Settings"));
+const Passport = lazy(() => import("../pages/Passport"));
+
+function PageLoader() {
+  return (
+    <div className="grid min-h-screen place-items-center bg-[#06111F] px-4 text-white">
+      <div className="text-center">
+        <div className="mx-auto h-10 w-10 animate-spin rounded-full border-2 border-white/10 border-t-[#F6AD55]" />
+
+        <p className="mt-4 text-sm font-black uppercase tracking-[0.22em] text-slate-500">
+          Loading WayMark
+        </p>
+      </div>
+    </div>
+  );
+}
+
+function ProtectedPage({ children }) {
+  return (
+    <ProtectedRoute>
+      <MainLayout>{children}</MainLayout>
+    </ProtectedRoute>
+  );
+}
 
 function AppRoutes() {
   return (
-    <Routes>
-      {/* Public Routes */}
-      <Route path="/" element={<Landing />} />
-      <Route path="/login" element={<Login />} />
-      <Route path="/register" element={<Register />} />
+    <Suspense fallback={<PageLoader />}>
+      <Routes>
+        {/* Public Routes */}
+        <Route path="/" element={<Landing />} />
+        <Route path="/login" element={<Login />} />
+        <Route path="/register" element={<Register />} />
 
-      {/* Protected Routes */}
-      <Route
-        path="/feed"
-        element={
-          <ProtectedRoute>
-            <MainLayout>
+        {/* Protected Routes */}
+        <Route
+          path="/feed"
+          element={
+            <ProtectedPage>
               <Feed />
-            </MainLayout>
-          </ProtectedRoute>
-        }
-      />
+            </ProtectedPage>
+          }
+        />
 
-      <Route
-        path="/explore"
-        element={
-          <ProtectedRoute>
-            <MainLayout>
+        <Route
+          path="/explore"
+          element={
+            <ProtectedPage>
               <Explore />
-            </MainLayout>
-          </ProtectedRoute>
-        }
-      />
+            </ProtectedPage>
+          }
+        />
 
-      <Route
-        path="/journeys"
-        element={
-          <ProtectedRoute>
-            <MainLayout>
+        <Route
+          path="/journeys"
+          element={
+            <ProtectedPage>
               <Journey />
-            </MainLayout>
-          </ProtectedRoute>
-        }
-      />
+            </ProtectedPage>
+          }
+        />
 
-      <Route
-        path="/bucket-list"
-        element={
-          <ProtectedRoute>
-            <MainLayout>
+        <Route
+          path="/bucket-list"
+          element={
+            <ProtectedPage>
               <BucketList />
-            </MainLayout>
-          </ProtectedRoute>
-        }
-      />
+            </ProtectedPage>
+          }
+        />
 
-      <Route
-        path="/memories/create"
-        element={
-          <ProtectedRoute>
-            <MainLayout>
+        <Route
+          path="/memories/create"
+          element={
+            <ProtectedPage>
               <CreateMemory />
-            </MainLayout>
-          </ProtectedRoute>
-        }
-      />
+            </ProtectedPage>
+          }
+        />
 
-      <Route
-        path="/memories/:id"
-        element={
-          <ProtectedRoute>
-            <MainLayout>
+        <Route
+          path="/memories/:id"
+          element={
+            <ProtectedPage>
               <MemoryDetail />
-            </MainLayout>
-          </ProtectedRoute>
-        }
-      />
+            </ProtectedPage>
+          }
+        />
 
-      <Route
-        path="/profile/:id"
-        element={
-          <ProtectedRoute>
-            <MainLayout>
-              <Profile />
-            </MainLayout>
-          </ProtectedRoute>
-        }
-      />
-
-      <Route
-        path="/notifications"
-        element={
-          <ProtectedRoute>
-            <MainLayout>
-              <Notification />
-            </MainLayout>
-          </ProtectedRoute>
-        }
-      />
-
-      <Route
-        path="/more"
-        element={
-          <ProtectedRoute>
-            <MainLayout>
-              <More />
-            </MainLayout>
-          </ProtectedRoute>
-        }
-      />
-
-      <Route
-        path="/travel-wrapped"
-        element={
-          <ProtectedRoute>
-            <MainLayout>
-              <TravelWrapped />
-            </MainLayout>
-          </ProtectedRoute>
-        }
-      />
-
-      <Route
-        path="/settings"
-        element={
-          <ProtectedRoute>
-            <MainLayout>
-              <Settings />
-            </MainLayout>
-          </ProtectedRoute>
-        }
-      />
-
-      <Route
-        path="/memories/:id/edit"
-        element={
-          <ProtectedRoute>
-            <MainLayout>
+        <Route
+          path="/memories/:id/edit"
+          element={
+            <ProtectedPage>
               <EditMemory />
-            </MainLayout>
-          </ProtectedRoute>
-        }
-      />
+            </ProtectedPage>
+          }
+        />
 
-      <Route
-        path="/passport"
-        element={
-          <ProtectedRoute>
-            <MainLayout>
+        <Route
+          path="/profile/:id"
+          element={
+            <ProtectedPage>
+              <Profile />
+            </ProtectedPage>
+          }
+        />
+
+        <Route
+          path="/notifications"
+          element={
+            <ProtectedPage>
+              <Notification />
+            </ProtectedPage>
+          }
+        />
+
+        <Route
+          path="/more"
+          element={
+            <ProtectedPage>
+              <More />
+            </ProtectedPage>
+          }
+        />
+
+        <Route
+          path="/travel-wrapped"
+          element={
+            <ProtectedPage>
+              <TravelWrapped />
+            </ProtectedPage>
+          }
+        />
+
+        <Route
+          path="/settings"
+          element={
+            <ProtectedPage>
+              <Settings />
+            </ProtectedPage>
+          }
+        />
+
+        <Route
+          path="/passport"
+          element={
+            <ProtectedPage>
               <Passport />
-            </MainLayout>
-          </ProtectedRoute>
-        }
-      />
+            </ProtectedPage>
+          }
+        />
 
-      {/* 404 fallback must stay LAST */}
-      <Route path="*" element={<Navigate to="/feed" />} />
-    </Routes>
+        {/* 404 fallback must stay LAST */}
+        <Route path="*" element={<Navigate to="/feed" />} />
+      </Routes>
+    </Suspense>
   );
 }
 

@@ -1,6 +1,7 @@
 import {
   BarChart3,
   Bell,
+  Book,
   Compass,
   Home,
   List,
@@ -26,6 +27,7 @@ function DesktopSidebar() {
     { label: "Notifications", path: "/notifications", icon: Bell },
     { label: "Create", path: "/memories/create", icon: SquarePen },
     { label: "Bucket List", path: "/bucket-list", icon: List },
+    { label: "Passport", path: "/passport", icon: Book },
     { label: "Travel Wrapped", path: "/travel-wrapped", icon: BarChart3 },
     { label: "Settings", path: "/settings", icon: Settings },
   ];
