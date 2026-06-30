@@ -31,8 +31,9 @@ import {
   toggleFollowUser,
   updateAvatar,
   updateCoverImage,
+  getUserMemories,
 } from "../services/user.service";
-import { getMemories } from "../services/memory.service";
+
 import { getSavedMemories } from "../services/bookmark.service";
 
 import { useAuth } from "../context/AuthContext";
@@ -70,18 +71,12 @@ function Profile() {
         setLoading(true);
 
         const userRes = await getUserProfile(id);
-        const memoriesRes = await getMemories();
-
         const userData = userRes.user || userRes;
-        const allMemories = memoriesRes.memories || [];
 
-        const filteredMemories = allMemories.filter((memory) => {
-          const authorId = memory.author?._id || memory.author;
-          return authorId?.toString() === userData._id?.toString();
-        });
+        const memoriesRes = await getUserMemories(userData._id);
 
         setProfileUser(userData);
-        setUserMemories(filteredMemories);
+        setUserMemories(memoriesRes.memories || []);
 
         const viewingOwnProfile =
           userData._id?.toString() === currentUserId?.toString();
@@ -444,7 +439,7 @@ function Profile() {
           <div className="relative h-56 overflow-hidden md:min-h-[600px]">
             {coverImage ? (
               <img
-                src={getOptimizedImageUrl(coverImage,1600)}
+                src={getOptimizedImageUrl(coverImage, 1600)}
                 alt="Profile cover"
                 loading="lazy"
                 decoding="async"
@@ -498,7 +493,7 @@ function Profile() {
                     <div className="h-28 w-28 overflow-hidden rounded-[1.75rem] border-4 border-[#06111F] bg-gradient-to-br from-[#F6AD55] to-orange-600 text-4xl font-black text-white shadow-2xl md:h-44 md:w-44 md:rounded-[2rem] md:text-5xl">
                       {avatarUrl ? (
                         <img
-                          src={getOptimizedImageUrl(avatarUrl,300)}
+                          src={getOptimizedImageUrl(avatarUrl, 300)}
                           alt={profileUser.username}
                           loading="lazy"
                           decoding="async"
@@ -693,7 +688,10 @@ function Profile() {
               <h3 className="text-xl font-black">Travel Snapshot</h3>
 
               <div className="mt-5 space-y-3">
-                <SnapshotRow label="Shared Memories" value={userMemories.length} />
+                <SnapshotRow
+                  label="Shared Memories"
+                  value={userMemories.length}
+                />
                 <SnapshotRow
                   label="Community"
                   value={followersCount + followingCount}
@@ -752,9 +750,7 @@ function Profile() {
 
             {displayedMemories.length === 0 ? (
               <div className="rounded-[2rem] border border-dashed border-white/10 bg-[#101D2E] p-10 text-center shadow-[0_20px_70px_rgba(0,0,0,0.18)]">
-                <h3 className="text-2xl font-black text-white">
-                  {emptyTitle}
-                </h3>
+                <h3 className="text-2xl font-black text-white">{emptyTitle}</h3>
                 <p className="mt-2 text-slate-400">{emptyMessage}</p>
               </div>
             ) : activeTab === "saved" ? (

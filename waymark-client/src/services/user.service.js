@@ -49,3 +49,8 @@ export const getUserFollowing = async(id)=>{
    const response = await api.get(`/users/${id}/following`);
    return response.data;
 };
+
+export const getUserMemories = async (userId) => {
+      const {data} = await api.get(`/users/${userId}/memories`);
+      return data;
+};
