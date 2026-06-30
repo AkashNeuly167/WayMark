@@ -165,7 +165,7 @@ function MemoryCard({ memory, onCommentClick }) {
           images={memory.images || []}
           title={memory.title}
           variant="feed"
-          className="h-[240px] !aspect-auto md:h-[300px] xl:h-[320px]"
+          className="h-[320px] !aspect-auto md:h-[380px] xl:h-[420px]"
         />
 
         {(memory.city || memory.country) && (

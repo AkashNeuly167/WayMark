@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useState, useRef } from "react";
 import { ImageOff, MapPin, Search, UserRound, X } from "lucide-react";
 import { Link, useSearchParams } from "react-router-dom";
 import {
@@ -309,7 +309,7 @@ function Explore() {
                   <MapContainer
                     center={mapCenter}
                     zoom={searchQuery ? 6 : 4}
-                    scrollWheelZoom
+                    scrollWheelZoom = {false}
                     className="z-0 h-full w-full"
                   >
                     <TileLayer
@@ -546,9 +546,10 @@ function MemoryResultCard({ memory }) {
 
 function FitMapToMarkers({ memories }) {
   const map = useMap();
+  const initializedRef = useRef(false);
 
   useEffect(() => {
-    if (!memories.length) return;
+    if (initializedRef.current || !memories.length) return;
 
     const bounds = L.latLngBounds(
       memories.map((memory) => [memory.mapLat, memory.mapLng]),
@@ -558,6 +559,8 @@ function FitMapToMarkers({ memories }) {
       padding: [40, 40],
       maxZoom: 9,
     });
+
+    initializedRef.current = true;
   }, [map, memories]);
 
   return null;

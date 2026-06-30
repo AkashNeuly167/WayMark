@@ -12,6 +12,33 @@ import {
 import { getMemories } from "../services/memory.service";
 import { useAuth } from "../context/AuthContext";
 
+const normalizePlaceName = (value) => {
+  const cleanValue = String(value || "").trim();
+
+  if (!cleanValue) return "";
+
+  return cleanValue
+    .toLowerCase()
+    .split(" ")
+    .filter(Boolean)
+    .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
+    .join(" ");
+};
+
+const getUniquePlaces = (memories, key) => {
+  const placeMap = new Map();
+
+  memories.forEach((memory) => {
+    const normalizedName = normalizePlaceName(memory[key]);
+
+    if (!normalizedName) return;
+
+    placeMap.set(normalizedName.toLowerCase(), normalizedName);
+  });
+
+  return Array.from(placeMap.values());
+};
+
 function Passport() {
   const { user } = useAuth();
   const currentUserId = user?._id || user?.id;
@@ -57,20 +84,16 @@ function Passport() {
   }, [currentUserId]);
 
   const loading = memories === null;
-  const safeMemories = useMemo(()=>{
+  const safeMemories = useMemo(() => {
     return memories || [];
-  } , [memories]); 
+  }, [memories]);
 
   const countries = useMemo(() => {
-    return Array.from(
-      new Set(safeMemories.map((memory) => memory.country).filter(Boolean)),
-    );
+    return getUniquePlaces(safeMemories, "country");
   }, [safeMemories]);
 
   const cities = useMemo(() => {
-    return Array.from(
-      new Set(safeMemories.map((memory) => memory.city).filter(Boolean)),
-    );
+    return getUniquePlaces(safeMemories, "city");
   }, [safeMemories]);
 
   const recentStamps = useMemo(() => {
@@ -174,7 +197,10 @@ function Passport() {
                 </div>
 
                 <div className="bg-[#0B0D12]/65 p-5 font-mono text-[11px] uppercase tracking-[0.16em] text-slate-700 md:p-6">
-                  <p>P&lt;WMK TRAVELER&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;</p>
+                  <p>
+                    P&lt;WMK
+                    TRAVELER&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;
+                  </p>
                   <p className="mt-2">
                     {passportId.replace(/-/g, "")}
                     {`<${countries.length}C${cities.length}V${safeMemories.length}M`}
@@ -320,7 +346,9 @@ function StampCard({ memory, index }) {
         className={`absolute -right-5 -top-6 h-16 w-16 rounded-full border-2 ${colorClass}`}
       />
 
-      <p className={`text-[11px] font-black uppercase tracking-[0.22em] ${colorClass}`}>
+      <p
+        className={`text-[11px] font-black uppercase tracking-[0.22em] ${colorClass}`}
+      >
         {type}
       </p>
 
