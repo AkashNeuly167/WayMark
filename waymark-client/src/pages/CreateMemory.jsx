@@ -1,4 +1,4 @@
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import {
   Camera,
@@ -11,7 +11,13 @@ import {
   Search,
   X,
 } from "lucide-react";
-import { MapContainer, Marker, TileLayer, useMapEvents } from "react-leaflet";
+import {
+  MapContainer,
+  Marker,
+  TileLayer,
+  useMap,
+  useMapEvents,
+} from "react-leaflet";
 import L from "leaflet";
 
 import api from "../api/axios";
@@ -43,6 +49,31 @@ const activityOptions = [
   "City Walk",
 ];
 
+const getAddressData = (address = {}, fallbackName = "") => {
+  const city =
+    address.city ||
+    address.town ||
+    address.village ||
+    address.hamlet ||
+    address.county ||
+    "";
+
+  const country = address.country || "";
+
+  const locationName =
+    address.attraction ||
+    address.amenity ||
+    address.road ||
+    address.neighbourhood ||
+    address.suburb ||
+    fallbackName ||
+    "";
+
+  return { city, country, locationName };
+};
+
+
+
 function CreateMemory() {
   const navigate = useNavigate();
 
@@ -59,18 +90,17 @@ function CreateMemory() {
   const [images, setImages] = useState([]);
   const [selectedMood, setSelectedMood] = useState("Adventure");
   const [selectedActivities, setSelectedActivities] = useState(["Hiking"]);
-
   const [locationOpen, setLocationOpen] = useState(false);
-
   const [uploading, setUploading] = useState(false);
   const [submitting, setSubmitting] = useState(false);
+  const [locationSearching, setLocationSearching] = useState(false);
   const [error, setError] = useState("");
 
   const mapPosition = useMemo(() => {
     const lat = Number(formData.lat);
     const lng = Number(formData.lng);
 
-    if (Number.isNaN(lat) || Number.isNaN(lng)) {
+    if (!Number.isFinite(lat) || !Number.isFinite(lng)) {
       return [30.7333, 76.7794];
     }
 
@@ -84,12 +114,99 @@ function CreateMemory() {
     }));
   };
 
-  const handleMapPick = ({ lat, lng }) => {
+ const handleLocationSearch = async () => {
+  const query = formData.locationName.trim();
+
+  if (!query || locationSearching) return;
+
+  try {
+    setError("");
+    setLocationSearching(true);
+
+    const res = await fetch(
+      `https://nominatim.openstreetmap.org/search?format=json&addressdetails=1&limit=1&q=${encodeURIComponent(
+        query,
+      )}`,
+      {
+        headers: {
+          "Accept-Language": "en",
+        },
+      },
+    );
+
+    const data = await res.json();
+    const place = data?.[0];
+
+    if (!place) {
+      setError("Location not found. Try city + country, like Mumbai, India.");
+      return;
+    }
+
+    const address = place.address || {};
+
+    const city =
+      address.city ||
+      address.town ||
+      address.village ||
+      address.hamlet ||
+      address.county ||
+      query;
+
+    const country = address.country || "";
+
+    const locationName =
+      address.city ||
+      address.town ||
+      address.village ||
+      address.suburb ||
+      address.neighbourhood ||
+      place.display_name?.split(",")?.[0] ||
+      query;
+
+    setFormData((prev) => ({
+      ...prev,
+      locationName,
+      city,
+      country,
+      lat: Number(place.lat).toFixed(6),
+      lng: Number(place.lon).toFixed(6),
+    }));
+  } catch (error) {
+    console.error("Location search error:", error);
+    setError("Could not search location. Please try again.");
+  } finally {
+    setLocationSearching(false);
+  }
+};
+  const handleMapPick = async ({ lat, lng }) => {
     setFormData((prev) => ({
       ...prev,
       lat: lat.toFixed(6),
       lng: lng.toFixed(6),
     }));
+
+    try {
+      const res = await fetch(
+        `https://nominatim.openstreetmap.org/reverse?format=json&addressdetails=1&lat=${lat}&lon=${lng}`,
+      );
+
+      const data = await res.json();
+      const addressData = getAddressData(
+        data.address || {},
+        data.display_name?.split(",")?.[0] || "",
+      );
+
+      setFormData((prev) => ({
+        ...prev,
+        locationName: addressData.locationName || prev.locationName,
+        city: addressData.city || prev.city,
+        country: addressData.country || prev.country,
+        lat: lat.toFixed(6),
+        lng: lng.toFixed(6),
+      }));
+    } catch (error) {
+      console.error("Reverse geocode error:", error);
+    }
   };
 
   const toggleActivity = (activity) => {
@@ -125,6 +242,7 @@ function CreateMemory() {
       setError(error.response?.data?.message || "Image upload failed");
     } finally {
       setUploading(false);
+      e.target.value = "";
     }
   };
 
@@ -159,7 +277,7 @@ function CreateMemory() {
       return;
     }
 
-    if (Number.isNaN(lat) || Number.isNaN(lng)) {
+    if (!Number.isFinite(lat) || !Number.isFinite(lng)) {
       setError("Please choose a valid map location");
       return;
     }
@@ -173,10 +291,7 @@ function CreateMemory() {
         country: formData.country.trim(),
         city: formData.city.trim(),
         locationName: formData.locationName.trim(),
-        coordinates: {
-          lat,
-          lng,
-        },
+        coordinates: { lat, lng },
         images,
       });
 
@@ -186,6 +301,15 @@ function CreateMemory() {
     } finally {
       setSubmitting(false);
     }
+  };
+
+  const locationSectionProps = {
+    formData,
+    handleChange,
+    mapPosition,
+    handleMapPick,
+    handleLocationSearch,
+    locationSearching,
   };
 
   return (
@@ -260,13 +384,7 @@ function CreateMemory() {
 
               {locationOpen && (
                 <div className="space-y-5 border-t border-white/10 p-5">
-                  <LocationSection
-                    formData={formData}
-                    handleChange={handleChange}
-                    mapPosition={mapPosition}
-                    handleMapPick={handleMapPick}
-                    compact
-                  />
+                  <LocationSection {...locationSectionProps} compact />
 
                   <MetadataSection
                     formData={formData}
@@ -280,8 +398,6 @@ function CreateMemory() {
               selectedActivities={selectedActivities}
               toggleActivity={toggleActivity}
             />
-
-            
           </div>
 
           <div className="hidden grid-cols-1 items-start gap-6 lg:grid lg:grid-cols-12">
@@ -302,12 +418,7 @@ function CreateMemory() {
             </section>
 
             <aside className="space-y-6 lg:col-span-4">
-              <LocationSection
-                formData={formData}
-                handleChange={handleChange}
-                mapPosition={mapPosition}
-                handleMapPick={handleMapPick}
-              />
+              <LocationSection {...locationSectionProps} />
 
               <MetadataSection
                 formData={formData}
@@ -451,6 +562,8 @@ function GallerySection({ images, uploading, handleImageUpload, removeImage }) {
             <img
               src={image.url || image}
               alt=""
+              loading="lazy"
+              decoding="async"
               className="h-full w-full object-cover transition group-hover:scale-105"
             />
 
@@ -499,6 +612,8 @@ function LocationSection({
   handleChange,
   mapPosition,
   handleMapPick,
+  handleLocationSearch,
+  locationSearching,
   compact = false,
 }) {
   return (
@@ -508,16 +623,38 @@ function LocationSection({
           Location Anchor
         </label>
 
-        <div className="relative mb-4">
-          <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-slate-500" />
+        <div className="relative mb-4 flex gap-2">
+          <div className="relative min-w-0 flex-1">
+            <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-slate-500" />
 
-          <input
-            name="locationName"
-            value={formData.locationName}
-            onChange={handleChange}
-            placeholder="Search or name this place..."
-            className="dark-input w-full rounded-xl border border-white/10 bg-black/20 py-3 pl-10 pr-4 text-sm font-semibold !text-white caret-[#F6AD55] outline-none placeholder:!text-slate-500 focus:border-[#F6AD55]/60 focus:ring-4 focus:ring-[#F6AD55]/10"
-          />
+            <input
+              name="locationName"
+              value={formData.locationName}
+              onChange={handleChange}
+              onKeyDown={(e) => {
+                if (e.key === "Enter") {
+                  e.preventDefault();
+                  handleLocationSearch();
+                }
+              }}
+              placeholder="Search or name this place..."
+              className="dark-input w-full rounded-xl border border-white/10 bg-black/20 py-3 pl-10 pr-4 text-sm font-semibold !text-white caret-[#F6AD55] outline-none placeholder:!text-slate-500 focus:border-[#F6AD55]/60 focus:ring-4 focus:ring-[#F6AD55]/10"
+            />
+          </div>
+
+          <button
+            type="button"
+            onClick={handleLocationSearch}
+            disabled={locationSearching}
+            className="grid h-11 w-11 shrink-0 place-items-center rounded-xl bg-[#F6AD55] text-[#06111F] transition hover:bg-orange-300 disabled:opacity-60"
+            aria-label="Search location"
+          >
+            {locationSearching ? (
+              <Loader2 size={18} className="animate-spin" />
+            ) : (
+              <Search size={18} />
+            )}
+          </button>
         </div>
 
         <div
@@ -535,13 +672,17 @@ function LocationSection({
               attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>'
               url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
             />
+
+            <MapPositionUpdater position={mapPosition} />
+
             <Marker position={mapPosition} />
             <MapClickHandler onPick={handleMapPick} />
           </MapContainer>
         </div>
 
         <p className="mt-3 text-xs leading-5 text-slate-400">
-          Click on the map to set exact coordinates for this memory.
+          Search a place or click on the map to auto-fill coordinates, city, and
+          country.
         </p>
       </div>
     </section>
@@ -686,6 +827,21 @@ function MapClickHandler({ onPick }) {
       onPick(e.latlng);
     },
   });
+
+  return null;
+}
+
+function MapPositionUpdater({ position }) {
+  const map = useMap();
+
+  useEffect(() => {
+    if (!position?.length) return;
+
+    map.flyTo(position, 13, {
+      animate: true,
+      duration: 1.2,
+    });
+  }, [map, position]);
 
   return null;
 }

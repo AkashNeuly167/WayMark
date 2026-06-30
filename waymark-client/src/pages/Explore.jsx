@@ -1,14 +1,7 @@
-import { useEffect, useMemo, useState, useRef } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { ImageOff, MapPin, Search, UserRound, X } from "lucide-react";
 import { Link, useSearchParams } from "react-router-dom";
-import {
-  MapContainer,
-  Marker,
-  Popup,
-  TileLayer,
-  Tooltip,
-  useMap,
-} from "react-leaflet";
+import { MapContainer, Marker, Popup, TileLayer, Tooltip, useMap } from "react-leaflet";
 import L from "leaflet";
 import "leaflet/dist/leaflet.css";
 
@@ -308,8 +301,8 @@ function Explore() {
                 {mappedMemories.length > 0 ? (
                   <MapContainer
                     center={mapCenter}
-                    zoom={searchQuery ? 6 : 4}
-                    scrollWheelZoom = {false}
+                    zoom={searchQuery ? 6 : 5}
+                    scrollWheelZoom={false}
                     className="z-0 h-full w-full"
                   >
                     <TileLayer
@@ -317,7 +310,7 @@ function Explore() {
                       url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
                     />
 
-                    <FitMapToMarkers memories={mappedMemories} />
+                    <MapUpdater center={mapCenter} zoom={searchQuery ? 6 : 5} />
 
                     {mappedMemories.map((memory) => {
                       const image =
@@ -340,7 +333,7 @@ function Explore() {
                             <div className="w-56">
                               {image && (
                                 <img
-                                  src={getOptimizedImageUrl(image,320)}
+                                  src={getOptimizedImageUrl(image, 320)}
                                   alt={memory.title}
                                   loading="lazy"
                                   decoding="async"
@@ -505,7 +498,7 @@ function MemoryResultCard({ memory }) {
       <div className="h-24 w-28 shrink-0 overflow-hidden rounded-2xl bg-[#06111F] ring-1 ring-white/10">
         {image ? (
           <img
-            src={getOptimizedImageUrl(image,360)}
+            src={getOptimizedImageUrl(image, 360)}
             alt={memory.title}
             loading="lazy"
             decoding="async"
@@ -544,24 +537,14 @@ function MemoryResultCard({ memory }) {
   );
 }
 
-function FitMapToMarkers({ memories }) {
+function MapUpdater({ center, zoom }) {
   const map = useMap();
-  const initializedRef = useRef(false);
 
   useEffect(() => {
-    if (initializedRef.current || !memories.length) return;
-
-    const bounds = L.latLngBounds(
-      memories.map((memory) => [memory.mapLat, memory.mapLng]),
-    );
-
-    map.fitBounds(bounds, {
-      padding: [40, 40],
-      maxZoom: 9,
+    map.setView(center, zoom, {
+      animate: true,
     });
-
-    initializedRef.current = true;
-  }, [map, memories]);
+  }, [map, center, zoom]);
 
   return null;
 }
