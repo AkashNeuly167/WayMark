@@ -10,6 +10,7 @@ import {
 } from "../../services/bookmark.service";
 import { useAuth } from "../../context/AuthContext";
 import ImageCarousel from "../memory/ImageCarousel";
+import { getOptimizedImageUrl } from "../../utils/cloudinary";
 
 function MemoryCard({ memory, onCommentClick }) {
   const navigate = useNavigate();
@@ -185,8 +186,10 @@ function MemoryCard({ memory, onCommentClick }) {
         <div className="mb-4 flex items-center gap-3">
           {avatarUrl ? (
             <img
-              src={avatarUrl}
+              src={getOptimizedImageUrl(avatarUrl,120)}
               alt={authorName}
+              loading="lazy"
+              decoding="async"
               className="h-10 w-10 shrink-0 rounded-full object-cover ring-2 ring-white/10"
             />
           ) : (

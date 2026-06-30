@@ -1,6 +1,19 @@
 import cloudinary from "../config/cloudinary.js";
 import streamifier from "streamifier";
 
+const imageUploadOptions = {
+  resource_type: "image",
+  quality: "auto",
+  fetch_format: "auto",
+  transformation: [
+    {
+      width: 1400,
+      height: 1400,
+      crop: "limit",
+    },
+  ],
+};
+
 export const uploadImage = async (req, res) => {
   try {
     if (!req.file) {
@@ -12,16 +25,19 @@ export const uploadImage = async (req, res) => {
 
     const result = await cloudinary.uploader.upload(req.file.path, {
       folder: "waymark",
+      ...imageUploadOptions,
     });
 
     return res.status(200).json({
       success: true,
-      image:{
+      image: {
         url: result.secure_url,
         publicId: result.public_id,
-      }
+      },
     });
   } catch (error) {
+    console.error("Single image upload error:", error);
+
     return res.status(500).json({
       success: false,
       message: error.message,
@@ -43,14 +59,18 @@ export const uploadImages = async (req, res) => {
         const uploadStream = cloudinary.uploader.upload_stream(
           {
             folder: "waymark/memories",
+            ...imageUploadOptions,
           },
           (error, result) => {
-            if (error) reject(error);
-            else
-              resolve({
-                url: result.secure_url,
-                publicId: result.public_id,
-              });
+            if (error) {
+              reject(error);
+              return;
+            }
+
+            resolve({
+              url: result.secure_url,
+              publicId: result.public_id,
+            });
           },
         );
 
@@ -66,7 +86,7 @@ export const uploadImages = async (req, res) => {
       images: imageUrls,
     });
   } catch (error) {
-    console.error(error);
+    console.error("Multiple image upload error:", error);
 
     return res.status(500).json({
       success: false,

@@ -1,5 +1,6 @@
 import { useMemo, useRef, useState } from "react";
 import { ChevronLeft, ChevronRight, ImageOff } from "lucide-react";
+import { getOptimizedImageUrl } from "../../utils/cloudinary";
 
 function ImageCarousel({
   images = [],
@@ -121,8 +122,10 @@ function ImageCarousel({
         {normalizedImages.map((image, index) => (
           <div key={`${image}-${index}`} className="h-full w-full shrink-0">
             <img
-              src={image}
+              src={getOptimizedImageUrl(image,isThumb ? 200 : isFeed ? 900 :1200)}
               alt={`${title} ${index + 1}`}
+              loading="lazy"
+              decoding="async"
               className="h-full w-full select-none object-cover"
               draggable="false"
             />

@@ -15,6 +15,7 @@ import "leaflet/dist/leaflet.css";
 import { searchMemories, searchUsers } from "../services/search.service";
 import { getMemories } from "../services/memory.service";
 import ExploreSkeleton from "../components/ui/ExploreSkeleton";
+import { getOptimizedImageUrl } from "../utils/cloudinary";
 
 const quickSearches = [
   "Delhi",
@@ -339,8 +340,10 @@ function Explore() {
                             <div className="w-56">
                               {image && (
                                 <img
-                                  src={image}
+                                  src={getOptimizedImageUrl(image,320)}
                                   alt={memory.title}
+                                  loading="lazy"
+                                  decoding="async"
                                   className="mb-2 h-28 w-full rounded-lg object-cover"
                                 />
                               )}
@@ -502,8 +505,10 @@ function MemoryResultCard({ memory }) {
       <div className="h-24 w-28 shrink-0 overflow-hidden rounded-2xl bg-[#06111F] ring-1 ring-white/10">
         {image ? (
           <img
-            src={image}
+            src={getOptimizedImageUrl(image,360)}
             alt={memory.title}
+            loading="lazy"
+            decoding="async"
             className="h-full w-full object-cover transition duration-500 group-hover:scale-110"
           />
         ) : (

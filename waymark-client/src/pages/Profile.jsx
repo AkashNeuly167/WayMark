@@ -39,6 +39,7 @@ import { useAuth } from "../context/AuthContext";
 import { useToast } from "../context/useToast";
 import api from "../api/axios";
 import ImageCarousel from "../components/memory/ImageCarousel";
+import { getOptimizedImageUrl } from "../utils/cloudinary";
 
 function Profile() {
   const { id } = useParams();
@@ -443,8 +444,10 @@ function Profile() {
           <div className="relative h-56 overflow-hidden md:min-h-[600px]">
             {coverImage ? (
               <img
-                src={coverImage}
+                src={getOptimizedImageUrl(coverImage,1600)}
                 alt="Profile cover"
+                loading="lazy"
+                decoding="async"
                 className="absolute inset-0 h-full w-full object-cover"
               />
             ) : (
@@ -495,8 +498,10 @@ function Profile() {
                     <div className="h-28 w-28 overflow-hidden rounded-[1.75rem] border-4 border-[#06111F] bg-gradient-to-br from-[#F6AD55] to-orange-600 text-4xl font-black text-white shadow-2xl md:h-44 md:w-44 md:rounded-[2rem] md:text-5xl">
                       {avatarUrl ? (
                         <img
-                          src={avatarUrl}
+                          src={getOptimizedImageUrl(avatarUrl,300)}
                           alt={profileUser.username}
+                          loading="lazy"
+                          decoding="async"
                           className="h-full w-full object-cover"
                         />
                       ) : (
