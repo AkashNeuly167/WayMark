@@ -1,6 +1,7 @@
 import User from "../models/User.js";
 import Notification from "../models/Notification.js";
 import cloudinary from "../config/cloudinary.js";
+import Memory from "../models/Memory.js";
 
 
 export const getMyProfile = async (req, res) => {
@@ -64,6 +65,36 @@ export const getUserProfile = async (req, res) => {
       user,
     });
   } catch (error) {
+    return res.status(500).json({
+      success: false,
+      message: error.message,
+    });
+  }
+};
+
+export const getUserMemories = async (req, res) => {
+  try {
+    const user = await User.findById(req.params.id).select("_id");
+
+    if (!user) {
+      return res.status(404).json({
+        success: false,
+        message: "User not found",
+      });
+    }
+
+    const memories = await Memory.find({ author: req.params.id })
+      .populate("author", "username fullName avatar country")
+      .sort({ createdAt: -1 });
+
+    return res.status(200).json({
+      success: true,
+      count: memories.length,
+      memories,
+    });
+  } catch (error) {
+    console.error("Get user memories error:", error);
+
     return res.status(500).json({
       success: false,
       message: error.message,

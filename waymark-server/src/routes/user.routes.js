@@ -12,6 +12,7 @@ import {
   deleteCoverImage,
   getUserFollowers,
   getUserFollowing,
+  getUserMemories,
 } from "../controllers/user.controller.js";
 
 const router = express.Router();
@@ -201,9 +202,71 @@ router.patch("/me/cover", protect, updateCoverImage);
  */
 router.delete("/me/cover", protect, deleteCoverImage);
 
+/**
+ * @swagger
+ * /api/users/{id}/followers:
+ *   get:
+ *     summary: Get user's followers
+ *     tags:
+ *       - Users
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: string
+ *         description: User ID
+ *     responses:
+ *       200:
+ *         description: Followers fetched successfully
+ *       404:
+ *         description: User not found
+ */
 router.get("/:id/followers", getUserFollowers);
 
+/**
+ * @swagger
+ * /api/users/{id}/following:
+ *   get:
+ *     summary: Get users followed by a user
+ *     tags:
+ *       - Users
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: string
+ *         description: User ID
+ *     responses:
+ *       200:
+ *         description: Following list fetched successfully
+ *       404:
+ *         description: User not found
+ */
 router.get("/:id/following", getUserFollowing);
+
+/**
+ * @swagger
+ * /api/users/{id}/memories:
+ *   get:
+ *     summary: Get memories created by a user
+ *     tags:
+ *       - Users
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: string
+ *         description: User ID
+ *     responses:
+ *       200:
+ *         description: User memories fetched successfully
+ *       404:
+ *         description: User not found
+ */
+router.get("/:id/memories", getUserMemories);
 
 // public profile
 /**
