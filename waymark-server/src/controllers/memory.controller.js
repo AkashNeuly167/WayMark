@@ -6,6 +6,14 @@ import validateRequiredFields from "../utils/validateRequiredFields.js";
 import Comment from "../models/Comment.js";
 import Bookmark from "../models/Bookmark.js";
 
+const getPagination = (req, defaultLimit = 10) => {
+  const page = Math.max(Number(req.query.page) || 1, 1);
+  const limit = Math.min(Math.max(Number(req.query.limit) || defaultLimit, 1), 30);
+  const skip = (page - 1) * limit;
+
+  return { page, limit, skip };
+};
+
 export const createMemory = async (req, res) => {
   try {
     const {
@@ -61,11 +69,9 @@ export const createMemory = async (req, res) => {
 
 export const getMemories = async (req, res) => {
   try {
-    const page = Number(req.query.page) || 1;
-    const limit = Number(req.query.limit) || 10;
-    const skip = (page - 1) * limit;
+    const { page, limit, skip } = getPagination(req, 10);
 
-    const totalMemories = await Memory.countDocuments();
+    const total = await Memory.countDocuments();
 
     const memories = await Memory.find()
       .populate("author", "username fullName country avatar")
@@ -73,17 +79,24 @@ export const getMemories = async (req, res) => {
       .skip(skip)
       .limit(limit);
 
-    res.status(200).json({
+    const totalPages = Math.ceil(total / limit);
+
+    return res.status(200).json({
+      success: true,
       page,
       limit,
-      totalMemories,
-      totalPages: Math.ceil(totalMemories / limit),
-      hasNextPage: page < Math.ceil(totalMemories / limit),
+      total,
+      totalMemories: total,
+      totalPages,
+      hasMore: page < totalPages,
+      hasNextPage: page < totalPages,
       hasPrevPage: page > 1,
+      count: memories.length,
       memories,
     });
   } catch (error) {
-    res.status(500).json({
+    return res.status(500).json({
+      success: false,
       message: "Failed to fetch memories",
       error: error.message,
     });
@@ -266,35 +279,34 @@ export const updateMemory = async (req, res) => {
 
 export const getFeed = async (req, res) => {
   try {
-    const page = Number(req.query.page) || 1;
-    const limit = Number(req.query.limit) || 10;
-    const skip = (page - 1) * limit;
+    const { page, limit, skip } = getPagination(req, 10);
 
-    const user = await User.findById(req.user._id);
+    const user = await User.findById(req.user._id).select("following");
 
-    const memories = await Memory.find({
+    const filter = {
       author: {
         $in: user.following,
       },
-    })
+    };
+
+    const total = await Memory.countDocuments(filter);
+
+    const memories = await Memory.find(filter)
       .populate("author", "username fullName avatar")
       .sort({ createdAt: -1 })
       .skip(skip)
       .limit(limit);
 
-    const total = await Memory.countDocuments({
-      author: {
-        $in: user.following,
-      },
-    });
+    const totalPages = Math.ceil(total / limit);
 
     return res.status(200).json({
       success: true,
       page,
       limit,
       total,
-      totalPages: Math.ceil(total / limit),
-      hasNextPage: page < Math.ceil(total / limit),
+      totalPages,
+      hasMore: page < totalPages,
+      hasNextPage: page < totalPages,
       hasPrevPage: page > 1,
       count: memories.length,
       memories,

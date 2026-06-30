@@ -69,6 +69,18 @@ const memorySchema = new mongoose.Schema(
   },
 );
 
+memorySchema.index({ author: 1, createdAt: -1 });
+memorySchema.index({ createdAt: -1 });
+memorySchema.index({ country: 1 });
+memorySchema.index({ city: 1 });
+memorySchema.index({
+  title: "text",
+  description: "text",
+  country: "text",
+  city: "text",
+  locationName: "text",
+});
+
 const Memory = mongoose.model("Memory", memorySchema);
 
 export default Memory;

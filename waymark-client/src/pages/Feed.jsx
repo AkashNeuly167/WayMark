@@ -1,5 +1,5 @@
-import { useEffect, useMemo, useState } from "react";
-import { Plus } from "lucide-react";
+import { useCallback, useEffect, useMemo, useState } from "react";
+import { Loader2, Plus } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 
 import CommentsSheet from "../components/comments/CommentsSheet";
@@ -11,36 +11,80 @@ import FeedSkeleton from "../components/ui/FeedSkeleton";
 import { getFollowingFeed, getMemories } from "../services/memory.service";
 import { useAuth } from "../context/AuthContext";
 
+const PAGE_LIMIT = 10;
+
 function Feed() {
   const { user } = useAuth();
   const navigate = useNavigate();
 
   const [activeTab, setActiveTab] = useState("discover");
   const [memories, setMemories] = useState([]);
+  const [page, setPage] = useState(1);
+  const [hasMore, setHasMore] = useState(false);
   const [loading, setLoading] = useState(true);
+  const [loadingMore, setLoadingMore] = useState(false);
   const [commentsOpen, setCommentsOpen] = useState(false);
   const [selectedMemory, setSelectedMemory] = useState(null);
+
+  const fetchMemories = useCallback(
+    async ({ nextPage = 1, append = false } = {}) => {
+      try {
+        if (append) {
+          setLoadingMore(true);
+        } else {
+          setLoading(true);
+        }
+
+        const data =
+          activeTab === "following"
+            ? await getFollowingFeed(nextPage, PAGE_LIMIT)
+            : await getMemories(nextPage, PAGE_LIMIT);
+
+        const nextMemories = data.memories || [];
+
+        setMemories((prev) =>
+          append ? [...prev, ...nextMemories] : nextMemories,
+        );
+
+        setPage(nextPage);
+        setHasMore(Boolean(data.hasMore || data.hasNextPage));
+      } catch (error) {
+        console.error("Fetch memories error:", error);
+
+        if (!append) {
+          setMemories([]);
+          setHasMore(false);
+        }
+      } finally {
+        setLoading(false);
+        setLoadingMore(false);
+      }
+    },
+    [activeTab],
+  );
 
   useEffect(() => {
     let ignore = false;
 
-    const fetchMemories = async () => {
+    const loadFirstPage = async () => {
       try {
         setLoading(true);
 
         const data =
           activeTab === "following"
-            ? await getFollowingFeed()
-            : await getMemories();
+            ? await getFollowingFeed(1, PAGE_LIMIT)
+            : await getMemories(1, PAGE_LIMIT);
 
-        if (!ignore) {
-          setMemories(data.memories || []);
-        }
+        if (ignore) return;
+
+        setMemories(data.memories || []);
+        setPage(1);
+        setHasMore(Boolean(data.hasMore || data.hasNextPage));
       } catch (error) {
-        console.error("Fetch memories error:", error);
-
         if (!ignore) {
+          console.error("Fetch memories error:", error);
           setMemories([]);
+          setHasMore(false);
         }
       } finally {
         if (!ignore) {
@@ -49,7 +93,7 @@ function Feed() {
       }
     };
 
-    fetchMemories();
+    loadFirstPage();
 
     return () => {
       ignore = true;
@@ -89,6 +133,15 @@ function Feed() {
         memory._id === memoryId ? { ...memory, commentsCount: count } : memory,
       ),
     );
+  };
+
+  const handleLoadMore = () => {
+    if (loadingMore || !hasMore) return;
+
+    fetchMemories({
+      nextPage: page + 1,
+      append: true,
+    });
   };
 
   return (
@@ -192,6 +245,25 @@ function Feed() {
                         onCommentClick={openComments}
                       />
                     ))}
+                  </div>
+                )}
+
+                {hasMore && (
+                  <div className="flex justify-center pt-2">
+                    <button
+                      type="button"
+                      onClick={handleLoadMore}
+                      disabled={loadingMore}
+                      className="inline-flex items-center justify-center gap-2 rounded-2xl border border-white/10 bg-[#101D2E] px-6 py-3 text-sm font-black text-white transition hover:border-[#F6AD55]/40 hover:bg-[#14243A] disabled:opacity-60"
+                    >
+                      {loadingMore && (
+                        <Loader2
+                          size={18}
+                          className="animate-spin text-[#F6AD55]"
+                        />
+                      )}
+                      {loadingMore ? "Loading..." : "Load more"}
+                    </button>
                   </div>
                 )}
               </div>

@@ -80,5 +80,14 @@ const UserSchema = new mongoose.Schema(
   },
 );
 
+
+UserSchema.index({ createdAt: -1 });
+UserSchema.index({
+  username: "text",
+  fullName: "text",
+  country: "text",
+});
+
 const User = mongoose.model("User", UserSchema);
+
 export default User;
