@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import {
   Camera,
@@ -95,11 +95,25 @@ function CreateMemory() {
   const [error, setError] = useState("");
 
   const mapPosition = useMemo(() => {
-    const lat = Number(formData.lat);
-    const lng = Number(formData.lng);
+    const rawLat = formData.lat;
+    const rawLng = formData.lng;
+
+    if (
+      !rawLat ||
+      !rawLng ||
+      String(rawLat).trim() === "" ||
+      String(rawLng).trim() === "" ||
+      String(rawLat).toLowerCase() === "nan" ||
+      String(rawLng).toLowerCase() === "nan"
+    ) {
+      return null;
+    }
+
+    const lat = Number(rawLat);
+    const lng = Number(rawLng);
 
     if (!Number.isFinite(lat) || !Number.isFinite(lng)) {
-      return [30.7333, 76.7794];
+      return null;
     }
 
     return [lat, lng];
@@ -113,29 +127,46 @@ function CreateMemory() {
   };
 
   const handleLocationSearch = async () => {
-    const query = formData.locationName.trim();
+    const searchValue = formData.locationName.trim();
+    if (!searchValue || locationSearching) return;
 
-    if (!query || locationSearching) return;
+    const queries = [
+      searchValue,
+      `${searchValue}, India`,
+      `${searchValue}, city`,
+    ];
 
     try {
       setError("");
       setLocationSearching(true);
 
-      const res = await fetch(
-        `https://nominatim.openstreetmap.org/search?format=json&addressdetails=1&limit=1&q=${encodeURIComponent(
-          query,
-        )}`,
-        {
-          headers: {
-            "Accept-Language": "en",
+      let place = null;
+
+      for (const query of queries) {
+        const res = await fetch(
+          `https://nominatim.openstreetmap.org/search?format=json&addressdetails=1&limit=5&q=${encodeURIComponent(
+            query,
+          )}`,
+          {
+            headers: {
+              "Accept-Language": "en",
+            },
           },
-        },
-      );
+        );
 
-      const data = await res.json();
-      const place = data?.[0];
+        const data = await res.json();
 
-      if (!place) {
+        place =
+          data?.find((item) => item?.address?.city) ||
+          data?.find((item) => item?.address?.town) ||
+          data?.find((item) => item?.address?.state) ||
+          data?.find((item) => item?.address?.country) ||
+          data?.[0];
+
+        if (place) break;
+      }
+
+      if (!place || !place.lat || !place.lon) {
         setError("Location not found. Try city + country, like Mumbai, India.");
         return;
       }
@@ -148,7 +179,8 @@ function CreateMemory() {
         address.village ||
         address.hamlet ||
         address.county ||
-        query;
+        address.state ||
+        searchValue;
 
       const country = address.country || "";
 
@@ -158,16 +190,17 @@ function CreateMemory() {
         address.village ||
         address.suburb ||
         address.neighbourhood ||
+        address.state ||
         place.display_name?.split(",")?.[0] ||
-        query;
+        searchValue;
 
       setFormData((prev) => ({
         ...prev,
         locationName,
         city,
         country,
-        lat: Number(place.lat).toFixed(6),
-        lng: Number(place.lon).toFixed(6),
+        lat: parseFloat(place.lat).toFixed(6),
+        lng: parseFloat(place.lon).toFixed(6),
       }));
     } catch (error) {
       console.error("Location search error:", error);
@@ -176,11 +209,17 @@ function CreateMemory() {
       setLocationSearching(false);
     }
   };
+
   const handleMapPick = async ({ lat, lng }) => {
+    if (!Number.isFinite(lat) || !Number.isFinite(lng)) return;
+
+    const latStr = lat.toFixed(6);
+    const lngStr = lng.toFixed(6);
+
     setFormData((prev) => ({
       ...prev,
-      lat: lat.toFixed(6),
-      lng: lng.toFixed(6),
+      lat: latStr,
+      lng: lngStr,
     }));
 
     try {
@@ -199,8 +238,6 @@ function CreateMemory() {
         locationName: addressData.locationName || prev.locationName,
         city: addressData.city || prev.city,
         country: addressData.country || prev.country,
-        lat: lat.toFixed(6),
-        lng: lng.toFixed(6),
       }));
     } catch (error) {
       console.error("Reverse geocode error:", error);
@@ -614,6 +651,23 @@ function LocationSection({
   locationSearching,
   compact = false,
 }) {
+  const safeMapPosition = useMemo(() => {
+    const fallback = [30.7333, 76.7794];
+    if (!mapPosition) return fallback;
+    const [lat, lng] = mapPosition;
+    if (!Number.isFinite(lat) || !Number.isFinite(lng)) return fallback;
+    return [lat, lng];
+  }, [mapPosition]);
+
+  const hasValidPosition = useMemo(() => {
+    return (
+      Array.isArray(safeMapPosition) &&
+      safeMapPosition.length === 2 &&
+      Number.isFinite(safeMapPosition[0]) &&
+      Number.isFinite(safeMapPosition[1])
+    );
+  }, [safeMapPosition]);
+
   return (
     <section className="overflow-hidden rounded-[2rem] border border-[#F6AD55]/20 bg-gradient-to-br from-[#1A365D] to-[#06111F] text-white shadow-[0_24px_80px_rgba(0,0,0,0.32)]">
       <div className="p-5 md:p-6">
@@ -661,7 +715,8 @@ function LocationSection({
           }`}
         >
           <MapContainer
-            center={mapPosition}
+            key = "create-memory-map"
+            center={safeMapPosition}
             zoom={7}
             scrollWheelZoom={false}
             className="h-full w-full"
@@ -671,9 +726,9 @@ function LocationSection({
               url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
             />
 
-            <MapPositionUpdater position={mapPosition} />
+            <MapPositionUpdater position={safeMapPosition} />
 
-            <Marker position={mapPosition} />
+            {hasValidPosition && <Marker position={safeMapPosition} />}
             <MapClickHandler onPick={handleMapPick} />
           </MapContainer>
         </div>
@@ -831,20 +886,47 @@ function MapClickHandler({ onPick }) {
 
 function MapPositionUpdater({ position }) {
   const map = useMap();
+  const isFirstRender = useRef(true);
+  const prevPositionRef = useRef(null);
 
   useEffect(() => {
-    const lat = Number(position?.[0]);
-    const lng = Number(position?.[1]);
+    if (!Array.isArray(position) || position.length < 2) return;
+
+    const lat = Number(position[0]);
+    const lng = Number(position[1]);
 
     if (!Number.isFinite(lat) || !Number.isFinite(lng)) return;
 
-    map.flyTo([lat, lng], 13, {
-      animate: true,
-      duration: 1.2,
-    });
+    // Skip flyTo on first render — MapContainer center handles initial position
+    if (isFirstRender.current) {
+      isFirstRender.current = false;
+      prevPositionRef.current = [lat, lng];
+      return;
+    }
+
+    // Skip if position hasn't actually changed (prevents animation conflicts)
+    const prev = prevPositionRef.current;
+    if (
+      prev &&
+      prev.length === 2 &&
+      Math.abs(prev[0] - lat) < 0.000001 &&
+      Math.abs(prev[1] - lng) < 0.000001
+    ) {
+      return;
+    }
+
+    prevPositionRef.current = [lat, lng];
+
+    try {
+      map.flyTo([lat, lng], 13, {
+        animate: true,
+        duration: 1.2,
+      });
+    } catch (err) {
+      console.error("flyTo error:", err);
+    }
   }, [map, position]);
 
   return null;
 }
-
 export default CreateMemory;
