@@ -72,8 +72,6 @@ const getAddressData = (address = {}, fallbackName = "") => {
   return { city, country, locationName };
 };
 
-
-
 function CreateMemory() {
   const navigate = useNavigate();
 
@@ -114,70 +112,70 @@ function CreateMemory() {
     }));
   };
 
- const handleLocationSearch = async () => {
-  const query = formData.locationName.trim();
+  const handleLocationSearch = async () => {
+    const query = formData.locationName.trim();
 
-  if (!query || locationSearching) return;
+    if (!query || locationSearching) return;
 
-  try {
-    setError("");
-    setLocationSearching(true);
+    try {
+      setError("");
+      setLocationSearching(true);
 
-    const res = await fetch(
-      `https://nominatim.openstreetmap.org/search?format=json&addressdetails=1&limit=1&q=${encodeURIComponent(
-        query,
-      )}`,
-      {
-        headers: {
-          "Accept-Language": "en",
+      const res = await fetch(
+        `https://nominatim.openstreetmap.org/search?format=json&addressdetails=1&limit=1&q=${encodeURIComponent(
+          query,
+        )}`,
+        {
+          headers: {
+            "Accept-Language": "en",
+          },
         },
-      },
-    );
+      );
 
-    const data = await res.json();
-    const place = data?.[0];
+      const data = await res.json();
+      const place = data?.[0];
 
-    if (!place) {
-      setError("Location not found. Try city + country, like Mumbai, India.");
-      return;
+      if (!place) {
+        setError("Location not found. Try city + country, like Mumbai, India.");
+        return;
+      }
+
+      const address = place.address || {};
+
+      const city =
+        address.city ||
+        address.town ||
+        address.village ||
+        address.hamlet ||
+        address.county ||
+        query;
+
+      const country = address.country || "";
+
+      const locationName =
+        address.city ||
+        address.town ||
+        address.village ||
+        address.suburb ||
+        address.neighbourhood ||
+        place.display_name?.split(",")?.[0] ||
+        query;
+
+      setFormData((prev) => ({
+        ...prev,
+        locationName,
+        city,
+        country,
+        lat: Number(place.lat).toFixed(6),
+        lng: Number(place.lon).toFixed(6),
+      }));
+    } catch (error) {
+      console.error("Location search error:", error);
+      setError("Could not search location. Please try again.");
+    } finally {
+      setLocationSearching(false);
     }
-
-    const address = place.address || {};
-
-    const city =
-      address.city ||
-      address.town ||
-      address.village ||
-      address.hamlet ||
-      address.county ||
-      query;
-
-    const country = address.country || "";
-
-    const locationName =
-      address.city ||
-      address.town ||
-      address.village ||
-      address.suburb ||
-      address.neighbourhood ||
-      place.display_name?.split(",")?.[0] ||
-      query;
-
-    setFormData((prev) => ({
-      ...prev,
-      locationName,
-      city,
-      country,
-      lat: Number(place.lat).toFixed(6),
-      lng: Number(place.lon).toFixed(6),
-    }));
-  } catch (error) {
-    console.error("Location search error:", error);
-    setError("Could not search location. Please try again.");
-  } finally {
-    setLocationSearching(false);
-  }
-};
+  };
   const handleMapPick = async ({ lat, lng }) => {
     setFormData((prev) => ({
       ...prev,
@@ -835,9 +833,12 @@ function MapPositionUpdater({ position }) {
   const map = useMap();
 
   useEffect(() => {
-    if (!position?.length) return;
+    const lat = Number(position?.[0]);
+    const lng = Number(position?.[1]);
 
-    map.flyTo(position, 13, {
+    if (!Number.isFinite(lat) || !Number.isFinite(lng)) return;
+
+    map.flyTo([lat, lng], 13, {
       animate: true,
       duration: 1.2,
     });
