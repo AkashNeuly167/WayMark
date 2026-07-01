@@ -115,43 +115,47 @@ WayMark is a full-stack MERN travel community app where users can share travel m
 
 #### Landing Page
 
-![WmLandingMobile](./Screenshots/Mobile/WmLandingMobile.png)
+![Landing Mobile](./Screenshots/Mobile/WmLandingMobile.jpg)
+
+#### Register Page
+
+![Register Mobile](./Screenshots/Mobile/WmRegisterMobile.jpg)
 
 #### Login Page
 
-![Login Mobile](./Screenshots/Mobile/WmLoginMobile.png)
+![Login Mobile](./Screenshots/Mobile/WmLoginMobile.jpg)
 
 #### Feed Page
 
-![Feed Mobile](./Screenshots/Mobile/WmFeedMobile.png)
+![Feed Mobile](./Screenshots/Mobile/WmFeedMobile.jpg)
 
 #### Create Memory Page
 
-![Create Memory Mobile](./Screenshots/Mobile/WmCreateMobile.png)
+![Create Memory Mobile](./Screenshots/Mobile/WmCreateMobile.jpg)
 
 #### Explore Page
 
-![Explore Mobile](./Screenshots/Mobile/WmExploreMobile.png)
+![Explore Mobile](./Screenshots/Mobile/WmExploreMobile.jpg)
 
 #### Journey Page
 
-![Journey Mobile](./Screenshots/Mobile/WmJoruneyMobile.png)
+![Journey Mobile](./Screenshots/Mobile/WmJourneyMobile.jpg)
 
 #### Profile Page
 
-![Profile Mobile](./Screenshots/Mobile/WmProfileMobile.png)
+![Profile Mobile](./Screenshots/Mobile/WmProfileMobile.jpg)
 
 #### Passport Page
 
-![Passport Mobile](./Screenshots/Mobile/WmPassportMobile.png)
+![Passport Mobile](./Screenshots/Mobile/WmPassportMobile.jpg)
 
 #### Settings Page
 
-![Settings Mobile](./Screenshots/Mobile/WmSettingsMobile.png)
+![Settings Mobile](./Screenshots/Mobile/WmSettingsMobile.jpg)
 
-#### MemoryDetail Page
+#### Memory Detail Page
 
-![MemoryDetail Mobile](./Screenshots/Mobile/WmDetailMobile.png)
+![Memory Detail Mobile](./Screenshots/Mobile/WmDetailMobile.jpg)
 
 ## Environment Variables
 
