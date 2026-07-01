@@ -17,6 +17,7 @@ import { useNavigate } from "react-router-dom";
 
 import { useAuth } from "../context/AuthContext";
 import { useToast } from "../context/useToast";
+import { changePassword } from "../services/auth.service";
 import { updateMyProfile } from "../services/user.service";
 
 function Settings() {
@@ -25,12 +26,20 @@ function Settings() {
   const { showToast } = useToast();
 
   const [saving, setSaving] = useState(false);
+  const [passwordSaving, setPasswordSaving] = useState(false);
+  const [passwordOpen, setPasswordOpen] = useState(false);
 
   const [formData, setFormData] = useState({
     fullName: user?.fullName || "",
     bio: user?.bio || "",
     country: user?.country || "",
     website: user?.website || "",
+  });
+
+  const [passwordData, setPasswordData] = useState({
+    currentPassword: "",
+    newPassword: "",
+    confirmPassword: "",
   });
 
   const profileName = user?.fullName || user?.username || "Waymark Traveler";
@@ -46,6 +55,15 @@ function Settings() {
     const { name, value } = event.target;
 
     setFormData((prev) => ({
+      ...prev,
+      [name]: value,
+    }));
+  };
+
+  const handlePasswordChange = (event) => {
+    const { name, value } = event.target;
+
+    setPasswordData((prev) => ({
       ...prev,
       [name]: value,
     }));
@@ -78,6 +96,71 @@ function Settings() {
       });
     } finally {
       setSaving(false);
+    }
+  };
+
+  const handlePasswordSubmit = async (event) => {
+    event.preventDefault();
+
+    if (!passwordData.currentPassword.trim()) {
+      showToast({
+        type: "error",
+        title: "Current password required",
+        message: "Enter your current password first.",
+      });
+      return;
+    }
+
+    if (passwordData.newPassword.length < 6) {
+      showToast({
+        type: "error",
+        title: "Weak password",
+        message: "New password must be at least 6 characters.",
+      });
+      return;
+    }
+
+    if (passwordData.newPassword !== passwordData.confirmPassword) {
+      showToast({
+        type: "error",
+        title: "Passwords do not match",
+        message: "Confirm password must match your new password.",
+      });
+      return;
+    }
+
+    try {
+      setPasswordSaving(true);
+
+      await changePassword({
+        currentPassword: passwordData.currentPassword,
+        newPassword: passwordData.newPassword,
+      });
+
+      setPasswordData({
+        currentPassword: "",
+        newPassword: "",
+        confirmPassword: "",
+      });
+
+      setPasswordOpen(false);
+
+      showToast({
+        type: "success",
+        title: "Password changed",
+        message: "Your password has been updated successfully.",
+      });
+    } catch (error) {
+      console.error("Change password error:", error);
+
+      showToast({
+        type: "error",
+        title: "Password update failed",
+        message:
+          error.response?.data?.message || "Could not change your password.",
+      });
+    } finally {
+      setPasswordSaving(false);
     }
   };
 
@@ -135,11 +218,6 @@ function Settings() {
       description:
         "Private profile and visibility controls need backend support.",
       icon: Shield,
-    },
-    {
-      title: "Security",
-      description: "Password change and login alerts need backend support.",
-      icon: Lock,
     },
     {
       title: "Appearance",
@@ -331,7 +409,10 @@ function Settings() {
               <h3 className="text-xl font-black text-white">Account Info</h3>
 
               <div className="mt-5 space-y-3">
-                <InfoBox label="Username" value={`@${user?.username || "waymark"}`} />
+                <InfoBox
+                  label="Username"
+                  value={`@${user?.username || "waymark"}`}
+                />
                 <InfoBox label="Email" value={user?.email || "Not available"} />
 
                 <div className="rounded-2xl border border-[#F6AD55]/20 bg-[#F6AD55]/10 p-4">
@@ -341,6 +422,85 @@ function Settings() {
                   <p className="mt-1 font-black text-white">Active</p>
                 </div>
               </div>
+            </section>
+
+            <section className="rounded-[2rem] border border-white/10 bg-[#101D2E] p-6 shadow-[0_20px_70px_rgba(0,0,0,0.22)]">
+              <div className="flex items-start gap-4">
+                <div className="grid h-11 w-11 shrink-0 place-items-center rounded-2xl bg-[#F6AD55]/15 text-[#F6AD55]">
+                  <Lock size={21} />
+                </div>
+
+                <div className="min-w-0 flex-1">
+                  <h3 className="text-xl font-black text-white">Security</h3>
+                  <p className="mt-1 text-sm leading-6 text-slate-400">
+                    Change your password for this account.
+                  </p>
+                </div>
+              </div>
+
+              {!passwordOpen ? (
+                <button
+                  type="button"
+                  onClick={() => setPasswordOpen(true)}
+                  className="mt-5 w-full rounded-full border border-[#F6AD55]/30 bg-[#F6AD55]/10 px-5 py-3 text-sm font-black text-[#F6AD55] transition hover:bg-[#F6AD55]/15"
+                >
+                  Change Password
+                </button>
+              ) : (
+                <form onSubmit={handlePasswordSubmit} className="mt-5 space-y-4">
+                  <PasswordField
+                    label="Current Password"
+                    name="currentPassword"
+                    value={passwordData.currentPassword}
+                    onChange={handlePasswordChange}
+                    autoComplete="current-password"
+                  />
+
+                  <PasswordField
+                    label="New Password"
+                    name="newPassword"
+                    value={passwordData.newPassword}
+                    onChange={handlePasswordChange}
+                    autoComplete="new-password"
+                  />
+
+                  <PasswordField
+                    label="Confirm New Password"
+                    name="confirmPassword"
+                    value={passwordData.confirmPassword}
+                    onChange={handlePasswordChange}
+                    autoComplete="new-password"
+                  />
+
+                  <div className="flex gap-3 pt-1">
+                    <button
+                      type="button"
+                      onClick={() => {
+                        setPasswordOpen(false);
+                        setPasswordData({
+                          currentPassword: "",
+                          newPassword: "",
+                          confirmPassword: "",
+                        });
+                      }}
+                      className="flex-1 rounded-full border border-white/10 px-4 py-3 text-sm font-black text-white transition hover:bg-white/[0.06]"
+                    >
+                      Cancel
+                    </button>
+
+                    <button
+                      type="submit"
+                      disabled={passwordSaving}
+                      className="flex flex-1 items-center justify-center gap-2 rounded-full bg-[#F6AD55] px-4 py-3 text-sm font-black text-[#06111F] transition hover:bg-orange-300 disabled:opacity-60"
+                    >
+                      {passwordSaving && (
+                        <Loader2 size={16} className="animate-spin" />
+                      )}
+                      {passwordSaving ? "Saving..." : "Update"}
+                    </button>
+                  </div>
+                </form>
+              )}
             </section>
 
             <section className="rounded-[2rem] border border-white/10 bg-[#101D2E] p-6 shadow-[0_20px_70px_rgba(0,0,0,0.22)]">
@@ -406,6 +566,26 @@ function SettingsField({ label, type, name, value, onChange, placeholder }) {
         value={value}
         onChange={onChange}
         placeholder={placeholder}
+        className="dark-input w-full rounded-2xl border border-white/10 bg-[#06111F] px-4 py-3 text-sm font-semibold !text-white caret-[#F6AD55] outline-none transition placeholder:!text-slate-600 focus:border-[#F6AD55]/60 focus:ring-4 focus:ring-[#F6AD55]/10"
+      />
+    </div>
+  );
+}
+
+function PasswordField({ label, name, value, onChange, autoComplete }) {
+  return (
+    <div>
+      <label className="mb-2 block text-sm font-black text-slate-300">
+        {label}
+      </label>
+
+      <input
+        type="password"
+        name={name}
+        value={value}
+        onChange={onChange}
+        autoComplete={autoComplete}
+        placeholder="••••••••"
         className="dark-input w-full rounded-2xl border border-white/10 bg-[#06111F] px-4 py-3 text-sm font-semibold !text-white caret-[#F6AD55] outline-none transition placeholder:!text-slate-600 focus:border-[#F6AD55]/60 focus:ring-4 focus:ring-[#F6AD55]/10"
       />
     </div>
