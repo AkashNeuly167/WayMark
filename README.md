@@ -170,7 +170,7 @@ VITE_API_BASE_URL=http://localhost:5000/api
 For production on Vercel:
 
 ```env
-VITE_API_BASE_URL=https://waymark-production-c107.up.railway.app/api
+VITE_API_BASE_URL=https://waymark-production-c107.up.railway.app/
 ```
 
 ### Backend
@@ -188,7 +188,7 @@ CLOUDINARY_API_KEY=your_cloudinary_api_key
 CLOUDINARY_API_SECRET=your_cloudinary_api_secret
 ```
 
-For production on Railway:
+For production:
 
 ```env
 MONGO_URI=your_mongodb_atlas_connection_string
@@ -226,13 +226,13 @@ npm run dev
 
 Backend will run on:
 
-```txt
+```
 http://localhost:5000
 ```
 
 Swagger API docs:
 
-```txt
+```
 http://localhost:5000/api-docs
 ```
 
@@ -259,7 +259,7 @@ npm run dev
 
 Frontend will run on:
 
-```txt
+```
 http://localhost:5173
 ```
 
@@ -283,7 +283,7 @@ Swagger API documentation is available on the backend server.
 
 Local Swagger URL:
 
-```txt
+```
 http://localhost:5000/api-docs
 ```
 
@@ -309,14 +309,14 @@ The frontend is deployed on Vercel.
 Important production environment variable:
 
 ```env
-VITE_API_BASE_URL=https://waymark-production-c107.up.railway.app/api
+VITE_API_BASE_URL=https://waymark-production-c107.up.railway.app/
 ```
 
 The project includes a `vercel.json` file to support React Router refresh on deployed routes.
 
 ### Backend
 
-The backend is deployed on Railway.
+The backend is deployed on Render.
 
 Important production environment variable:
 
@@ -328,11 +328,11 @@ The backend allows requests from the deployed Vercel frontend using CORS.
 
 ## Project Structure
 
-```txt
+```
 WayMark
 ├── Screenshots
-│   ├── Desktop
-│   └── Mobile
+│   ├── desktop
+│   └── mobile
 │
 ├── waymark-client
 │   ├── src
