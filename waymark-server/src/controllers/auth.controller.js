@@ -135,12 +135,19 @@ export const changePassword = async (req, res) => {
       });
     }
 
-    const user = await User.findById(req.user._id);
+    const user = await User.findById(req.user._id).select("+password");
 
     if (!user) {
       return res.status(404).json({
         success: false,
         message: "User not found",
+      });
+    }
+
+    if (!user.password) {
+      return res.status(400).json({
+        success: false,
+        message: "Password change is not available for this account",
       });
     }
 
@@ -177,7 +184,7 @@ export const changePassword = async (req, res) => {
 
     return res.status(500).json({
       success: false,
-      message: "Failed to change password",
+      message: error.message,
     });
   }
 };
