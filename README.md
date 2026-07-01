@@ -165,14 +165,19 @@ Create a `.env` file inside `waymark-client`:
 
 ```env
 VITE_API_BASE_URL=http://localhost:5000/api
+```
 
 For production on Vercel:
 
-VITE_API_BASE_URL=https://waymark-production-c107.up.railway.app/
-Backend
+```env
+VITE_API_BASE_URL=https://waymark-production-c107.up.railway.app/api
+```
 
-Create a .env file inside waymark-server:
+### Backend
 
+Create a `.env` file inside `waymark-server`:
+
+```env
 PORT=5000
 MONGO_URI=your_mongodb_atlas_connection_string
 JWT_SECRET=your_jwt_secret
@@ -181,9 +186,11 @@ CLIENT_URL=http://localhost:5173
 CLOUDINARY_CLOUD_NAME=your_cloudinary_cloud_name
 CLOUDINARY_API_KEY=your_cloudinary_api_key
 CLOUDINARY_API_SECRET=your_cloudinary_api_secret
+```
 
-For production:
+For production on Railway:
 
+```env
 MONGO_URI=your_mongodb_atlas_connection_string
 JWT_SECRET=your_jwt_secret
 CLIENT_URL=https://way-mark-xi.vercel.app
@@ -191,97 +198,141 @@ CLIENT_URL=https://way-mark-xi.vercel.app
 CLOUDINARY_CLOUD_NAME=your_cloudinary_cloud_name
 CLOUDINARY_API_KEY=your_cloudinary_api_key
 CLOUDINARY_API_SECRET=your_cloudinary_api_secret
-How to Run Locally
-1. Clone the repository
+```
+
+## How to Run Locally
+
+### 1. Clone the repository
+
+```bash
 git clone https://github.com/AkashNeuly167/WayMark.git
 cd WayMark
-2. Install backend dependencies
+```
+
+### 2. Install backend dependencies
+
+```bash
 cd waymark-server
 npm install
+```
 
-Create .env inside waymark-server and add the backend environment variables.
+Create `.env` inside `waymark-server` and add the backend environment variables.
 
 Start backend:
 
+```bash
 npm run dev
+```
 
 Backend will run on:
 
+```txt
 http://localhost:5000
+```
 
 Swagger API docs:
 
+```txt
 http://localhost:5000/api-docs
-3. Install frontend dependencies
+```
+
+### 3. Install frontend dependencies
 
 Open a new terminal:
 
+```bash
 cd waymark-client
 npm install
+```
 
-Create .env inside waymark-client and add:
+Create `.env` inside `waymark-client` and add:
 
+```env
 VITE_API_BASE_URL=http://localhost:5000/api
+```
 
 Start frontend:
 
+```bash
 npm run dev
+```
 
 Frontend will run on:
 
+```txt
 http://localhost:5173
-Build Frontend
+```
+
+## Build Frontend
+
+```bash
 cd waymark-client
 npm run build
-Run Backend in Production Mode
+```
+
+## Run Backend in Production Mode
+
+```bash
 cd waymark-server
 npm start
-API Documentation
+```
+
+## API Documentation
 
 Swagger API documentation is available on the backend server.
 
 Local Swagger URL:
 
+```txt
 http://localhost:5000/api-docs
+```
 
 Main API modules:
 
-Auth
-Users
-Memories
-Comments
-Likes
-Saved Memories
-Follow / Unfollow
-Notifications
-Bucket List
-Uploads
-Deployment
-Frontend
+* Auth
+* Users
+* Memories
+* Comments
+* Likes
+* Saved Memories
+* Follow / Unfollow
+* Notifications
+* Bucket List
+* Uploads
+
+## Deployment
+
+### Frontend
 
 The frontend is deployed on Vercel.
 
 Important production environment variable:
 
-VITE_API_BASE_URL=https://waymark-production-c107.up.railway.app/
+```env
+VITE_API_BASE_URL=https://waymark-production-c107.up.railway.app/api
+```
 
-The project includes a vercel.json file to support React Router refresh on deployed routes.
+The project includes a `vercel.json` file to support React Router refresh on deployed routes.
 
-Backend
+### Backend
 
-The backend is deployed on Render.
+The backend is deployed on Railway.
 
 Important production environment variable:
 
+```env
 CLIENT_URL=https://way-mark-xi.vercel.app
+```
 
 The backend allows requests from the deployed Vercel frontend using CORS.
 
-Project Structure
+## Project Structure
+
+```txt
 WayMark
 ├── Screenshots
-│   ├── desktop
-│   └── mobile
+│   ├── Desktop
+│   └── Mobile
 │
 ├── waymark-client
 │   ├── src
@@ -303,6 +354,8 @@ WayMark
     │   ├── routes
     │   └── utils
     └── package.json
-Author
+```
+
+## Author
 
 Built by Akash Neuly.
