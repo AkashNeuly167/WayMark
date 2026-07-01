@@ -316,7 +316,7 @@ The project includes a `vercel.json` file to support React Router refresh on dep
 
 ### Backend
 
-The backend is deployed on Render.
+The backend is deployed on Railway.
 
 Important production environment variable:
 
