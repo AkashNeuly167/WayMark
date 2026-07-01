@@ -115,7 +115,7 @@ WayMark is a full-stack MERN travel community app where users can share travel m
 
 #### Landing Page
 
-![Landing Mobile](./Screenshots/Mobile/WmLandingMobile.png)
+![WmLandingMobile](./Screenshots/Mobile/WmLandingMobile.png)
 
 #### Login Page
 
