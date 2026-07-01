@@ -144,6 +144,7 @@ function Login() {
                   type="email"
                   value={formData.email}
                   onChange={handleChange}
+                  autoComplete="email"
                   placeholder="explorer@waymark.com"
                   className="dark-input w-full rounded-2xl border border-white/10 bg-white/[0.05] px-12 py-3.5 font-semibold !text-white placeholder:text-slate-600 outline-none transition focus:border-[#F6AD55] focus:ring-2 focus:ring-[#F6AD55]/25"
                 />
@@ -170,8 +171,10 @@ function Login() {
                 <input
                   name="password"
                   type={showPassword ? "text" : "password"}
+
                   value={formData.password}
                   onChange={handleChange}
+                  autoComplete="current-password"
                   placeholder="••••••••"
                   className="dark-input w-full rounded-2xl border border-white/10 bg-white/[0.05] px-12 py-3.5 font-semibold !text-white placeholder:text-slate-600 outline-none transition focus:border-[#F6AD55] focus:ring-2 focus:ring-[#F6AD55]/25"
                 />

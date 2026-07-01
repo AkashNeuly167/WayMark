@@ -203,6 +203,7 @@ function Register() {
                 <input
                   name="password"
                   type={showPassword ? "text" : "password"}
+                  autoComplete = "new-password"
                   value={formData.password}
                   onChange={handleChange}
                   placeholder="••••••••"
@@ -235,6 +236,7 @@ function Register() {
                 <input
                   name="confirmPassword"
                   type={showPassword ? "text" : "password"}
+                  autoComplete="new-password"
                   value={formData.confirmPassword}
                   onChange={handleChange}
                   placeholder="••••••••"

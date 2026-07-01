@@ -1,8 +1,11 @@
 import express from "express";
-import {register} from "../controllers/auth.controller.js";
-import {login} from "../controllers/auth.controller.js";
-import protect from "../middlewares/auth.middleware.js";
+import {
+  register,
+  login,
+  changePassword,
+} from "../controllers/auth.controller.js";
 
+import protect from "../middlewares/auth.middleware.js";
 
 const router = express.Router();
 
@@ -43,7 +46,6 @@ const router = express.Router();
  */
 router.post("/register", register);
 
-
 /**
  * @swagger
  * /api/auth/login:
@@ -71,8 +73,55 @@ router.post("/register", register);
  *       200:
  *         description: Login successful
  */
-router.post("/login",login);
+router.post("/login", login);
 
-
+/**
+ * @swagger
+ * /api/auth/change-password:
+ *   patch:
+ *     summary: Change logged-in user's password
+ *     tags: [Authentication]
+ *     security:
+ *       - bearerAuth: []
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             required:
+ *               - currentPassword
+ *               - newPassword
+ *             properties:
+ *               currentPassword:
+ *                 type: string
+ *                 example: golu@123
+ *               newPassword:
+ *                 type: string
+ *                 example: Waymark@2026#Demo!91
+ *     responses:
+ *       200:
+ *         description: Password changed successfully
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: true
+ *                 message:
+ *                   type: string
+ *                   example: Password changed successfully
+ *       400:
+ *         description: Missing fields, weak password, same password, or incorrect current password
+ *       401:
+ *         description: Not authorized, token missing or invalid
+ *       404:
+ *         description: User not found
+ *       500:
+ *         description: Failed to change password
+ */
+router.patch("/change-password", protect, changePassword);
 
 export default router;
