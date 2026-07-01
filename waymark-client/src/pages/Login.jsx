@@ -35,7 +35,9 @@ function Login() {
       login(data.token, data.user);
       navigate("/feed");
     } catch (err) {
-      setError(err.response?.data?.message || "Login failed. Please try again.");
+      setError(
+        err.response?.data?.message || "Login failed. Please try again.",
+      );
     } finally {
       setLoading(false);
     }
@@ -171,7 +173,6 @@ function Login() {
                 <input
                   name="password"
                   type={showPassword ? "text" : "password"}
-
                   value={formData.password}
                   onChange={handleChange}
                   autoComplete="current-password"
@@ -211,14 +212,6 @@ function Login() {
             </span>
             <div className="h-px flex-1 bg-white/10" />
           </div>
-
-          <button
-            type="button"
-            className="flex w-full items-center justify-center gap-3 rounded-2xl border border-white/10 bg-white/[0.05] py-3.5 font-black text-white transition hover:bg-white/10"
-          >
-            <span className="font-black text-blue-400">G</span>
-            Google
-          </button>
 
           <p className="mt-6 text-center text-sm font-semibold text-slate-400">
             New to WayMark?
